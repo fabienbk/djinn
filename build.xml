@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+<!-- ====================================================================== 
+     Builds and packages the djinn release.
+     Use the 'makeall' target to run the full process.
+                   
+     Author: Fabien BENOIT                                                                
+     ====================================================================== -->
+<project name="djinn" default="makeall" basedir=".">
+
+	<description>
+            Builds and packages the djinn distribution
+    </description>
+
+	<property name="version" value="0.1.4" />
+	
+	<!-- NSIS ANT Environment -->	
+    <taskdef name="nsis" classname="net.sf.nsisant.Task">
+        <classpath location="./lib/nsisant/nsisant-1.2.jar"/>
+    </taskdef>
+
+	<!-- Launch4J Environment -->
+	<property name="launch4j.dir" location="C:\Program Files\Launch4j" />
+	<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask"
+		classpath="${launch4j.dir}/launch4j.jar;${launch4j.dir}/lib/xstream.jar" />
+			
+	<target name="makeall" depends="package" description="Builds and packages the djinn distribution">
+	</target>
+
+	<target name="clean">
+		<deltree dir="./bin"/>
+		<deltree dir="./build"/>
+	</target>
+
+	<target name="init" depends="clean">
+		<mkdir dir="./bin"/>
+		<mkdir dir="./build"/>
+	</target>
+
+	<target name="compile-resources" description="Compile the resources">
+		<jar destfile="./lib/djinn-icons.jar" basedir="./img">
+			<include name="*.gif" />
+		</jar>
+	</target>
+
+	<target name="compile" depends="init, compile-resources" description="Compile the project">
+
+		<javac srcdir="./src" destdir="./bin" optimize="true" >
+			<classpath>
+				<pathelement location="./lib/asm-all-3.0.jar"/>
+				<pathelement location="./lib/eclipseicons.jar"/>
+				<pathelement location="./lib/hsqldb.jar"/>
+				<pathelement location="./lib/colt.jar"/>
+				<pathelement location="./lib/concurrent.jar"/>
+				<pathelement location="./lib/jung-1.7.5.jar"/>
+				<pathelement location="./lib/swing-layout-1.0.jar"/>				
+				<pathelement location="./lib/xercesImpl.jar"/>
+				<pathelement location="./lib/xml-apis.jar"/>
+				<pathelement location="./lib/commons-collections-3.1.jar"/>
+				<pathelement location="./lib/djinn-icons.jar"/>
+			</classpath>
+			<include name="**/*.java" />
+		</javac>
+		<copy todir="./bin">
+			<fileset dir="./src">
+				<include name="**/*.properties"/>
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="package" depends="compile">
+		<jar destfile="./build/djinn-${version}.jar" basedir="./bin" includes="**">
+			<manifest>
+				<attribute name="Built-By" value="Djinn Ant Script"/>
+				<attribute name="Version" value="${version}"/>
+				<attribute name="Main-Class" value="net.jnovation.djinn.Launcher"/>
+				<attribute name="Class-Path" value="./lib/asm-all-3.0.jar ./lib/eclipseicons.jar ./lib/hsqldb.jar ./lib/colt.jar ./lib/concurrent.jar ./lib/jung-1.7.5.jar ./lib/xercesImpl.jar ./lib/xml-apis.jar ./lib/commons-collections-3.1.jar ./lib/djinn-icons.jar ./lib/swing-layout-1.0.jar"/>
+			</manifest>
+		</jar>
+		
+		<!-- Create the .exe -->
+		<launch4j configFile="launch4j.xml" jar="djinn-${version}.jar" outfile="/build/djinn.exe"/>
+
+		<!-- Create the .zip -->
+		<copy todir="./build/lib">
+			<fileset dir="./lib"/>
+		</copy>
+		<copy todir="./build/ddl">
+			<fileset dir="./ddl"/>
+		</copy>
+		<copy todir="./build/src">
+			<fileset dir="./src"/>
+		</copy>
+		
+		<!-- Generate the NSIS Installer executable -->
+		<nsis script="setup.nsi" path="C:\Program Files\NSIS" >
+			<define name="VERSION" value="${version}"/>
+		</nsis>
+		<move file="setup.exe" todir="build" />
+        
+	</target>	
+
+</project>
+
