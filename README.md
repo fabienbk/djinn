@@ -1,7 +1,7 @@
 djinn
 =====
 
-A GUI to graph java dependencies between jars, classes, packages and projects (currently eclipse projects only).
+A visual tool that analyze, and graph java dependencies between jars, classes, packages and projects (currently eclipse projects only).
 
 This tool can be used to :
 * Analyze legacy code-bases that do not rely on dependency management systems (such as maven or 
