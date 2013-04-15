@@ -30,7 +30,7 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import net.jnovation.djinn.model.workspace.DBTreeNode;
+import net.jnovation.djinn.model.workspace.JavaItemTreeNode;
 import net.jnovation.djinn.model.workspace.RootNode;
 import net.jnovation.djinn.ui.menu.DBObjectContextMenu;
 
@@ -41,8 +41,8 @@ public class WorkspaceTreeController implements
 
     public DefaultTreeModel treeModel = null;
     public JTree tree = null;
-    public DBTreeNode selectedNode = null;
-    public DBTreeNode rootNode = null;
+    public JavaItemTreeNode selectedNode = null;
+    public JavaItemTreeNode rootNode = null;
     
     public WorkspaceTreeController(Application application) {
         
@@ -70,11 +70,11 @@ public class WorkspaceTreeController implements
     }
 
     public void valueChanged(TreeSelectionEvent e) {           
-        this.selectedNode = (DBTreeNode)e.getPath().getLastPathComponent();              
+        this.selectedNode = (JavaItemTreeNode)e.getPath().getLastPathComponent();              
     }        
 
     public void treeExpanded(TreeExpansionEvent event) {
-        DBTreeNode treeNode = (DBTreeNode)event.getPath().getLastPathComponent();
+        JavaItemTreeNode treeNode = (JavaItemTreeNode)event.getPath().getLastPathComponent();
         treeNode.refresh();
         treeModel.reload(treeNode);        
     }
@@ -91,15 +91,15 @@ public class WorkspaceTreeController implements
         // Do nothing.
     }
   
-    public DBTreeNode getSelectedNode() {
+    public JavaItemTreeNode getSelectedNode() {
         return this.selectedNode;
     }
 
-    public DBTreeNode getRootNode() {
+    public JavaItemTreeNode getRootNode() {
         return this.rootNode;
     }
     
-    public void refreshNode(DBTreeNode node) {
+    public void refreshNode(JavaItemTreeNode node) {
         node.refresh();
         treeModel.reload(); // will trigger TreeModel events handled below               
     }

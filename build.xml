@@ -13,15 +13,14 @@
 
 	<property name="version" value="0.1.4" />
 	
-	<!-- NSIS ANT Environment -->	
+<!--
     <taskdef name="nsis" classname="net.sf.nsisant.Task">
         <classpath location="./lib/nsisant/nsisant-1.2.jar"/>
     </taskdef>
-
-	<!-- Launch4J Environment -->
+	
 	<property name="launch4j.dir" location="C:\Program Files\Launch4j" />
 	<taskdef name="launch4j" classname="net.sf.launch4j.ant.Launch4jTask"
-		classpath="${launch4j.dir}/launch4j.jar;${launch4j.dir}/lib/xstream.jar" />
+		classpath="${launch4j.dir}/launch4j.jar;${launch4j.dir}/lib/xstream.jar" />-->
 			
 	<target name="makeall" depends="package" description="Builds and packages the djinn distribution">
 	</target>

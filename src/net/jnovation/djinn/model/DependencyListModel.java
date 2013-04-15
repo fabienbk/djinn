@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.Icon;
 
-import net.jnovation.djinn.db.data.DBObject;
+import net.jnovation.djinn.db.data.JavaItem;
 import net.jnovation.djinn.db.data.Location;
 import net.jnovation.djinn.db.data.Package;
 import net.jnovation.djinn.model.workspace.ClassNode;
@@ -30,8 +30,8 @@ public class DependencyListModel extends AbstractListModel {
         });
     }
     
-    public DependencyListModel(List<DBObject> dboList) {
-        for (DBObject object : dboList) {
+    public DependencyListModel(List<JavaItem> javaItemList) {
+        for (JavaItem object : javaItemList) {
             if (object instanceof Location) {
                 nodeList.add(new LocationNode(null, (Location)object));
             }

@@ -31,7 +31,7 @@ import net.jnovation.djinn.db.mgmt.QueryHelper;
 import net.jnovation.djinn.db.mgmt.RowConverter;
 import net.jnovation.djinn.i18n.Images;
 
-public class LocationNode extends DBTreeNode {
+public class LocationNode extends JavaItemTreeNode {
     
     private static final Icon ICON = Images.getIcon("Jar.icon");
     
@@ -40,12 +40,12 @@ public class LocationNode extends DBTreeNode {
     }
     
     @Override
-    protected Vector<DBTreeNode> getChildren() {
+    protected Vector<JavaItemTreeNode> getChildren() {
         Connection conn = ConnectionManager.getInstance().getConnection();
-        Vector<DBTreeNode> children = new Vector<DBTreeNode>();
+        Vector<JavaItemTreeNode> children = new Vector<JavaItemTreeNode>();
         QueryHelper<PackageNode> queryHelper = new QueryHelper<PackageNode>();
         List<PackageNode> projectNodeList = queryHelper.executeQuery(conn,
-                "SELECT * FROM PACKAGES WHERE location_key = " + getDataObject().getKey(), 
+                "SELECT * FROM PACKAGES WHERE location_key = " + getJavaItem().getKey(), 
                 new RowConverter<PackageNode>(){
             public PackageNode getRow(ResultSet rs) throws SQLException {                
                 Package packageObj = new Package(rs);                        

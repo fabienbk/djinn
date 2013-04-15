@@ -22,7 +22,7 @@ import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 
-public class Project extends DBObject {
+public class Project extends JavaItem {
 
     private int projectKey;
     private String projectName;
@@ -73,7 +73,7 @@ public class Project extends DBObject {
     }
 
     @Override
-    public boolean isContainedBy(DBObject destinationObject) {
+    public boolean isContainedBy(JavaItem destinationObject) {
         return false;
     }
        

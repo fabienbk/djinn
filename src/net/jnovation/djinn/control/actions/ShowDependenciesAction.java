@@ -31,14 +31,15 @@ import edu.uci.ics.jung.graph.Graph;
 
 import net.jnovation.djinn.control.Application;
 import net.jnovation.djinn.db.data.Class;
-import net.jnovation.djinn.db.data.DBObject;
+import net.jnovation.djinn.db.data.JavaDependency;
+import net.jnovation.djinn.db.data.JavaItem;
 import net.jnovation.djinn.db.data.Location;
 import net.jnovation.djinn.db.data.Package;
 import net.jnovation.djinn.db.logic.ReferenceTools;
 import net.jnovation.djinn.graph.GraphTools;
 import net.jnovation.djinn.i18n.Images;
 import net.jnovation.djinn.i18n.Messages;
-import net.jnovation.djinn.model.workspace.DBTreeNode;
+import net.jnovation.djinn.model.workspace.JavaItemTreeNode;
 import net.jnovation.djinn.util.SwingWorker;
 
 /**
@@ -59,7 +60,7 @@ public abstract class ShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithJarsAction.label"));
         }
         @Override
-        public List<DBObject> getReferences(DBObject dbObject) {
+        public List<JavaItem> getReferences(JavaItem dbObject) {
             return  ReferenceTools.getAllLocationsReferences(dbObject);
         }
     }
@@ -72,7 +73,7 @@ public abstract class ShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithPackagesAction.label"));
         }
         @Override
-        public List<DBObject> getReferences(DBObject dbObject) {
+        public List<JavaItem> getReferences(JavaItem dbObject) {
             return  ReferenceTools.getAllPackagesReferences(dbObject);
         }
     }
@@ -85,7 +86,7 @@ public abstract class ShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithClassesAction.label"));
         }
         @Override
-        public List<DBObject> getReferences(DBObject dbObject) {
+        public List<JavaItem> getReferences(JavaItem dbObject) {
             return  ReferenceTools.getAllClassReferences(dbObject);
         }
     }
@@ -105,31 +106,31 @@ public abstract class ShowDependenciesAction extends AbstractAction {
                 updateProgress(0);
 
                 Application instance = Application.getInstance();
-                DBTreeNode selectedNode = instance.getWorkspaceTreeController()
+                JavaItemTreeNode selectedNode = instance.getWorkspaceTreeController()
                         .getSelectedNode();
 
-                DBObject dbObject = selectedNode.getDataObject();
+                JavaItem javaItem = selectedNode.getJavaItem();
 
-                if (dbObject instanceof Location || dbObject instanceof Package
-                        || dbObject instanceof Class) {
+                if (javaItem instanceof Location || javaItem instanceof Package
+                        || javaItem instanceof Class) {
                     
-                    Set<DBObject> locRefList = new HashSet<DBObject>(getReferences(dbObject));
+                    Set<JavaItem> locRefList = new HashSet<JavaItem>(getReferences(javaItem));
                     
                     updateMessage("Creating Graph...");
                     updateProgress(70);
 
                     // Build graph data
-                    Map<DBObject, Set<DBObject>> graphData = new HashMap<DBObject, Set<DBObject>>();
+                    Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
 
                     // Put central object in the vertices list, with it's references
-                    graphData.put(dbObject, locRefList);
+                    graphData.put(javaItem, locRefList);
 
                     // Put referenced objects in the vertices list
-                    for (Iterator<DBObject> iter = locRefList.iterator(); iter
+                    for (Iterator<JavaItem> iter = locRefList.iterator(); iter
                             .hasNext();) {
-                        DBObject ref = iter.next();
-                        if (!ref.equals(dbObject)) {
-                            graphData.put(ref, new HashSet<DBObject>());
+                        JavaItem ref = iter.next();
+                        if (!ref.equals(javaItem)) {
+                            graphData.put(ref, new HashSet<JavaItem>());
                         }
                     }
 
@@ -146,15 +147,16 @@ public abstract class ShowDependenciesAction extends AbstractAction {
              * Display the graph, once built
              */
             @Override
+            @SuppressWarnings("unchecked")
             public void finished() {
-            	Graph builtGraph = (Graph) getValue();
+				Graph<JavaItem, JavaDependency> builtGraph = (Graph<JavaItem, JavaDependency>) getValue();
             	if (builtGraph!=null) {           
 
             		Application instance = Application.getInstance();
-            		DBTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
-            		String label = selectedNode.getDataObject().getLabel();
+            		JavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
+            		String label = selectedNode.getJavaItem().getLabel();
             		            		
-            		Application.getInstance().getGraphAreaController().showGraph(label, (Graph) getValue());    	
+            		Application.getInstance().getGraphAreaController().showGraph(label, (Graph<JavaItem, JavaDependency>) getValue());    	
             	}       
             }
 
@@ -163,6 +165,6 @@ public abstract class ShowDependenciesAction extends AbstractAction {
         worker.start();
     }
     
-    public abstract List<DBObject> getReferences(DBObject dbObject);
+    public abstract List<JavaItem> getReferences(JavaItem dbObject);
 
 }

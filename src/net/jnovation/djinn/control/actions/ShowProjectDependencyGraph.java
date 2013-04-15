@@ -31,7 +31,7 @@ import javax.swing.JOptionPane;
 import edu.uci.ics.jung.graph.Graph;
 
 import net.jnovation.djinn.control.Application;
-import net.jnovation.djinn.db.data.DBObject;
+import net.jnovation.djinn.db.data.JavaItem;
 import net.jnovation.djinn.db.data.DataHelper;
 import net.jnovation.djinn.db.data.Location;
 import net.jnovation.djinn.db.data.Project;
@@ -40,7 +40,7 @@ import net.jnovation.djinn.db.mgmt.ConnectionManager;
 import net.jnovation.djinn.graph.GraphTools;
 import net.jnovation.djinn.i18n.Images;
 import net.jnovation.djinn.i18n.Messages;
-import net.jnovation.djinn.model.workspace.DBTreeNode;
+import net.jnovation.djinn.model.workspace.JavaItemTreeNode;
 import net.jnovation.djinn.util.SwingWorker;
 
 /**
@@ -68,14 +68,14 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                 updateProgress(0);
                 
                 Application instance = Application.getInstance();
-                DBTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
+                JavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
                 
-                DBObject dbObject = selectedNode.getDataObject();
+                JavaItem dbObject = selectedNode.getJavaItem();
                 
                 if (dbObject instanceof Project) {
                                        
 //                  Build graph data
-                    Map<DBObject, Set<DBObject>> graphData = new HashMap<DBObject, Set<DBObject>>();
+                    Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
                                         
                     // Get all locations and transform them into vertices
                     List<Location> locationsList =
@@ -84,7 +84,7 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                     
                     for (Iterator iter = locationsList.iterator(); iter.hasNext();) {
                         Location element = (Location) iter.next();
-                        graphData.put(element, new HashSet<DBObject>());
+                        graphData.put(element, new HashSet<JavaItem>());
                     }
                                             
                     int progress = 0;                    
@@ -98,13 +98,13 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                         Location element = (Location) iter.next();
                         
                         // Get the references of the current element
-                        List<DBObject> elementRefList = ReferenceTools.getAllLocationsReferences(element);
-                        Set<DBObject> elementRefListFiltered = new HashSet<DBObject>();
+                        List<JavaItem> elementRefList = ReferenceTools.getAllLocationsReferences(element);
+                        Set<JavaItem> elementRefListFiltered = new HashSet<JavaItem>();
                         
                         // Check that all references are located in the vertices set
                         // Otherwise we have a dependency that is outside the project - delete it.
                         for (Iterator iterator = elementRefList.iterator(); iterator.hasNext();) {
-                            DBObject elementRef = (DBObject) iterator.next();
+                            JavaItem elementRef = (JavaItem) iterator.next();
                             if (!locationsList.contains(elementRef)) {
                                 JOptionPane.showConfirmDialog(null, Messages.getString("warning.referenceIsOutsideTheProject"), 
                                         Messages.getString("warning"), JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE);                                
@@ -135,8 +135,8 @@ public class ShowProjectDependencyGraph extends AbstractAction {
             	if (builtGraph!=null) {
             	
             		Application instance = Application.getInstance();
-            		DBTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
-            		String projetName = selectedNode.getDataObject().getLabel();
+            		JavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
+            		String projetName = selectedNode.getJavaItem().getLabel();
             		
                         Application.getInstance().getGraphAreaController().showGraph(projetName, (Graph) getValue());    	
             	}            	

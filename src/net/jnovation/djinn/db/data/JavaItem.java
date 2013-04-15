@@ -20,7 +20,7 @@ import java.awt.Color;
 
 import javax.swing.ImageIcon;
 
-public abstract class DBObject {
+public abstract class JavaItem {
            
     public abstract int getKey();
     
@@ -40,7 +40,7 @@ public abstract class DBObject {
     @Override
     public boolean equals(Object obj) {
         if (obj.getClass() == getClass()) {
-            return ((DBObject)obj).getKey() == getKey(); 
+            return ((JavaItem)obj).getKey() == getKey(); 
         }
         return false;                
     }
@@ -50,6 +50,6 @@ public abstract class DBObject {
         return (getClass().getName() + String.valueOf(getKey())).hashCode();
     }
 
-    public abstract boolean isContainedBy(DBObject destinationObject);
+    public abstract boolean isContainedBy(JavaItem destinationObject);
     
 }

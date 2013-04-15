@@ -25,7 +25,7 @@ import javax.swing.ImageIcon;
 
 import net.jnovation.djinn.i18n.Images;
 
-public class Location extends DBObject {
+public class Location extends JavaItem {
 
     public static final int JAR_LOCATION_TYPE = 0;
     public static final int DIR_LOCATION_TYPE = 1;    
@@ -110,7 +110,7 @@ public class Location extends DBObject {
     }
 
     @Override
-    public boolean isContainedBy(DBObject destinationObject) {
+    public boolean isContainedBy(JavaItem destinationObject) {
         return false;
     }
     

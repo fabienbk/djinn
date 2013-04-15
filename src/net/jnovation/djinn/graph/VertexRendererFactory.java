@@ -20,19 +20,12 @@ import java.awt.Shape;
 
 import javax.swing.Icon;
 
-import edu.uci.ics.jung.graph.ArchetypeVertex;
-import edu.uci.ics.jung.graph.Vertex;
-import edu.uci.ics.jung.graph.decorators.AbstractVertexShapeFunction;
-import edu.uci.ics.jung.graph.decorators.EdgeShape;
-import edu.uci.ics.jung.graph.decorators.VertexAspectRatioFunction;
-import edu.uci.ics.jung.graph.decorators.VertexIconFunction;
-import edu.uci.ics.jung.graph.decorators.VertexSizeFunction;
-import edu.uci.ics.jung.graph.decorators.VertexStringer;
-import edu.uci.ics.jung.visualization.PluggableRenderer;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape;
+import edu.uci.ics.jung.visualization.renderers.Renderer.Vertex;
 
 public class VertexRendererFactory {
     
-    public static PluggableRenderer getRenderer() {
+   /* public static PluggableRenderer getRenderer() {
         PluggableRenderer pr = new PluggableRenderer();
                         
         // Edge shape
@@ -82,5 +75,5 @@ public class VertexRendererFactory {
         public Shape getShape(Vertex v) {            
             return factory.getEllipse(v);
         }        
-    }
+    }*/
 }

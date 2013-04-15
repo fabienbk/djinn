@@ -31,7 +31,7 @@ import net.jnovation.djinn.db.mgmt.RowConverter;
 import net.jnovation.djinn.i18n.Images;
 import net.jnovation.djinn.i18n.Messages;
 
-public class RootNode extends DBTreeNode {
+public class RootNode extends JavaItemTreeNode {
 
     private static final Icon ICON = Images.getIcon("Workspace.icon"); 
     
@@ -39,9 +39,9 @@ public class RootNode extends DBTreeNode {
         super(null, null);
     }
 
-    protected Vector<DBTreeNode> getChildren() {
+    protected Vector<JavaItemTreeNode> getChildren() {
         Connection conn = ConnectionManager.getInstance().getConnection();
-        Vector<DBTreeNode> children = new Vector<DBTreeNode>();
+        Vector<JavaItemTreeNode> children = new Vector<JavaItemTreeNode>();
         QueryHelper<ProjectNode> queryHelper = new QueryHelper<ProjectNode>();
         List<ProjectNode> projectNodeList = queryHelper.executeQuery(conn,
                 "SELECT * FROM PROJECTS", 

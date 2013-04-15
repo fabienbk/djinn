@@ -23,7 +23,7 @@ import javax.swing.AbstractAction;
 import net.jnovation.djinn.control.Application;
 import net.jnovation.djinn.db.logic.ReferenceTools;
 import net.jnovation.djinn.i18n.Images;
-import net.jnovation.djinn.model.workspace.DBTreeNode;
+import net.jnovation.djinn.model.workspace.JavaItemTreeNode;
 
 public class DumpReferencesAction extends AbstractAction {
 
@@ -40,12 +40,12 @@ public class DumpReferencesAction extends AbstractAction {
         Runnable runnable = new Runnable() {
             public void run() {
                 Application instance = Application.getInstance();
-                DBTreeNode selectedNode =
+                JavaItemTreeNode selectedNode =
                     instance.getWorkspaceTreeController().getSelectedNode();        
                 
                 System.out.println("Refs : ");
                 System.out.println(
-                        ReferenceTools.getAllLocationsReferences(selectedNode.getDataObject())
+                        ReferenceTools.getAllLocationsReferences(selectedNode.getJavaItem())
                 );
             }
         };

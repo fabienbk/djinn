@@ -32,7 +32,7 @@ import net.jnovation.djinn.db.mgmt.QueryHelper;
 import net.jnovation.djinn.db.mgmt.RowConverter;
 import net.jnovation.djinn.i18n.Images;
 
-public class ClassNode extends DBTreeNode {
+public class ClassNode extends JavaItemTreeNode {
 
     private static final Icon ICON = Images.getIcon("Class.icon");
     private boolean showChildren = true;    
@@ -57,14 +57,14 @@ public class ClassNode extends DBTreeNode {
     }
 
     @Override
-    protected Vector<DBTreeNode> getChildren() {
+    protected Vector<JavaItemTreeNode> getChildren() {
         Connection conn = ConnectionManager.getInstance().getConnection();
-        Vector<DBTreeNode> children = new Vector<DBTreeNode>();
+        Vector<JavaItemTreeNode> children = new Vector<JavaItemTreeNode>();
         
         if (showChildren) {         
             QueryHelper<MethodNode> queryHelper = new QueryHelper<MethodNode>();
             List<MethodNode> methodNodeList = queryHelper.executeQuery(conn,
-                    "SELECT * FROM METHODS WHERE class_key = " + getDataObject().getKey(), 
+                    "SELECT * FROM METHODS WHERE class_key = " + getJavaItem().getKey(), 
                     new RowConverter<MethodNode>(){
                 public MethodNode getRow(ResultSet rs) throws SQLException {       
                     Method method = new Method(rs);                        
@@ -75,7 +75,7 @@ public class ClassNode extends DBTreeNode {
 
             QueryHelper<FieldNode> queryHelper2 = new QueryHelper<FieldNode>();        
             List<FieldNode> fieldNodeList = queryHelper2.executeQuery(conn,
-                    "SELECT * FROM FIELDS WHERE class_key = " + getDataObject().getKey(), 
+                    "SELECT * FROM FIELDS WHERE class_key = " + getJavaItem().getKey(), 
                     new RowConverter<FieldNode>(){
                 public FieldNode getRow(ResultSet rs) throws SQLException {       
                     Field field = new Field(rs);                        

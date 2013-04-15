@@ -24,7 +24,7 @@ import javax.swing.ImageIcon;
 
 import net.jnovation.djinn.i18n.Images;
 
-public class Package extends DBObject {
+public class Package extends JavaItem {
     
     public static final ImageIcon icon = Images.getIcon("Package.graph.icon");
     
@@ -89,7 +89,7 @@ public class Package extends DBObject {
     }
     
     @Override
-    public boolean isContainedBy(DBObject destinationObject) {        
+    public boolean isContainedBy(JavaItem destinationObject) {        
         if (destinationObject instanceof Location) {           
             return (getLocationKey() == destinationObject.getKey());
         }

@@ -32,23 +32,21 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import net.jnovation.djinn.db.data.DBObject;
+import net.jnovation.djinn.db.data.JavaDependency;
+import net.jnovation.djinn.db.data.JavaItem;
 import net.jnovation.djinn.db.data.Location;
 import net.jnovation.djinn.db.logic.ReferenceTools;
 import net.jnovation.djinn.model.DependencyListModel;
 import net.jnovation.djinn.model.GraphGranularityComboBoxModel;
 import net.jnovation.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
 import net.jnovation.djinn.model.workspace.ClassNode;
-import net.jnovation.djinn.model.workspace.DBTreeNode;
+import net.jnovation.djinn.model.workspace.JavaItemTreeNode;
 import net.jnovation.djinn.model.workspace.LocationNode;
 import net.jnovation.djinn.model.workspace.PackageNode;
 import net.jnovation.djinn.ui.panels.DependencyDetailsPanel;
 import net.jnovation.djinn.ui.panels.DependencyGraphPanel;
 import net.jnovation.djinn.util.SwingWorker;
-import edu.uci.ics.jung.graph.Edge;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.Vertex;
-import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
 
 /**
  * Control the panel displaying a dependency graph. 
@@ -57,19 +55,19 @@ import edu.uci.ics.jung.graph.impl.DirectedSparseEdge;
  */
 public class GraphController implements TreeExpansionListener, TreeSelectionListener, ActionListener {
     
-    private Graph graph;
+    private Graph<JavaItem, JavaDependency> graph;
     private DependencyGraphPanel graphPanel;
     private DependencyDetailsPanel detailsPanel;
     
-    public GraphController(Graph graphInfo) {
+    public GraphController(Graph<JavaItem, JavaDependency> graphInfo) {
         this.graph = graphInfo;        
         this.graphPanel = new DependencyGraphPanel(graphInfo);
-        
+                
         graphPanel.getPickedState().addItemListener(new ItemListener() {
-           public void itemStateChanged(ItemEvent e) {               
-               if (e.getItem() instanceof Edge) {
-                   onEdgeSelectionEvent();
-               }
+           public void itemStateChanged(ItemEvent e) {
+        	   if(e.getItem() instanceof JavaDependency) {
+        		   onEdgeSelectionEvent((JavaDependency)e.getItem());
+        	   }
            }
         });
         
@@ -110,9 +108,9 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
     /**
      * Update the dependecy details panel. This is normally triggered on edge selection.
      */
-    private void onEdgeSelectionEvent() {
+    private void onEdgeSelectionEvent(JavaDependency javaDependency) {
         
-        Set<DirectedSparseEdge> pickedEdges = graphPanel.getPickedState().getPickedEdges();
+        Set<JavaDependency> pickedEdges = graphPanel.getPickedState().getPicked();
         if (pickedEdges.size() == 0) {
             clearDependencyDetailsPanel();            
         }
@@ -123,18 +121,12 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
             
             detailsPanel.getDependencyList().setModel(new DependencyListModel());
             detailsPanel.getDependencyList().repaint();
-            
-            DirectedSparseEdge pickedEdge = pickedEdges.iterator().next();            
-            Vertex from = pickedEdge.getSource();
-            Vertex to = pickedEdge.getDest();
-            
-            final DBObject fromDBOject = (DBObject)from.getUserDatum(DBObject.class.getName());
-            final DBObject toDBOject = (DBObject)to.getUserDatum(DBObject.class.getName());            
+          
+            final JavaItem fromDBOject = javaDependency.getSourceItem();
+            final JavaItem toDBOject = javaDependency.getDestinationItem();
             
             // Current selected granularity
-            final GranularityLevel granularityLevel 
-            = ((GraphGranularityComboBoxModel)
-                    detailsPanel.getGranularityComboBox().getModel()).getGranularity();
+            final GranularityLevel granularityLevel = ((GraphGranularityComboBoxModel)detailsPanel.getGranularityComboBox().getModel()).getGranularity();
                 
             if (fromDBOject instanceof Location) {
                 LocationNode locationNode = new LocationNode(null, (Location)fromDBOject);
@@ -151,7 +143,7 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
                 ((DefaultTreeModel)detailsPanel.getNodeTree().getModel()).setRoot(classNode);
             }
             
-            SwingWorker  worker = new SwingWorker() {
+            SwingWorker worker = new SwingWorker() {            	
                 @Override
                 public Object construct() {
                     return ReferenceTools.getReferences(fromDBOject, toDBOject, granularityLevel);
@@ -160,13 +152,11 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
                 @Override
                 public void finished() {
                     if (getValue() != null) {                        
-                        DependencyListModel model = 
-                            new DependencyListModel((List<DBObject>)getValue());
-                        
+                        DependencyListModel model = new DependencyListModel((List<JavaItem>)getValue());                        
                         detailsPanel.getDependencyList().setModel(model);                        
                     }                    
                 }
-                
+                                
             };      
             worker.start();
             
@@ -178,7 +168,7 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
     }
 
     public void treeExpanded(TreeExpansionEvent event) {
-        DBTreeNode treeNode = (DBTreeNode)event.getPath().getLastPathComponent();
+    	JavaItemTreeNode treeNode = (JavaItemTreeNode)event.getPath().getLastPathComponent();
         treeNode.refresh();
         ((DefaultTreeModel)detailsPanel.getNodeTree().getModel()).reload(treeNode);
     }
@@ -187,7 +177,7 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
      * TreeSelectionListener callback
      */
     public void valueChanged(TreeSelectionEvent e) {
-    	updateDependencyListOnUserChange();
+    	updateDependencyListOnUserChange(); 
     }
 
 	private void updateDependencyListOnUserChange() {
@@ -201,7 +191,7 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
 		if (selectionPath == null) {
 			return;
 		}
-		final DBObject fromDBOject = ((DBTreeNode)selectionPath.getLastPathComponent()).getDataObject();
+		final JavaItem fromJavaItem = ((JavaItemTreeNode)selectionPath.getLastPathComponent()).getJavaItem();
 
 		// Get the current granularity
 		final GranularityLevel granularityLevel 
@@ -209,23 +199,20 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
 				detailsPanel.getGranularityComboBox().getModel()).getGranularity();
     		
 		// Get the current selected 'target' vertex in the graph
-		Set<DirectedSparseEdge> pickedEdges = graphPanel.getPickedState().getPickedEdges();
-		DirectedSparseEdge pickedEdge = pickedEdges.iterator().next();            
-		Vertex to = pickedEdge.getDest();
-		final DBObject toDBOject = (DBObject)to.getUserDatum(DBObject.class.getName());
+		Set<JavaDependency> pickedEdges = graphPanel.getPickedState().getPicked();
+		JavaDependency pickedEdge = pickedEdges.iterator().next();            
+		final JavaItem toJavaItem = pickedEdge.getDestinationItem();
 		            
 		SwingWorker  worker = new SwingWorker() {
 		    @Override
 		    public Object construct() {
-		        return ReferenceTools.getReferences(fromDBOject, toDBOject, granularityLevel);
+		        return ReferenceTools.getReferences(fromJavaItem, toJavaItem, granularityLevel);
 		    }
 		    
 		    @Override
 		    public void finished() {
 		        if (getValue() != null) {                        
-		            DependencyListModel model = 
-		                new DependencyListModel((List<DBObject>)getValue());
-		            
+		            DependencyListModel model =  new DependencyListModel((List<JavaItem>)getValue());		            
 		            detailsPanel.getDependencyList().setModel(model);                        
 		        }                    
 		    }
@@ -234,8 +221,9 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
 		worker.start();
 	}
 
-	public void actionPerformed(ActionEvent e) {
-		updateDependencyListOnUserChange();
-	} 
+    public void actionPerformed(ActionEvent e) {
+		updateDependencyListOnUserChange();    	
+    }
+
         
 }

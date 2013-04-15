@@ -21,29 +21,29 @@ import java.util.Vector;
 
 import javax.swing.tree.TreeNode;
 
-import net.jnovation.djinn.db.data.DBObject;
+import net.jnovation.djinn.db.data.JavaItem;
 import net.jnovation.djinn.model.DecoratedNode;
 
-public abstract class DBTreeNode implements TreeNode, DecoratedNode {    
+public abstract class JavaItemTreeNode implements TreeNode, DecoratedNode {    
     
-    private DBObject dataObject;    
-    private DBTreeNode parent;
-    private Vector<DBTreeNode> children;    
+    private JavaItem javaItem;    
+    private JavaItemTreeNode parent;
+    private Vector<JavaItemTreeNode> children;    
     
-    public DBTreeNode(DBTreeNode parent) {
+    public JavaItemTreeNode(JavaItemTreeNode parent) {
         this.parent = parent;
-        this.children = new Vector<DBTreeNode>();
+        this.children = new Vector<JavaItemTreeNode>();
     }
     
-    public DBTreeNode(DBTreeNode parent, DBObject dataObject) {
+    public JavaItemTreeNode(JavaItemTreeNode parent, JavaItem dataObject) {
         this.parent = parent;
-        this.children = new Vector<DBTreeNode>();
-        this.dataObject = dataObject;                
+        this.children = new Vector<JavaItemTreeNode>();
+        this.javaItem = dataObject;                
     }          
     
     public String getLabel() {
-        if (dataObject != null) {
-            return dataObject.getLabel();
+        if (javaItem != null) {
+            return javaItem.getLabel();
         }
         return "";
     }
@@ -52,7 +52,7 @@ public abstract class DBTreeNode implements TreeNode, DecoratedNode {
         children = getChildren();        
     }
     
-    protected abstract Vector<DBTreeNode> getChildren();
+    protected abstract Vector<JavaItemTreeNode> getChildren();
 
     public TreeNode getChildAt(int childIndex) {
         return children.get(childIndex);
@@ -66,7 +66,7 @@ public abstract class DBTreeNode implements TreeNode, DecoratedNode {
         return parent;
     }
     
-    public DBTreeNode getDBTreeNodeParent() {
+    public JavaItemTreeNode getDBTreeNodeParent() {
         return parent;
     }
 
@@ -86,8 +86,8 @@ public abstract class DBTreeNode implements TreeNode, DecoratedNode {
         return children.elements();
     }
 
-    public DBObject getDataObject() {
-        return this.dataObject;
+    public JavaItem getJavaItem() {
+        return this.javaItem;
     }
 
 }

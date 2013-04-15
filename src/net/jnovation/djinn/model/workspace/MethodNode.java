@@ -23,7 +23,7 @@ import javax.swing.Icon;
 import net.jnovation.djinn.db.data.Method;
 import net.jnovation.djinn.i18n.Images;
 
-public class MethodNode extends DBTreeNode {
+public class MethodNode extends JavaItemTreeNode {
 
     private static final Icon ICON = Images.getIcon("Method.icon");
     
@@ -32,8 +32,8 @@ public class MethodNode extends DBTreeNode {
     }
 
     @Override
-    protected Vector<DBTreeNode> getChildren() {
-        return new Vector<DBTreeNode>();
+    protected Vector<JavaItemTreeNode> getChildren() {
+        return new Vector<JavaItemTreeNode>();
     }
 
     @Override

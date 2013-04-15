@@ -23,54 +23,57 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 
 import javax.imageio.ImageIO;
+import javax.swing.Icon;
 import javax.swing.JPanel;
 
-import net.jnovation.djinn.graph.VertexRendererFactory;
-import net.jnovation.djinn.ui.panels.DependencyDetailsPanel;
+import net.jnovation.djinn.db.data.JavaDependency;
+import net.jnovation.djinn.db.data.JavaItem;
 
+import org.apache.commons.collections15.Transformer;
+
+import edu.uci.ics.jung.algorithms.layout.FRLayout;
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.decorators.PickableEdgePaintFunction;
-import edu.uci.ics.jung.visualization.FRLayout;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
-import edu.uci.ics.jung.visualization.Layout;
-import edu.uci.ics.jung.visualization.PickedState;
-import edu.uci.ics.jung.visualization.PluggableRenderer;
-import edu.uci.ics.jung.visualization.ShapePickSupport;
+import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
+import edu.uci.ics.jung.visualization.picking.PickedState;
 
 public class DependencyGraphPanel extends JPanel {
 
-    /** Comment for <code>serialVersionUID</code> */
-    private static final long serialVersionUID = -2343340380947041680L;
+    private static final long serialVersionUID = 1L;
     
-    private VisualizationViewer visualizationViewer;
-    private PluggableRenderer pluggableRenderer;
+    private VisualizationViewer<JavaItem, JavaDependency> visualizationViewer;
+      
     private DependencyDetailsPanel dependencyDetailsPanel;	    
-    private PickedState pickedState;
 
-    public DependencyGraphPanel(Graph g) {
+    public DependencyGraphPanel(Graph<JavaItem, JavaDependency> graph) {
                 
-        pluggableRenderer = VertexRendererFactory.getRenderer();
-        Layout layout = new FRLayout(g);               
-        visualizationViewer = new VisualizationViewer(layout, pluggableRenderer);
-                
-        pickedState = visualizationViewer.getPickedState();
-        // Selectable edge paint function
-        pluggableRenderer.setEdgePaintFunction(new PickableEdgePaintFunction(pickedState,Color.black,Color.cyan));
-                
-        ShapePickSupport ps = new ShapePickSupport();
-        visualizationViewer.setPickSupport(ps);
-                       
+        Layout<JavaItem, JavaDependency> layout = new FRLayout<JavaItem, JavaDependency>(graph);               
+        visualizationViewer = new VisualizationViewer<JavaItem, JavaDependency>(layout);
+        
+        RenderContext<JavaItem, JavaDependency> renderContext = visualizationViewer.getRenderContext();
+		renderContext.setVertexIconTransformer(new Transformer<JavaItem, Icon>() {			
+			@Override
+			public Icon transform(JavaItem node) {
+	            return node.getImage();
+			}
+		});
+		renderContext.setVertexLabelTransformer(new Transformer<JavaItem, String>() {
+			@Override
+			public String transform(JavaItem node) {
+				return node.getLabel();
+			}
+		});
+    
         visualizationViewer.setBackground(Color.white);        
         GraphZoomScrollPane scrollPane = new GraphZoomScrollPane(visualizationViewer);
         
-        //DefaultModalGraphMouse graphMouse = new DefaultModalGraphMouse();
         final PluggableGraphMouse graphMouse = new PluggableGraphMouse();
-        graphMouse.add( new PickingGraphMousePlugin() );
-                
-        //graphMouse.setMode(Mode.PICKING);
+        graphMouse.add( new PickingGraphMousePlugin<JavaItem, JavaDependency>() );
+        
         visualizationViewer.setGraphMouse(graphMouse);
         
         this.setLayout(new BorderLayout());
@@ -79,11 +82,10 @@ public class DependencyGraphPanel extends JPanel {
         dependencyDetailsPanel = new DependencyDetailsPanel();
         this.add(dependencyDetailsPanel, BorderLayout.SOUTH);
      
-                        
     }
     
-    public PickedState getPickedState() {
-        return pickedState;
+    public PickedState<JavaDependency> getPickedState() {
+        return visualizationViewer.getPickedEdgeState();
     }
     
     public DependencyDetailsPanel getDependencyDetailsPanel() {
@@ -98,8 +100,7 @@ public class DependencyGraphPanel extends JPanel {
         int width = visualizationViewer.getWidth();
         int height = visualizationViewer.getHeight();
 
-        BufferedImage bi = new BufferedImage(width, height,
-                BufferedImage.TYPE_INT_RGB);
+        BufferedImage bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = bi.createGraphics();
         visualizationViewer.paint(graphics);
         graphics.dispose();

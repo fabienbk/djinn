@@ -32,7 +32,7 @@ import net.jnovation.djinn.db.data.Location;
 import net.jnovation.djinn.db.mgmt.ConnectionManager;
 import net.jnovation.djinn.i18n.Images;
 import net.jnovation.djinn.i18n.Messages;
-import net.jnovation.djinn.model.workspace.DBTreeNode;
+import net.jnovation.djinn.model.workspace.JavaItemTreeNode;
 import net.jnovation.djinn.model.workspace.ProjectNode;
 import net.jnovation.djinn.util.FileChooserFactory;
 
@@ -51,7 +51,7 @@ public class AddClassFolderAction extends AbstractAction {
         WorkspaceTreeController controller = app.getWorkspaceTreeController(); 
         
         // Get the current selected node in the tree
-        DBTreeNode selectedNode = controller.getSelectedNode();        
+        JavaItemTreeNode selectedNode = controller.getSelectedNode();        
         // if not a project, return
         if (!(selectedNode instanceof ProjectNode)) {
             return;
@@ -71,7 +71,7 @@ public class AddClassFolderAction extends AbstractAction {
                 DirectoryReader r = new DirectoryReader(new File(path));
                 
                 // the selected project key
-                int projectKey = ((ProjectNode)selectedNode).getDataObject().getKey();
+                int projectKey = ((ProjectNode)selectedNode).getJavaItem().getKey();
                 
                 Connection conn = ConnectionManager.getInstance().getConnection();
                 

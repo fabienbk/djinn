@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import javax.swing.ImageIcon;
 
 /** @author Hibernate CodeGenerator */
-public class Method extends DBObject {
+public class Method extends JavaItem {
 
     private int methodKey;
     private int access;
@@ -84,7 +84,7 @@ public class Method extends DBObject {
     }
 
     @Override
-    public boolean isContainedBy(DBObject destinationObject) {
+    public boolean isContainedBy(JavaItem destinationObject) {
         return false;
     }
 }

@@ -23,7 +23,7 @@ import javax.swing.Icon;
 import net.jnovation.djinn.db.data.Field;
 import net.jnovation.djinn.i18n.Images;
 
-public class FieldNode extends DBTreeNode {
+public class FieldNode extends JavaItemTreeNode {
 
     private static final Icon ICON = Images.getIcon("Field.icon");
     
@@ -32,8 +32,8 @@ public class FieldNode extends DBTreeNode {
     }
 
     @Override
-    protected Vector<DBTreeNode> getChildren() {
-        return new Vector<DBTreeNode>();
+    protected Vector<JavaItemTreeNode> getChildren() {
+        return new Vector<JavaItemTreeNode>();
     }
     
     @Override

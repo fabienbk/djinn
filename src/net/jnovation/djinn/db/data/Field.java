@@ -22,7 +22,7 @@ import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 
-public class Field extends DBObject {
+public class Field extends JavaItem {
 
     private int fieldKey;
     private int classKey;
@@ -95,7 +95,7 @@ public class Field extends DBObject {
     }
 
     @Override
-    public boolean isContainedBy(DBObject destinationObject) {
+    public boolean isContainedBy(JavaItem destinationObject) {
         return false;
     }
     
