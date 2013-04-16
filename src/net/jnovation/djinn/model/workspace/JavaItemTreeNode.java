@@ -82,7 +82,7 @@ public abstract class JavaItemTreeNode implements TreeNode, DecoratedNode {
         return false;
     }
 
-    public Enumeration children() {
+    public Enumeration<JavaItemTreeNode> children() {
         return children.elements();
     }
 

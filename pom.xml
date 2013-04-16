@@ -17,6 +17,17 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>project-repo</id>
+			<releases>
+				<enabled>true</enabled>
+				<checksumPolicy>ignore</checksumPolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<url>file://${project.basedir}/lib</url>
+		</repository>
 	</repositories>
 
 	<build>
@@ -29,8 +40,8 @@
 				</excludes>
 			</resource>
 			<resource>
-       			<directory>img</directory>
-     		</resource>
+				<directory>img</directory>
+			</resource>
 		</resources>
 		<plugins>
 			<plugin>
@@ -52,7 +63,9 @@
 					</archive>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
+					</descriptorRefs>					
+        			<finalName>djinn-gui</finalName>
+        			<appendAssemblyId>false</appendAssemblyId>					
 				</configuration>
 			</plugin>
 
@@ -83,6 +96,16 @@
 		<dependency>
 			<groupId>net.java.dev.swing-layout</groupId>
 			<artifactId>swing-layout</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>djinn</groupId>
+			<artifactId>djinn-icons</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>djinn</groupId>
+			<artifactId>eclipse-icons</artifactId>
 			<version>1.0</version>
 		</dependency>
 	</dependencies>

@@ -20,6 +20,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -29,17 +31,9 @@ import java.sql.SQLException;
  * @author Fabien Benoit <fabien.benoit@gmail.com>
  */
 public class DBConstructor {
-    
-    /**
-     * Execute a set of update statement contained in a specified file.
-     * @param conn An active JDBC connection.
-     * @param scriptFile The file containing the SQL script.
-     * @throws IOException If the file can't be read.
-     * @throws SQLException If one of the queries fails.
-     */    
-    public void buildSchema(Connection conn, File scriptFile) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(scriptFile));
-        String line = reader.readLine();
+	
+	public void buildSchema(Connection conn, BufferedReader reader) throws IOException {
+		String line = reader.readLine();
         StringBuffer script = new StringBuffer();
         while (line != null) {
             script.append(line);
@@ -50,6 +44,23 @@ public class DBConstructor {
         
         buildSchema(conn, statements);
         reader.close();
+	}
+	
+	public void buildSchema(Connection conn, InputStream is) throws IOException {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		buildSchema(conn, reader);
+	}
+    
+    /**
+     * Execute a set of update statement contained in a specified file.
+     * @param conn An active JDBC connection.
+     * @param scriptFile The file containing the SQL script.
+     * @throws IOException If the file can't be read.
+     * @throws SQLException If one of the queries fails.
+     */    
+    public void buildSchema(Connection conn, File scriptFile) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(scriptFile));
+        buildSchema(conn, reader);
     }
 
     /**

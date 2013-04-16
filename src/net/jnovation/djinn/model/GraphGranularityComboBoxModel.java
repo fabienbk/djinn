@@ -6,8 +6,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 
-public class GraphGranularityComboBoxModel extends AbstractListModel 
-implements ComboBoxModel {
+public class GraphGranularityComboBoxModel extends AbstractListModel<String> implements ComboBoxModel<String> {	
 
     public enum GranularityLevel {
         JAR, PACKAGE, CLASS 
@@ -32,7 +31,7 @@ implements ComboBoxModel {
         this.selectedItem = (String)anItem;
     }
 
-    public Object getElementAt(int index) {
+    public String getElementAt(int index) {
         return objectList.get(index);
     }
 

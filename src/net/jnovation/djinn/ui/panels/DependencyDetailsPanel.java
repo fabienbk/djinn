@@ -1,22 +1,19 @@
 package net.jnovation.djinn.ui.panels;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
-
-import javax.swing.WindowConstants;
-
-import net.jnovation.djinn.model.GraphGranularityComboBoxModel;
-
-import org.jdesktop.layout.GroupLayout;
-import org.jdesktop.layout.LayoutStyle;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ListModel;
+import javax.swing.WindowConstants;
+
+import net.jnovation.djinn.model.GraphGranularityComboBoxModel;
+
+import org.jdesktop.layout.GroupLayout;
+import org.jdesktop.layout.LayoutStyle;
 
 /**
 * This code was edited or generated using CloudGarden's Jigloo
@@ -30,12 +27,13 @@ import javax.swing.ListModel;
 * THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
 * LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
 */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class DependencyDetailsPanel extends javax.swing.JPanel {
     
     private static final long serialVersionUID = 541893182308632768L;
     private JScrollPane treeScrollPane;
-    private JScrollPane listScrollPane;
-    private JList dependencyList;
+    private JScrollPane listScrollPane;    
+	private JList dependencyList;
     private JComboBox granularityComboBox;
     private JLabel granularityLabel;
     private JTree nodeTree;
@@ -77,7 +75,8 @@ public class DependencyDetailsPanel extends javax.swing.JPanel {
             {
                 listScrollPane = new JScrollPane();
                 {
-                    ListModel dependencyListModel = new DefaultComboBoxModel(new String[] { "Item One", "Item Two" });
+                    
+					ListModel dependencyListModel = new DefaultComboBoxModel(new String[] { "Item One", "Item Two" });
                     dependencyList = new JList();
                     listScrollPane.setViewportView(getDependencyList());
                     dependencyList.setModel(dependencyListModel);

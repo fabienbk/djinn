@@ -88,7 +88,7 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
         return graphPanel;
     }
     
-    public Graph getGraph() {
+    public Graph<JavaItem, JavaDependency>  getGraph() {
         return graph;
     }
     
@@ -98,11 +98,6 @@ public class GraphController implements TreeExpansionListener, TreeSelectionList
         detailsPanel.getDependencyList().setModel(new DefaultListModel());
         detailsPanel.getDependencyList().setEnabled(false);
         detailsPanel.getGranularityComboBox().setEnabled(false);
-    }
-
-    
-    private void onNodeSelectionEvent() {
-        
     }
     
     /**

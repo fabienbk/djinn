@@ -16,9 +16,10 @@
  */
 package net.jnovation.djinn.db.mgmt;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+
+import net.jnovation.djinn.db.meta.DatabaseModel;
 
 
 public class ConnectionManager {
@@ -35,12 +36,10 @@ public class ConnectionManager {
         try {
             Class.forName ("org.hsqldb.jdbcDriver");
             DriverManager.registerDriver(new org.hsqldb.jdbcDriver());
-            connection = DriverManager.getConnection("jdbc:hsqldb:mem:djinn","sa","");
-            
+            connection = DriverManager.getConnection("jdbc:hsqldb:mem:djinn","sa","");            
             DBConstructor dbConstructor = new DBConstructor();            
-            dbConstructor.buildSchema(connection, new File("ddl/createSchema.sql"));
-            connection.commit();
-                        
+            dbConstructor.buildSchema(connection, DatabaseModel.class.getResourceAsStream("schema.sql"));
+            connection.commit();                        
         }
         catch(Exception e) {
             throw new RuntimeException(e);

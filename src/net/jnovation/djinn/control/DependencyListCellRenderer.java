@@ -24,8 +24,7 @@ import javax.swing.ListCellRenderer;
 
 import net.jnovation.djinn.model.DecoratedNode;
 
-public class DependencyListCellRenderer extends JLabel
-implements ListCellRenderer {
+public class DependencyListCellRenderer extends JLabel implements ListCellRenderer {	
 
     /** Comment for <code>serialVersionUID</code> */
     private static final long serialVersionUID = 1L;

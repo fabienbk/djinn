@@ -23,6 +23,9 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import net.jnovation.djinn.db.data.JavaDependency;
+import net.jnovation.djinn.db.data.JavaItem;
+
 import edu.uci.ics.jung.graph.Graph;
 
 public class GraphAreaController {
@@ -34,7 +37,7 @@ public class GraphAreaController {
         this.graphAreaTabbedPane = application.getApplicationFrame().getGraphAreaPanel().getTabbedPane();
     }
     
-    public void showGraph(String title, Graph graphInfo) {
+    public void showGraph(String title, Graph<JavaItem, JavaDependency>  graphInfo) {
         GraphController graphController = new GraphController(graphInfo);
         addTab(title, graphController.getPanel());     
     }

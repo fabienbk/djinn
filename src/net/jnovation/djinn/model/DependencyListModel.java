@@ -13,7 +13,7 @@ import net.jnovation.djinn.model.workspace.ClassNode;
 import net.jnovation.djinn.model.workspace.LocationNode;
 import net.jnovation.djinn.model.workspace.PackageNode;
 
-public class DependencyListModel extends AbstractListModel {
+public class DependencyListModel extends AbstractListModel<DecoratedNode> {
     
     private static final long serialVersionUID = -4344727518624732109L;
     
@@ -45,7 +45,7 @@ public class DependencyListModel extends AbstractListModel {
         }
     }
 
-    public Object getElementAt(int index) {
+    public DecoratedNode getElementAt(int index) {
         return nodeList.get(index);
     }
 
