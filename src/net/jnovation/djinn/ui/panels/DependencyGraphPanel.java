@@ -26,10 +26,10 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.JPanel;
 
+import org.apache.commons.collections15.Transformer;
+
 import net.jnovation.djinn.db.data.JavaDependency;
 import net.jnovation.djinn.db.data.JavaItem;
-
-import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -55,14 +55,12 @@ public class DependencyGraphPanel extends JPanel {
         visualizationViewer = new VisualizationViewer<JavaItem, JavaDependency>(layout);
         
         RenderContext<JavaItem, JavaDependency> renderContext = visualizationViewer.getRenderContext();
-		renderContext.setVertexIconTransformer(new Transformer<JavaItem, Icon>() {			
-			@Override
+		renderContext.setVertexIconTransformer(new Transformer<JavaItem, Icon>() {	
 			public Icon transform(JavaItem node) {
 	            return node.getImage();
 			}
 		});
 		renderContext.setVertexLabelTransformer(new Transformer<JavaItem, String>() {
-			@Override
 			public String transform(JavaItem node) {
 				return node.getLabel();
 			}

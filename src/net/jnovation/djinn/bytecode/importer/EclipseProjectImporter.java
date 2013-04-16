@@ -71,9 +71,9 @@ public class EclipseProjectImporter extends Importer {
 		double progress = 0;
 		double delta = 100d / locations.size();
 
-		for (Iterator iter = locations.iterator(); iter.hasNext();) {
+		for (Iterator<Location> iter = locations.iterator(); iter.hasNext();) {
 
-			Location loc = (Location) iter.next();
+			Location loc = iter.next();
 			LocationReader locReader = null;
 
 			fireStatusUpdate(loc.getAbsolutePath());            
