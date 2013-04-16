@@ -1,5 +1,7 @@
 *.class
 
+djinn-[0-9\.]*.jar
+
 # Package Files #
 *.war
 *.ear
