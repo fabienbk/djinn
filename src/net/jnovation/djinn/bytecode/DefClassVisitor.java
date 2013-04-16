@@ -1,6 +1,6 @@
 /*
  * Created on Feb 8, 2006
- * By Fabien Benoit - http://www.jnovation.net
+ * By Fabien Benoit - http://www.scramcode.com
  * 
  *
  * This program is free software; you can redistribute it and/or
