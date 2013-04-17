@@ -1,4 +1,5 @@
 *.class
+target
 
 djinn-[0-9\.]*.jar
 
