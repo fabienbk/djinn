@@ -71,41 +71,35 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                 Application instance = Application.getInstance();
                 JavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
                 
-                JavaItem dbObject = selectedNode.getJavaItem();
+                JavaItem javaItem = selectedNode.getJavaItem();
                 
-                if (dbObject instanceof Project) {
-                                       
-//                  Build graph data
+                if (javaItem instanceof Project) {
+                                    
                     Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
                                         
                     // Get all locations and transform them into vertices
-                    List<Location> locationsList =
-                    DataHelper.getLocations(ConnectionManager.getInstance().getConnection(), 
-                            (Project)dbObject);
+                    List<Location> locationsList = DataHelper.getLocations(ConnectionManager.getInstance().getConnection(),  (Project)javaItem);
                     
-                    for (Iterator iter = locationsList.iterator(); iter.hasNext();) {
-                        Location element = (Location) iter.next();
+                    for (Location element : locationsList) {
                         graphData.put(element, new HashSet<JavaItem>());
                     }
                                             
                     int progress = 0;                    
                     int delta = 100 / locationsList.size();  
                                         
-                    for (Iterator iter = locationsList.iterator(); iter.hasNext();) {
+                    for (Location element : locationsList) {
                         
                         progress+=delta;
                         updateProgress(progress);
-                        
-                        Location element = (Location) iter.next();
-                        
+                                                
                         // Get the references of the current element
                         List<JavaItem> elementRefList = ReferenceTools.getAllLocationsReferences(element);
+                        
                         Set<JavaItem> elementRefListFiltered = new HashSet<JavaItem>();
                         
                         // Check that all references are located in the vertices set
                         // Otherwise we have a dependency that is outside the project - delete it.
-                        for (Iterator iterator = elementRefList.iterator(); iterator.hasNext();) {
-                            JavaItem elementRef = (JavaItem) iterator.next();
+                        for (JavaItem elementRef : elementRefList) {
                             if (!locationsList.contains(elementRef)) {
                                 JOptionPane.showConfirmDialog(null, Messages.getString("warning.referenceIsOutsideTheProject"), 
                                         Messages.getString("warning"), JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE);                                

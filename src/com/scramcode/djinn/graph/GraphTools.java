@@ -57,7 +57,7 @@ public class GraphTools {
             for (Iterator<JavaItem> iterRef = references.iterator(); iterRef.hasNext();) {
                 JavaItem destinationJavaItem = iterRef.next();
  
-                if (destinationJavaItem != originJavaItem) {                
+                if (!destinationJavaItem.equals(originJavaItem)) {                
                     graph.addEdge(new JavaDependency(originJavaItem, destinationJavaItem), originJavaItem, destinationJavaItem);
                 }
             }
