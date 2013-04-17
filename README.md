@@ -12,6 +12,8 @@ ivy) and then produce information that facilitate migration to these systems;
 * Locate, and fix cyclic dependencies;
 * Understand how a project is structured to gain comprehension quicker.
 
+![screenshot](http://blog.scramcode.com/static/img/djinn-graph-example.png)
+
 There is still a lot of work to do - the tool only provides basic functionality currently.
 
 Building and running
