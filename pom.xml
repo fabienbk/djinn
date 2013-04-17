@@ -38,6 +38,7 @@
 				<excludes>
 					<exclude>**/*.java</exclude>
 				</excludes>
+				<filtering>true</filtering>
 			</resource>
 			<resource>
 				<directory>img</directory>
@@ -58,7 +59,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>net.jnovation.djinn.Launcher</mainClass>
+							<mainClass>com.scramcode.djinn.Launcher</mainClass>
 						</manifest>
 					</archive>
 					<descriptorRefs>
