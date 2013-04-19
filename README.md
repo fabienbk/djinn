@@ -1,6 +1,5 @@
-djinn, the java dependency explorer
+djinn, the java dependency explorer [![Build Status](https://travis-ci.org/fabienbk/djinn.png?branch=master)](https://travis-ci.org/fabienbk/djinn)
 ===================================
-[![Build Status](https://travis-ci.org/fabienbk/djinn.png?branch=master)](https://travis-ci.org/fabienbk/djinn)
 
 Description
 -----------
