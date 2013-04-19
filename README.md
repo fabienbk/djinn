@@ -35,3 +35,8 @@ java -jar target/djinn-gui.jar
 ```
 
 If you're a clicky person, flip the executable permission flag, and you should be able to run djinn by double-clicking on the jar, under linux or windows.
+
+Getting Started
+---------------
+
+<Section to be done after 0.2 release>
