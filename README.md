@@ -4,9 +4,9 @@ djinn, the java dependency explorer [![Build Status](https://travis-ci.org/fabie
 Description
 -----------
 
-A visual tool that analyze, and graph java dependencies between jars, classes, packages and projects (currently eclipse projects only).
+A visual tool that creates dependency graphs between arbitrary sets of jars, classes, packages and java projects.
 
-This tool can be used to :
+Djinn can be used to :
 * Analyze legacy code-bases that do not rely on dependency management systems (such as maven or 
 ivy) and then produce information that facilitate migration to these systems;
 * Locate, and fix cyclic dependencies;
@@ -19,7 +19,8 @@ There is still a lot of work to do - the tool only provides basic functionality 
 Building and running
 --------------------
 
-The project use maven. It has been tested under Windows and Linux, although it should run wherever swing applications are supported.
+The project requires [Maven](http://maven.apache.org/download.cgi) for building, and JDK 6 (or later).
+It has been tested under Windows and Linux, although it should run wherever Swing Applications are supported.
 
 To build the runnable jar, simply run:
 
