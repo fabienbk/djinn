@@ -18,7 +18,7 @@ package com.scramcode.djinn.util;
 
 import javax.swing.SwingUtilities;
 
-import com.scramcode.djinn.ui.ProgressDialog;
+import com.scramcode.djinn.ui.dialogs.ProgressDialog;
 
 
 /**

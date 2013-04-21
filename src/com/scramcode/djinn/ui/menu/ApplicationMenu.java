@@ -19,7 +19,7 @@ package com.scramcode.djinn.ui.menu;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 
-import com.scramcode.djinn.i18n.Messages;
+import com.scramcode.djinn.ui.i18n.Messages;
 
 
 public class ApplicationMenu extends JMenuBar {
@@ -29,19 +29,14 @@ public class ApplicationMenu extends JMenuBar {
     
     private JMenu workspaceMenu;
     private JMenu toolsMenu;
-    private JMenu newMenu;
     private JMenu helpMenu;    
     
     public ApplicationMenu() {
-        workspaceMenu = new JMenu(Messages.getString("ApplicationMenu.workspaceMenu"));
-        newMenu = new JMenu(Messages.getString("ApplicationMenu.workspaceMenu.newMenu"));
+        workspaceMenu = new JMenu(Messages.getString("ApplicationMenu.workspaceMenu"));        
         toolsMenu = new JMenu(Messages.getString("ApplicationMenu.toolsMenu"));
         helpMenu = new JMenu(Messages.getString("ApplicationMenu.helpMenu"));
-        this.add(workspaceMenu);
-        workspaceMenu.add(newMenu);
-        
-        this.add(toolsMenu);
-        
+        this.add(workspaceMenu);        
+        this.add(toolsMenu);        
         this.add(helpMenu);
     }
 
@@ -49,14 +44,9 @@ public class ApplicationMenu extends JMenuBar {
         return this.workspaceMenu;
     }
 
-    public JMenu getNewMenu() {
-        return this.newMenu;
-    }
-
     public JMenu getToolsMenu() {
         return this.toolsMenu;
     }
-        
 
     public JMenu getHelpMenu() {
         return this.helpMenu;

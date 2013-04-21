@@ -29,7 +29,7 @@ import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.db.mgmt.QueryHelper;
 import com.scramcode.djinn.db.mgmt.RowConverter;
-import com.scramcode.djinn.i18n.Images;
+import com.scramcode.djinn.ui.i18n.Images;
 
 
 public class ProjectNode extends JavaItemTreeNode {
@@ -40,7 +40,7 @@ public class ProjectNode extends JavaItemTreeNode {
         super(parent, project);
     }
         
-    protected Vector<JavaItemTreeNode> getChildren() {
+    protected Vector<JavaItemTreeNode> computeChildren() {
         Connection conn = ConnectionManager.getInstance().getConnection();
         Vector<JavaItemTreeNode> children = new Vector<JavaItemTreeNode>();
         QueryHelper<LocationNode> queryHelper = new QueryHelper<LocationNode>();

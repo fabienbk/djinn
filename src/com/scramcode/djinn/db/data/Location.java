@@ -23,11 +23,12 @@ import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 
-import com.scramcode.djinn.i18n.Images;
+import com.scramcode.djinn.ui.i18n.Images;
 
 
 public class Location extends JavaItem {
 
+	public static final int NO_PROJECT_ROOT = -1;
     public static final int JAR_LOCATION_TYPE = 0;
     public static final int DIR_LOCATION_TYPE = 1;    
    
@@ -37,7 +38,7 @@ public class Location extends JavaItem {
     private String absolutePath;
     private int type;    
     private File pathFile;
-    private int projectKey;
+    private Integer projectKey;
 
     /** full constructor */
     public Location(String absolutePath, int type, int projectKey) {
@@ -55,7 +56,14 @@ public class Location extends JavaItem {
         this.pathFile = new File(absolutePath);        
     }
 
-    public int getKey() {
+    public Location(String absolutePath, int type) {
+    	 this.absolutePath = absolutePath;        
+         this.type = type;
+         this.projectKey = null;
+         this.pathFile = new File(absolutePath);
+	}
+
+	public int getKey() {
         return this.locationKey;
     }
 
@@ -83,7 +91,7 @@ public class Location extends JavaItem {
         return this.pathFile;
     }
 
-    public int getProjectKey() {
+    public Integer getProjectKey() {
         return this.projectKey;
     }
 

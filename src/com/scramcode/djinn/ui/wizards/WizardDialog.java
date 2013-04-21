@@ -25,7 +25,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
-import com.scramcode.djinn.i18n.Messages;
+import com.scramcode.djinn.ui.i18n.Messages;
 
 
 public class WizardDialog extends JDialog {

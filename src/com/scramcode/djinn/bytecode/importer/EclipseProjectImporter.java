@@ -56,13 +56,13 @@ public class EclipseProjectImporter extends Importer {
 		this.directory = directory;    
 	}
 
-	public void importProject() throws DjinnException {
+	public void performImport() throws DjinnException {
 
 		fireStatusUpdate("Beginning eclipse import...");
 		fireProgressUpdate(0);
 
 		File classPathFile = scanForClasspath();
-		Project project = createAndSaveProject(directory.getName());
+		Project project = createAndSaveProject(directory.getName(), directory);
 
 		List<Location> locations = createAndSaveLocations(classPathFile, project.getKey());
 
@@ -71,27 +71,27 @@ public class EclipseProjectImporter extends Importer {
 
 		for (Iterator<Location> iter = locations.iterator(); iter.hasNext();) {
 
-			Location loc = iter.next();
-			LocationReader locReader = null;
+			Location eclipseProjectItemLocation = iter.next();
+			LocationReader locationReader = null;
 
-			fireStatusUpdate(loc.getAbsolutePath());            
+			fireStatusUpdate(eclipseProjectItemLocation.getAbsolutePath());            
 			fireProgressUpdate((int)progress);
 
-			if (loc.getType() == Location.DIR_LOCATION_TYPE) {
-				locReader = new DirectoryReader(new File(loc.getAbsolutePath()));                
+			if (eclipseProjectItemLocation.getType() == Location.DIR_LOCATION_TYPE) {
+				locationReader = new DirectoryReader(new File(eclipseProjectItemLocation.getAbsolutePath()));                
 			}
-			else if (loc.getType() == Location.JAR_LOCATION_TYPE) {
+			else if (eclipseProjectItemLocation.getType() == Location.JAR_LOCATION_TYPE) {
 				try {
-					locReader = new JarReader(new JarFile(loc.getAbsolutePath()));                    
+					locationReader = new JarReader(new JarFile(eclipseProjectItemLocation.getAbsolutePath()));                    
 				}
 				catch (IOException e) {
-					throw new DjinnException("Can't open jar file : " + loc.getAbsolutePath(), e);
+					throw new DjinnException("Can't open jar file : " + eclipseProjectItemLocation.getAbsolutePath(), e);
 				}
 			}                                    
 			else {
-				throw new DjinnException("Unknown location type = " + loc.getType());
+				throw new DjinnException("Unknown location type = " + eclipseProjectItemLocation.getType());
 			}            
-			locReader.accept(new DefLocationVisitor(loc.getKey()));
+			locationReader.accept(new DefLocationVisitor(eclipseProjectItemLocation.getKey()));
 
 			progress+=delta;
 		}        

@@ -24,12 +24,13 @@ import java.util.Vector;
 
 import javax.swing.Icon;
 
+import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.db.mgmt.QueryHelper;
 import com.scramcode.djinn.db.mgmt.RowConverter;
-import com.scramcode.djinn.i18n.Images;
-import com.scramcode.djinn.i18n.Messages;
+import com.scramcode.djinn.ui.i18n.Images;
+import com.scramcode.djinn.ui.i18n.Messages;
 
 
 public class RootNode extends JavaItemTreeNode {
@@ -40,7 +41,7 @@ public class RootNode extends JavaItemTreeNode {
         super(null, null);
     }
 
-    protected Vector<JavaItemTreeNode> getChildren() {
+    protected Vector<JavaItemTreeNode> computeChildren() {
         Connection conn = ConnectionManager.getInstance().getConnection();
         Vector<JavaItemTreeNode> children = new Vector<JavaItemTreeNode>();
         QueryHelper<ProjectNode> queryHelper = new QueryHelper<ProjectNode>();
@@ -48,12 +49,24 @@ public class RootNode extends JavaItemTreeNode {
                 "SELECT * FROM PROJECTS", 
                 new RowConverter<ProjectNode>(){
                     public ProjectNode getRow(ResultSet rs) throws SQLException {       
-                        Project project = new Project(rs);                        
+                        Project project = new Project(rs);
                         ProjectNode projectNode = new ProjectNode(RootNode.this, project);                        
                         return projectNode;
                     }            
         });
         children.addAll(projectNodeList);
+        
+        QueryHelper<LocationNode> queryHelper2 = new QueryHelper<LocationNode>();
+        List<LocationNode> topLevelLocationNodeList = queryHelper2.executeQuery(conn,
+                "SELECT * FROM LOCATIONS WHERE PROJECT_KEY IS NULL", 
+                new RowConverter<LocationNode>(){
+                    public LocationNode getRow(ResultSet rs) throws SQLException {                    	
+                    	Location location = new Location(rs);                     
+                    	LocationNode locationNode = new LocationNode(RootNode.this, location);                        
+                        return locationNode;
+                    }            
+        });
+        children.addAll(topLevelLocationNodeList);
         return children;
     }
     

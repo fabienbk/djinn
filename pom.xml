@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>djinn</groupId>
 	<artifactId>djinn</artifactId>
-	<version>0.2</version>
+	<version>0.2.0</version>	
 	<name>djinn</name>
 	<description>java dependency tool</description>
 
@@ -108,7 +108,12 @@
 			<groupId>djinn</groupId>
 			<artifactId>eclipse-icons</artifactId>
 			<version>1.0</version>
-		</dependency>
+		</dependency>		
+		<dependency>
+			<groupId>jgoodies</groupId>
+			<artifactId>forms</artifactId>
+			<version>1.0.5</version>
+		</dependency>		
 	</dependencies>
 
 </project>

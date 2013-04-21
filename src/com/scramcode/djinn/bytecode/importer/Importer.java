@@ -16,13 +16,13 @@
  */
 package com.scramcode.djinn.bytecode.importer;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.util.DjinnException;
-
 
 /**
  * 
@@ -48,12 +48,12 @@ public abstract class Importer {
 		}
 	}		
 
-	public Project createAndSaveProject(String name) {
-	    Project p = new Project(name);
+	public Project createAndSaveProject(String name, File directory) {
+	    Project p = new Project(name, directory);
 	    DataHelper.putProject(ConnectionManager.getInstance().getConnection(), p);
 	    return p;
 	}
 	
-	public abstract void importProject() throws DjinnException;
+	public abstract void performImport() throws DjinnException;
 	
 }

@@ -29,19 +29,19 @@ import com.scramcode.djinn.db.data.Package;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.db.mgmt.QueryHelper;
 import com.scramcode.djinn.db.mgmt.RowConverter;
-import com.scramcode.djinn.i18n.Images;
+import com.scramcode.djinn.ui.i18n.Images;
 
 
 public class LocationNode extends JavaItemTreeNode {
     
     private static final Icon ICON = Images.getIcon("Jar.icon");
     
-    public LocationNode(ProjectNode parent, Location location) {
+    public LocationNode(JavaItemTreeNode parent, Location location) {
         super(parent, location);        
     }
     
     @Override
-    protected Vector<JavaItemTreeNode> getChildren() {
+    protected Vector<JavaItemTreeNode> computeChildren() {
         Connection conn = ConnectionManager.getInstance().getConnection();
         Vector<JavaItemTreeNode> children = new Vector<JavaItemTreeNode>();
         QueryHelper<PackageNode> queryHelper = new QueryHelper<PackageNode>();

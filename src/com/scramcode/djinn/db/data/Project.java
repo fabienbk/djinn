@@ -17,6 +17,7 @@
 package com.scramcode.djinn.db.data;
 
 import java.awt.Color;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -26,18 +27,21 @@ public class Project extends JavaItem {
 
     private int projectKey;
     private String projectName;
-    
+	private File directory;
+        
     /**
      * @param key
      * @param name
      */
-    public Project(String name) {        
+    public Project(String name, File directory) {        
         this.projectName = name;
+        this.directory = directory;
     }
     
     public Project(ResultSet rs) throws SQLException {
         this.projectKey = rs.getInt("project_key");
-        this.projectName = rs.getString("project_name");        
+        this.projectName = rs.getString("project_name");
+        this.directory = new File(rs.getString("directory"));
     }    
     
     public String getMappedTable() {
@@ -76,5 +80,9 @@ public class Project extends JavaItem {
     public boolean isContainedBy(JavaItem destinationObject) {
         return false;
     }
+    
+    public File getDirectory() {
+		return directory;
+	}
        
 }

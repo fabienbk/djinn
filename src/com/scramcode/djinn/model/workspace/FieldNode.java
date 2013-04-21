@@ -21,7 +21,7 @@ import java.util.Vector;
 import javax.swing.Icon;
 
 import com.scramcode.djinn.db.data.Field;
-import com.scramcode.djinn.i18n.Images;
+import com.scramcode.djinn.ui.i18n.Images;
 
 
 public class FieldNode extends JavaItemTreeNode {
@@ -33,7 +33,7 @@ public class FieldNode extends JavaItemTreeNode {
     }
 
     @Override
-    protected Vector<JavaItemTreeNode> getChildren() {
+    protected Vector<JavaItemTreeNode> computeChildren() {
         return new Vector<JavaItemTreeNode>();
     }
     

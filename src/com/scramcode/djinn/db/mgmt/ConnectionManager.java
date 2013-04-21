@@ -16,8 +16,10 @@
  */
 package com.scramcode.djinn.db.mgmt;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import com.scramcode.djinn.db.meta.DatabaseModel;
 
@@ -36,11 +38,7 @@ public class ConnectionManager {
     private ConnectionManager() {        
         try {
             Class.forName ("org.hsqldb.jdbcDriver");
-            DriverManager.registerDriver(new org.hsqldb.jdbcDriver());
-            connection = DriverManager.getConnection("jdbc:hsqldb:mem:djinn","sa","");            
-            DBConstructor dbConstructor = new DBConstructor();            
-            dbConstructor.buildSchema(connection, DatabaseModel.class.getResourceAsStream("schema.sql"));
-            connection.commit();                        
+            DriverManager.registerDriver(new org.hsqldb.jdbcDriver());            
         }
         catch(Exception e) {
             throw new RuntimeException(e);
@@ -49,6 +47,15 @@ public class ConnectionManager {
 
     public Connection getConnection() {
         return this.connection;
+    }
+    
+    public void resetDatabase() throws SQLException, IOException {
+    	connection = DriverManager.getConnection("jdbc:hsqldb:mem:djinn","sa","");    	
+    	QueryHelper.executeUpdate(connection, "DROP SCHEMA PUBLIC CASCADE");
+    	
+        DBConstructor dbConstructor = new DBConstructor();            
+        dbConstructor.buildSchema(connection, DatabaseModel.class.getResourceAsStream("schema.sql"));
+        connection.commit();
     }
     
 }

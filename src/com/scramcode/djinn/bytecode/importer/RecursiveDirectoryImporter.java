@@ -80,12 +80,12 @@ public class RecursiveDirectoryImporter extends Importer {
 		this.selectedDir = selectedDir;
 	}
 
-	public void importProject() throws DjinnException {
+	public void performImport() throws DjinnException {
 		try {
 			fireStatusUpdate("Beginning directory import...");
 			
 			List<File> jarList = getFileListing(selectedDir);			
-			Project project = createAndSaveProject(selectedDir.getName());			
+			Project project = createAndSaveProject(selectedDir.getName(), selectedDir);			
 						
 			double progress = 0;
 			double delta = 100d / jarList.size();
@@ -179,7 +179,7 @@ public class RecursiveDirectoryImporter extends Importer {
 	public static void main(String[] args) throws DjinnException {
 		
 		RecursiveDirectoryImporter rdi = new RecursiveDirectoryImporter(new File("C:/workspace/Djinn-tool"));
-		rdi.importProject();
+		rdi.performImport();
 		
 	}
 } 

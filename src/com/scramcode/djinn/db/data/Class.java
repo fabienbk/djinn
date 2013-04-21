@@ -22,7 +22,7 @@ import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 
-import com.scramcode.djinn.i18n.Images;
+import com.scramcode.djinn.ui.i18n.Images;
 
 
 public class Class extends JavaItem {

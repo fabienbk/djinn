@@ -20,12 +20,12 @@ import javax.swing.ActionMap;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
-import com.scramcode.djinn.control.actions.ShowProjectDependencyGraph;
-import com.scramcode.djinn.control.actions.ShowDependenciesAction.ShowLinksWithClassesAction;
-import com.scramcode.djinn.control.actions.ShowDependenciesAction.ShowLinksWithJarsAction;
-import com.scramcode.djinn.control.actions.ShowDependenciesAction.ShowLinksWithPackagesAction;
-import com.scramcode.djinn.i18n.Images;
-import com.scramcode.djinn.i18n.Messages;
+import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
+import com.scramcode.djinn.ui.actions.ShowDependenciesAction.ShowLinksWithClassesAction;
+import com.scramcode.djinn.ui.actions.ShowDependenciesAction.ShowLinksWithJarsAction;
+import com.scramcode.djinn.ui.actions.ShowDependenciesAction.ShowLinksWithPackagesAction;
+import com.scramcode.djinn.ui.i18n.Images;
+import com.scramcode.djinn.ui.i18n.Messages;
 
 
 public class DBObjectContextMenu extends JPopupMenu {

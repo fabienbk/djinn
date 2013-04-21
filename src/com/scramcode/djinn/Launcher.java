@@ -22,12 +22,13 @@ import java.util.Properties;
 
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import com.scramcode.djinn.bytecode.importer.ImportListener;
 import com.scramcode.djinn.bytecode.importer.RecursiveDirectoryImporter;
-import com.scramcode.djinn.control.Application;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
-import com.scramcode.djinn.i18n.Messages;
+import com.scramcode.djinn.ui.Application;
+import com.scramcode.djinn.ui.i18n.Messages;
 import com.scramcode.djinn.util.DjinnException;
 import com.scramcode.djinn.util.FileChooserFactory;
 import com.scramcode.djinn.util.SwingWorker;
@@ -37,15 +38,19 @@ public class Launcher {
 	
 	public static String VERSION = "";
     
-    public static void main(String[] args) throws IOException {       
+    public static void main(String[] args) throws Exception {       
             	    	
     	// Install the look and feel
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } 
-        catch (Exception e) { 
-            e.printStackTrace();
-        }
+    	try {
+    	    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+    	        if ("Nimbus".equals(info.getName())) {
+    	            UIManager.setLookAndFeel(info.getClassName());
+    	            break;
+    	        }
+    	    }
+    	} catch (Exception e) {
+    		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    	}
         
         // Load the version
         Properties versionProperties = new Properties();
@@ -83,7 +88,7 @@ public class Launcher {
                     });
 					
 					try {
-						importer.importProject();
+						importer.performImport();
 					} catch (DjinnException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -97,7 +102,7 @@ public class Launcher {
     	}    	
     	        
         FileChooserFactory.getInstance();
-        ConnectionManager.getInstance();
+//        ConnectionManager.getInstance();
         
         Application.getInstance().start();
         

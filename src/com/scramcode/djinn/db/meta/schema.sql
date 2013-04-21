@@ -1,13 +1,14 @@
 CREATE TABLE PROJECTS ( 
-	project_key			INTEGER 		IDENTITY,
-	project_name		VARCHAR 		NOT NULL
+	project_key		INTEGER 		IDENTITY,
+	project_name		VARCHAR 		NOT NULL,
+	directory		VARCHAR 		NOT NULL
 );
 
 CREATE TABLE LOCATIONS ( 
 	location_key		INTEGER 		IDENTITY ,
 	absolute_path 		VARCHAR			NOT NULL ,
 	type 				INTEGER 		NOT NULL ,
-	project_key			INTEGER 		NOT NULL ,
+	project_key			INTEGER 		,
 	CONSTRAINT project_key_fk FOREIGN KEY ( project_key ) 
     REFERENCES PROJECTS ( project_key ) ON DELETE CASCADE
 );

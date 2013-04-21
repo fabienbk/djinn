@@ -50,10 +50,10 @@ public abstract class JavaItemTreeNode implements TreeNode, DecoratedNode {
     }
     
     public void refresh() {
-        children = getChildren();        
+        children = computeChildren();        
     }
     
-    protected abstract Vector<JavaItemTreeNode> getChildren();
+    protected abstract Vector<JavaItemTreeNode> computeChildren();
 
     public TreeNode getChildAt(int childIndex) {
         return children.get(childIndex);

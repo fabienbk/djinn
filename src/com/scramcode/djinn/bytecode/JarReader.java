@@ -18,16 +18,10 @@ package com.scramcode.djinn.bytecode;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-
-import com.scramcode.djinn.db.data.DataHelper;
-import com.scramcode.djinn.db.data.Location;
-import com.scramcode.djinn.db.data.Project;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 
 
 public class JarReader implements LocationReader {
@@ -83,26 +77,5 @@ public class JarReader implements LocationReader {
         }
         
     }
-    
-    public static void main(String[] args) throws IOException {
-        
-        final String path = "C:/lib/colt/lib/colt.jar";
-                
-        Connection conn = ConnectionManager.getInstance().getConnection();
-        JarReader r = new JarReader(new JarFile(path));                
-        
-        int projectKey = DataHelper.putProject(conn, new Project("fooproject"));
-        int locKey = DataHelper.putLocation(conn, 
-                new Location(path, Location.JAR_LOCATION_TYPE, projectKey));
-        
-        long t1 = - System.currentTimeMillis();
-        System.out.println("Start !");
-        r.accept(new DefLocationVisitor(locKey));        
-        t1 += System.currentTimeMillis();
-        System.out.println("Stop - " + (t1/1000.0) + " secs");
-        
-        //QueryHelper.dump(conn, "CLASS_REFERENCES");
-        
-    }
-    
+      
 }

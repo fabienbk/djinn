@@ -29,9 +29,9 @@ public class DataHelper {
         
     public static int putProject(Connection conn, Project project) {
         QueryHelper.executeUpdate(conn, 
-                "INSERT INTO PROJECTS (project_name) " +
-                "VALUES (?)",
-                new Object[] {project.getProjectName()});
+                "INSERT INTO PROJECTS (project_name, directory) " +
+                "VALUES (?, ?)",
+                new Object[] {project.getProjectName(), project.getDirectory().getAbsolutePath()});
         int generatedKey = QueryHelper.callIdentity(conn); 
         project.setKey(generatedKey);        
         return generatedKey;
