@@ -16,21 +16,28 @@
  */
 package com.scramcode.djinn.db.logic;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 import com.scramcode.djinn.db.data.Class;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
+import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.meta.DatabaseModel;
 import com.scramcode.djinn.db.meta.Table;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.db.mgmt.QueryHelper;
 import com.scramcode.djinn.db.mgmt.RowConverter;
 import com.scramcode.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
+import com.scramcode.djinn.model.workspace.JavaItemTreeNode;
+import com.scramcode.djinn.model.workspace.LocationNode;
+import com.scramcode.djinn.model.workspace.ProjectNode;
+import com.scramcode.djinn.model.workspace.RootNode;
 
 
 /**
@@ -46,18 +53,18 @@ public class ReferenceTools {
             GranularityLevel granularityLevel) {
 
         // Get all references of the source object, at the requested granularity
-        List<JavaItem> references = null;
+        List<? extends JavaItem> references = null;        
         switch(granularityLevel) {
             case CLASS: {
-                references = getAllClassReferences(sourceObject);
+                references = getAllReferencesGroupByClass(sourceObject);
                 break;
             }
             case JAR: {
-                references = getAllLocationsReferences(sourceObject);
+                references = getAllReferencesGroupByLocation(sourceObject);
                 break;
             }    
             case PACKAGE: {
-                references = getAllPackagesReferences(sourceObject);
+                references = getAllReferencesGroupByPackage(sourceObject);
             }
         }
         // Filter references not contained by destination object
@@ -71,7 +78,32 @@ public class ReferenceTools {
         return result;
     }
 
-    public static List<JavaItem> getAllClassReferences(JavaItem dbObject) {
+    public static List<JavaItem> getTopLevelItems() {
+        Connection conn = ConnectionManager.getInstance().getConnection();
+        ArrayList<JavaItem> topLevelItemList = new ArrayList<JavaItem>();
+        QueryHelper<Project> queryHelper = new QueryHelper<Project>();
+        List<Project> projectNodeList = queryHelper.executeQuery(conn,
+                "SELECT * FROM PROJECTS", 
+                new RowConverter<Project>(){
+                    public Project getRow(ResultSet rs) throws SQLException {       
+                        return new Project(rs);                        
+                    }            
+        });
+        topLevelItemList.addAll(projectNodeList);
+        
+        QueryHelper<Location> queryHelper2 = new QueryHelper<Location>();
+        List<Location> topLevelLocationNodeList = queryHelper2.executeQuery(conn,
+                "SELECT * FROM LOCATIONS WHERE PROJECT_KEY IS NULL", 
+                new RowConverter<Location>(){
+                    public Location getRow(ResultSet rs) throws SQLException {                    	
+                    	return new Location(rs);                     
+                    }            
+        });
+        topLevelItemList.addAll(topLevelLocationNodeList);
+        return topLevelItemList;
+    }
+    
+    public static List<Class> getAllReferencesGroupByClass(JavaItem dbObject) {
         
         DatabaseModel dbInstance = DatabaseModel.getInstance();
         Table dbObjectTable = dbInstance.getTable(dbObject.getMappedTable());
@@ -82,15 +114,15 @@ public class ReferenceTools {
 
         // Methods and Field level are not supported
 
-        QueryHelper<JavaItem> queryHelper = new QueryHelper<JavaItem>();
-        List<JavaItem> referencesList = queryHelper.executeQuery(
+        QueryHelper<Class> queryHelper = new QueryHelper<Class>();
+        List<Class> referencesList = queryHelper.executeQuery(
                 ConnectionManager.getInstance().getConnection(),                
                 "SELECT DISTINCT CLASSES.* FROM " 
                 + "(SELECT DISTINCT cname "
                 + " FROM " + getRefsJoinClause
                 + " WHERE " + dbObjectTable.getPrimaryKeyFieldName() + " = " + dbObject.getKey() + ") T1"
                 + " JOIN CLASSES ON CLASSES.cname = T1.cname ",                
-                new RowConverter<JavaItem>() {
+                new RowConverter<Class>() {
                     public Class getRow(ResultSet rs) throws SQLException {
                         Class p = new Class(rs);
                         return p;
@@ -101,10 +133,10 @@ public class ReferenceTools {
 
     }
 
-    public static List<JavaItem> getAllLocationsReferences(JavaItem dbObject) {
+    public static List<Location> getAllReferencesGroupByLocation(JavaItem sourceItem) {
         
         DatabaseModel dbInstance = DatabaseModel.getInstance();
-        Table dbObjectTable = dbInstance.getTable(dbObject.getMappedTable());
+        Table dbObjectTable = dbInstance.getTable(sourceItem.getMappedTable());
         Table classRefTable = dbInstance.getTable("CLASS_REFERENCES");
 
         String getRefsJoinClause = 
@@ -112,17 +144,17 @@ public class ReferenceTools {
 
         // Methods and Field level are not supported
 
-        QueryHelper<JavaItem> queryHelper = new QueryHelper<JavaItem>();
-        List<JavaItem> referencesList = queryHelper.executeQuery(
+        QueryHelper<Location> queryHelper = new QueryHelper<Location>();
+        List<Location> referencesList = queryHelper.executeQuery(
                 ConnectionManager.getInstance().getConnection(),                
                 "SELECT DISTINCT LOCATIONS.* FROM " 
                 + "(SELECT DISTINCT cname "
                 + " FROM " + getRefsJoinClause
-                + " WHERE " + dbObjectTable.getPrimaryKeyFieldName() + " = " + dbObject.getKey() + ") T1"
+                + " WHERE " + dbObjectTable.getPrimaryKeyFieldName() + " = " + sourceItem.getKey() + ") T1"
                 + " JOIN CLASSES ON CLASSES.cname = T1.cname " 
                 + " JOIN PACKAGES ON CLASSES.package_key = PACKAGES.package_key " 
                 + " JOIN LOCATIONS ON PACKAGES.location_key = LOCATIONS.location_key",                
-                new RowConverter<JavaItem>() {
+                new RowConverter<Location>() {
                     public Location getRow(ResultSet rs) throws SQLException {
                         Location loc = new Location(rs);
                         return loc;
@@ -132,7 +164,7 @@ public class ReferenceTools {
         return referencesList;        
     }
 
-    public static List<JavaItem> getAllPackagesReferences(JavaItem dbObject) {
+    public static List<Package> getAllReferencesGroupByPackage(JavaItem dbObject) {
 
         DatabaseModel dbInstance = DatabaseModel.getInstance();
         Table dbObjectTable = dbInstance.getTable(dbObject.getMappedTable());
@@ -143,8 +175,8 @@ public class ReferenceTools {
 
         // Methods and Field level are not supported
 
-        QueryHelper<JavaItem> queryHelper = new QueryHelper<JavaItem>();
-        List<JavaItem> referencesList = queryHelper.executeQuery(
+        QueryHelper<Package> queryHelper = new QueryHelper<Package>();
+        List<Package> referencesList = queryHelper.executeQuery(
                 ConnectionManager.getInstance().getConnection(),                
                 "SELECT DISTINCT PACKAGES.* FROM " 
                 + "(SELECT DISTINCT cname "
@@ -152,7 +184,7 @@ public class ReferenceTools {
                 + " WHERE " + dbObjectTable.getPrimaryKeyFieldName() + " = " + dbObject.getKey() + ") T1"
                 + " JOIN CLASSES ON CLASSES.cname = T1.cname " 
                 + " JOIN PACKAGES ON CLASSES.package_key = PACKAGES.package_key ",                
-                new RowConverter<JavaItem>() {
+                new RowConverter<Package>() {
                     public Package getRow(ResultSet rs) throws SQLException {
                         Package p = new Package(rs);
                         return p;

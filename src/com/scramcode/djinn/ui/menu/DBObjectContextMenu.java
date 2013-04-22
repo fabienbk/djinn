@@ -21,6 +21,7 @@ import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
 import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
+import com.scramcode.djinn.ui.actions.ShowTopLevelDependencyGraph;
 import com.scramcode.djinn.ui.actions.ShowDependenciesAction.ShowLinksWithClassesAction;
 import com.scramcode.djinn.ui.actions.ShowDependenciesAction.ShowLinksWithJarsAction;
 import com.scramcode.djinn.ui.actions.ShowDependenciesAction.ShowLinksWithPackagesAction;
@@ -34,7 +35,8 @@ public class DBObjectContextMenu extends JPopupMenu {
     private static final long serialVersionUID = 1L;
 
     public DBObjectContextMenu(ActionMap actionMap) {        
-        this.add(actionMap.get(ShowProjectDependencyGraph.class));
+    	this.add(actionMap.get(ShowTopLevelDependencyGraph.class));
+    	this.add(actionMap.get(ShowProjectDependencyGraph.class));
         
         JMenu showLinksMenu = new JMenu(Messages.getString("ShowLinks.label"));                
         showLinksMenu.setIcon(Images.getIcon("ShowDependenciesAction.icon"));

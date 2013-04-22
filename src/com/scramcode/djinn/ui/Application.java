@@ -30,6 +30,7 @@ import com.scramcode.djinn.ui.actions.QuitAction;
 import com.scramcode.djinn.ui.actions.ShowDependenciesAction;
 import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
 import com.scramcode.djinn.ui.actions.ShowSQLQueryManager;
+import com.scramcode.djinn.ui.actions.ShowTopLevelDependencyGraph;
 import com.scramcode.djinn.ui.actions.layout.FRLayoutAction;
 import com.scramcode.djinn.ui.actions.layout.KKLayoutAction;
 import com.scramcode.djinn.ui.actions.layout.SpringLayoutAction;
@@ -66,6 +67,7 @@ public class Application {
 		rootActionMap.put(QuitAction.class, new QuitAction());
 		rootActionMap.put(AboutDialogAction.class, new AboutDialogAction());
 
+		rootActionMap.put(ShowTopLevelDependencyGraph.class, new ShowTopLevelDependencyGraph());
 		rootActionMap.put(ShowProjectDependencyGraph.class, new ShowProjectDependencyGraph(true));
 		rootActionMap.put(ShowDependenciesAction.ShowLinksWithJarsAction.class, new ShowDependenciesAction.ShowLinksWithJarsAction(true));
 		rootActionMap.put(ShowDependenciesAction.ShowLinksWithPackagesAction.class, new ShowDependenciesAction.ShowLinksWithPackagesAction(true));

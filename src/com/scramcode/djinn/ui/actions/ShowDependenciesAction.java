@@ -61,8 +61,8 @@ public abstract class ShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithJarsAction.label"));
         }
         @Override
-        public List<JavaItem> getReferences(JavaItem dbObject) {
-            return  ReferenceTools.getAllLocationsReferences(dbObject);
+        public List<Location> getReferences(JavaItem dbObject) {
+            return  ReferenceTools.getAllReferencesGroupByLocation(dbObject);
         }
     }
     
@@ -74,8 +74,8 @@ public abstract class ShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithPackagesAction.label"));
         }
         @Override
-        public List<JavaItem> getReferences(JavaItem dbObject) {
-            return  ReferenceTools.getAllPackagesReferences(dbObject);
+        public List<Package> getReferences(JavaItem dbObject) {
+            return  ReferenceTools.getAllReferencesGroupByPackage(dbObject);
         }
     }
     
@@ -87,8 +87,8 @@ public abstract class ShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithClassesAction.label"));
         }
         @Override
-        public List<JavaItem> getReferences(JavaItem dbObject) {
-            return  ReferenceTools.getAllClassReferences(dbObject);
+        public List<Class> getReferences(JavaItem dbObject) {
+            return  ReferenceTools.getAllReferencesGroupByClass(dbObject);
         }
     }
 
@@ -166,6 +166,6 @@ public abstract class ShowDependenciesAction extends AbstractAction {
         worker.start();
     }
     
-    public abstract List<JavaItem> getReferences(JavaItem dbObject);
+    public abstract List<? extends JavaItem> getReferences(JavaItem dbObject);
 
 }

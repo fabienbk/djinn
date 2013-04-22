@@ -91,7 +91,7 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                         updateProgress(progress);
                                                 
                         // Get the references of the current element
-                        List<JavaItem> elementRefList = ReferenceTools.getAllLocationsReferences(element);
+                        List<Location> elementRefList = ReferenceTools.getAllReferencesGroupByLocation(element);                        
                         
                         Set<JavaItem> elementRefListFiltered = new HashSet<JavaItem>();
                         

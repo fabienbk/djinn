@@ -46,7 +46,7 @@ public class DumpReferencesAction extends AbstractAction {
                 
                 System.out.println("Refs : ");
                 System.out.println(
-                        ReferenceTools.getAllLocationsReferences(selectedNode.getJavaItem())
+                        ReferenceTools.getAllReferencesGroupByLocation(selectedNode.getJavaItem())
                 );
             }
         };
