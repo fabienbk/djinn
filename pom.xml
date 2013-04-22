@@ -101,11 +101,6 @@
 		</dependency>
 		<dependency>
 			<groupId>djinn</groupId>
-			<artifactId>djinn-icons</artifactId>
-			<version>1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>djinn</groupId>
 			<artifactId>eclipse-icons</artifactId>
 			<version>1.0</version>
 		</dependency>		
