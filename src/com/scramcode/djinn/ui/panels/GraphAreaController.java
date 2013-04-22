@@ -28,6 +28,7 @@ import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.ui.Application;
 
 
+import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 
 public class GraphAreaController {
@@ -52,5 +53,17 @@ public class GraphAreaController {
     public void deleteTab(String title) {                               
         graphAreaTabbedPane.remove(tabNames.get(title));        
     }
+    
+    public Graph<JavaItem, JavaDependency> getActiveGraph() {
+    	DependencyGraphPanel dependencyGraphPanel = (DependencyGraphPanel)graphAreaTabbedPane.getSelectedComponent();
+    	if (dependencyGraphPanel != null) {
+    		return dependencyGraphPanel.getGraph();
+    	}
+    	return null;
+    }
 
+    public void changeLayout(Layout<JavaItem, JavaDependency> newLayout) {
+    	DependencyGraphPanel dependencyGraphPanel = (DependencyGraphPanel)graphAreaTabbedPane.getSelectedComponent();
+    	dependencyGraphPanel.getVisualizationViewer().setGraphLayout(newLayout);
+    }
 }

@@ -18,6 +18,7 @@ package com.scramcode.djinn.ui.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -50,11 +51,15 @@ public class DependencyGraphPanel extends JPanel {
       
     private DependencyDetailsPanel dependencyDetailsPanel;	    
 
+    private Graph<JavaItem, JavaDependency> graph;
+    
     public DependencyGraphPanel(Graph<JavaItem, JavaDependency> graph) {
                 
-        Layout<JavaItem, JavaDependency> layout = new FRLayout<JavaItem, JavaDependency>(graph);               
+    	this.graph = graph;
+    	
+        Layout<JavaItem, JavaDependency> layout = new FRLayout<JavaItem, JavaDependency>(graph);                       
         visualizationViewer = new VisualizationViewer<JavaItem, JavaDependency>(layout);
-        
+                        
         RenderContext<JavaItem, JavaDependency> renderContext = visualizationViewer.getRenderContext();
 		renderContext.setVertexIconTransformer(new Transformer<JavaItem, Icon>() {	
 			public Icon transform(JavaItem node) {
@@ -110,5 +115,13 @@ public class DependencyGraphPanel extends JPanel {
             e.printStackTrace();
         }
     }
+    
+    public Graph<JavaItem, JavaDependency> getGraph() {
+		return graph;
+	}
+    
+    public VisualizationViewer<JavaItem, JavaDependency> getVisualizationViewer() {
+		return visualizationViewer;
+	}
         
 }

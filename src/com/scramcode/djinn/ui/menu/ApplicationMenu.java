@@ -29,13 +29,19 @@ public class ApplicationMenu extends JMenuBar {
     
     private JMenu workspaceMenu;
     private JMenu toolsMenu;
+    private JMenu graphMenu;
+    private JMenu layoutMenu;
     private JMenu helpMenu;    
     
     public ApplicationMenu() {
-        workspaceMenu = new JMenu(Messages.getString("ApplicationMenu.workspaceMenu"));        
+        workspaceMenu = new JMenu(Messages.getString("ApplicationMenu.workspaceMenu"));
+        graphMenu = new JMenu(Messages.getString("ApplicationMenu.graphMenu"));
+        layoutMenu = new JMenu(Messages.getString("ApplicationMenu.layoutMenu"));
         toolsMenu = new JMenu(Messages.getString("ApplicationMenu.toolsMenu"));
         helpMenu = new JMenu(Messages.getString("ApplicationMenu.helpMenu"));
-        this.add(workspaceMenu);        
+        this.add(workspaceMenu);
+        this.add(graphMenu);
+        graphMenu.add(layoutMenu);
         this.add(toolsMenu);        
         this.add(helpMenu);
     }
@@ -51,4 +57,12 @@ public class ApplicationMenu extends JMenuBar {
     public JMenu getHelpMenu() {
         return this.helpMenu;
     }
+    
+    public JMenu getGraphMenu() {
+		return graphMenu;
+	}
+    
+    public JMenu getLayoutMenu() {
+		return layoutMenu;
+	}
 }

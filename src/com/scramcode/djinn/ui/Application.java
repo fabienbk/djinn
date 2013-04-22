@@ -30,6 +30,9 @@ import com.scramcode.djinn.ui.actions.QuitAction;
 import com.scramcode.djinn.ui.actions.ShowDependenciesAction;
 import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
 import com.scramcode.djinn.ui.actions.ShowSQLQueryManager;
+import com.scramcode.djinn.ui.actions.layout.FRLayoutAction;
+import com.scramcode.djinn.ui.actions.layout.KKLayoutAction;
+import com.scramcode.djinn.ui.actions.layout.SpringLayoutAction;
 import com.scramcode.djinn.ui.dialogs.WorkspaceEditorDialogController;
 import com.scramcode.djinn.ui.menu.ApplicationMenu;
 import com.scramcode.djinn.ui.panels.GraphAreaController;
@@ -73,10 +76,18 @@ public class Application {
 		rootActionMap.put(ImportEclipseProjectAction.class, new ImportEclipseProjectAction(true));
 		rootActionMap.put(ImportDirectoryAction.class, new ImportDirectoryAction(true));
 
+		rootActionMap.put(FRLayoutAction.class, new FRLayoutAction());
+		rootActionMap.put(KKLayoutAction.class, new KKLayoutAction());
+		rootActionMap.put(SpringLayoutAction.class, new SpringLayoutAction());
+		
+		
 		// Creating menu bar actions
 		ApplicationMenu menuBar = applicationFrame.getApplicationMenu();
 		menuBar.getWorkspaceMenu().add(rootActionMap.get(NewWorkspaceAction.class));
 		menuBar.getWorkspaceMenu().add(rootActionMap.get(QuitAction.class));
+		menuBar.getLayoutMenu().add(rootActionMap.get(FRLayoutAction.class));
+		menuBar.getLayoutMenu().add(rootActionMap.get(KKLayoutAction.class));
+		menuBar.getLayoutMenu().add(rootActionMap.get(SpringLayoutAction.class));
 		menuBar.getToolsMenu().add(rootActionMap.get(ShowSQLQueryManager.class));
 		menuBar.getHelpMenu().add(rootActionMap.get(AboutDialogAction.class));
 
