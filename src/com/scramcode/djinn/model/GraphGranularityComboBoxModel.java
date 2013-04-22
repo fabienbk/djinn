@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 
-public class GraphGranularityComboBoxModel extends AbstractListModel<String> implements ComboBoxModel<String> {	
+public class GraphGranularityComboBoxModel extends AbstractListModel implements ComboBoxModel {	
 
     public enum GranularityLevel {
         JAR, PACKAGE, CLASS 
