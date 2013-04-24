@@ -5,15 +5,12 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import com.scramcode.djinn.bytecode.importer.EclipseProjectImporter;
 import com.scramcode.djinn.bytecode.importer.ImportListener;
 import com.scramcode.djinn.bytecode.importer.Importer;
 import com.scramcode.djinn.bytecode.importer.ImporterFactory;
@@ -23,7 +20,6 @@ import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.i18n.Images;
-import com.scramcode.djinn.ui.i18n.Messages;
 import com.scramcode.djinn.util.DjinnException;
 import com.scramcode.djinn.util.SwingWorker;
 
@@ -97,9 +93,9 @@ public class WorkspaceEditorDialogController {
 		
 		workspaceEditorDialog.getClearButton().setAction(new AbstractAction("Clear selected", Images.getIcon("Delete.icon")) {		
 			public void actionPerformed(ActionEvent e) {
-				List<JavaItem> selectedValuesList = workspaceEditorDialog.getList().getSelectedValuesList();
-				for (JavaItem javaItem : selectedValuesList) {
-					workspaceEditorListModel.remove(javaItem);
+				Object[] selectedValues = workspaceEditorDialog.getList().getSelectedValues();
+				for (Object javaItem : selectedValues) {
+					workspaceEditorListModel.remove((JavaItem)javaItem);
 				}
 			}
 		});

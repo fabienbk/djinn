@@ -3,11 +3,10 @@ package com.scramcode.djinn.ui.dialogs;
 import java.util.ArrayList;
 
 import javax.swing.AbstractListModel;
-import javax.swing.event.ListDataListener;
 
 import com.scramcode.djinn.db.data.JavaItem;
 
-public class WorkspaceEditorListModel extends AbstractListModel<JavaItem> {
+public class WorkspaceEditorListModel extends AbstractListModel {
 	
 	private static final long serialVersionUID = 1L;
 	

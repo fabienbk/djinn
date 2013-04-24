@@ -14,7 +14,7 @@ import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.ui.i18n.Images;
 
-public class WorkspaceEditorListCellRenderer extends JPanel implements ListCellRenderer<JavaItem> {
+public class WorkspaceEditorListCellRenderer extends JPanel implements ListCellRenderer {
 
 	private static final long serialVersionUID = 1L;
 	private JLabel itemNameLabel;
@@ -36,9 +36,9 @@ public class WorkspaceEditorListCellRenderer extends JPanel implements ListCellR
 		add(pathLabel);
 	}
 	
-	
-	public Component getListCellRendererComponent(JList<? extends JavaItem> list, JavaItem value, int index, boolean isSelected, boolean cellHasFocus) {
-		itemNameLabel.setText(value.getLabel());
+	@Override
+	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+		itemNameLabel.setText(((JavaItem)value).getLabel());
 		if (isSelected) {
 			setBackground(javax.swing.UIManager.getDefaults().getColor("Table.selectionBackground"));
 			itemNameLabel.setForeground(javax.swing.UIManager.getDefaults().getColor("Table.selectionForeground"));
