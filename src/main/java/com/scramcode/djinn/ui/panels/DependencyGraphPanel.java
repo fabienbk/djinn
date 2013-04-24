@@ -29,7 +29,7 @@ import javax.swing.JPanel;
 import org.apache.commons.collections15.Transformer;
 
 import com.scramcode.djinn.db.data.JavaDependency;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -45,27 +45,27 @@ public class DependencyGraphPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     
-    private VisualizationViewer<AbstractJavaItem, JavaDependency> visualizationViewer;
+    private VisualizationViewer<JavaItem, JavaDependency> visualizationViewer;
       
     private DependencyDetailsPanel dependencyDetailsPanel;	    
 
-    private Graph<AbstractJavaItem, JavaDependency> graph;
+    private Graph<JavaItem, JavaDependency> graph;
     
-    public DependencyGraphPanel(Graph<AbstractJavaItem, JavaDependency> graph) {
+    public DependencyGraphPanel(Graph<JavaItem, JavaDependency> graph) {
                 
     	this.graph = graph;
     	
-        Layout<AbstractJavaItem, JavaDependency> layout = new FRLayout<AbstractJavaItem, JavaDependency>(graph);                       
-        visualizationViewer = new VisualizationViewer<AbstractJavaItem, JavaDependency>(layout);
+        Layout<JavaItem, JavaDependency> layout = new FRLayout<JavaItem, JavaDependency>(graph);                       
+        visualizationViewer = new VisualizationViewer<JavaItem, JavaDependency>(layout);
                         
-        RenderContext<AbstractJavaItem, JavaDependency> renderContext = visualizationViewer.getRenderContext();
-		renderContext.setVertexIconTransformer(new Transformer<AbstractJavaItem, Icon>() {	
-			public Icon transform(AbstractJavaItem node) {
+        RenderContext<JavaItem, JavaDependency> renderContext = visualizationViewer.getRenderContext();
+		renderContext.setVertexIconTransformer(new Transformer<JavaItem, Icon>() {	
+			public Icon transform(JavaItem node) {
 	            return node.getImage();
 			}
 		});
-		renderContext.setVertexLabelTransformer(new Transformer<AbstractJavaItem, String>() {
-			public String transform(AbstractJavaItem node) {
+		renderContext.setVertexLabelTransformer(new Transformer<JavaItem, String>() {
+			public String transform(JavaItem node) {
 				return node.getLabel();
 			}
 		});
@@ -74,7 +74,7 @@ public class DependencyGraphPanel extends JPanel {
         GraphZoomScrollPane scrollPane = new GraphZoomScrollPane(visualizationViewer);
         
         final PluggableGraphMouse graphMouse = new PluggableGraphMouse();
-        graphMouse.add( new PickingGraphMousePlugin<AbstractJavaItem, JavaDependency>() );
+        graphMouse.add( new PickingGraphMousePlugin<JavaItem, JavaDependency>() );
         
         visualizationViewer.setGraphMouse(graphMouse);
         
@@ -114,11 +114,11 @@ public class DependencyGraphPanel extends JPanel {
         }
     }
     
-    public Graph<AbstractJavaItem, JavaDependency> getGraph() {
+    public Graph<JavaItem, JavaDependency> getGraph() {
 		return graph;
 	}
     
-    public VisualizationViewer<AbstractJavaItem, JavaDependency> getVisualizationViewer() {
+    public VisualizationViewer<JavaItem, JavaDependency> getVisualizationViewer() {
 		return visualizationViewer;
 	}
         

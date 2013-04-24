@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.scramcode.djinn.db.data.JavaDependency;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 
 import edu.uci.ics.jung.graph.DirectedSparseMultigraph;
 import edu.uci.ics.jung.graph.Graph;
@@ -31,31 +31,34 @@ import edu.uci.ics.jung.graph.Graph;
  * 
  * @author Fabien Benoit <fabien.benoit@gmail.com>
  */
-public class GraphTools {
+public final class GraphTools {
     
+	private GraphTools() {		
+	}
+	
     /**
      * Converts a set of DBObjects relationships into a graph.
      * @param graphData A map of DBObject linked to their relations.
      * @return A new Graph.
      */
-    public static Graph<AbstractJavaItem, JavaDependency> createGraph(Map<AbstractJavaItem, Set<AbstractJavaItem>> graphData) {
+    public static Graph<JavaItem, JavaDependency> createGraph(Map<JavaItem, Set<JavaItem>> graphData) {
         
-        Graph<AbstractJavaItem, JavaDependency> graph = new DirectedSparseMultigraph<AbstractJavaItem, JavaDependency>();
+        Graph<JavaItem, JavaDependency> graph = new DirectedSparseMultigraph<JavaItem, JavaDependency>();
         
         // fill with vertices
-        Set<AbstractJavaItem> verticesSet = graphData.keySet();
-        for (AbstractJavaItem javaItem : verticesSet) {
+        Set<JavaItem> verticesSet = graphData.keySet();
+        for (JavaItem javaItem : verticesSet) {
             graph.addVertex(javaItem);            
         }
         
         // fill with edges
-        for (Iterator<AbstractJavaItem> iter = verticesSet.iterator(); iter.hasNext();) {
-            AbstractJavaItem originJavaItem = iter.next();
+        for (Iterator<JavaItem> iter = verticesSet.iterator(); iter.hasNext();) {
+            JavaItem originJavaItem = iter.next();
                         
             // Iterate over the list of referenced dbobjects
-            Set<AbstractJavaItem> references = graphData.get(originJavaItem);
-            for (Iterator<AbstractJavaItem> iterRef = references.iterator(); iterRef.hasNext();) {
-                AbstractJavaItem destinationJavaItem = iterRef.next();
+            Set<JavaItem> references = graphData.get(originJavaItem);
+            for (Iterator<JavaItem> iterRef = references.iterator(); iterRef.hasNext();) {
+                JavaItem destinationJavaItem = iterRef.next();
  
                 if (!destinationJavaItem.equals(originJavaItem)) {                
                     graph.addEdge(new JavaDependency(originJavaItem, destinationJavaItem), originJavaItem, destinationJavaItem);

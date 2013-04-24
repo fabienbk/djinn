@@ -29,7 +29,7 @@ import javax.swing.Action;
 
 import com.scramcode.djinn.db.data.Class;
 import com.scramcode.djinn.db.data.JavaDependency;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
 import com.scramcode.djinn.db.logic.ReferenceTools;
@@ -70,28 +70,28 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
                 AbstractJavaItemTreeNode selectedNode = instance.getWorkspaceTreeController()
                         .getSelectedNode();
 
-                AbstractJavaItem javaItem = selectedNode.getJavaItem();
+                JavaItem javaItem = selectedNode.getJavaItem();
 
                 if (javaItem instanceof Location || javaItem instanceof Package
                         || javaItem instanceof Class) {
                     
-                    Set<AbstractJavaItem> locRefList = new HashSet<AbstractJavaItem>(getReferences(javaItem));
+                    Set<JavaItem> locRefList = new HashSet<JavaItem>(getReferences(javaItem));
                     
                     updateMessage("Creating Graph...");
                     updateProgress(70);
 
                     // Build graph data
-                    Map<AbstractJavaItem, Set<AbstractJavaItem>> graphData = new HashMap<AbstractJavaItem, Set<AbstractJavaItem>>();
+                    Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
 
                     // Put central object in the vertices list, with it's references
                     graphData.put(javaItem, locRefList);
 
                     // Put referenced objects in the vertices list
-                    for (Iterator<AbstractJavaItem> iter = locRefList.iterator(); iter
+                    for (Iterator<JavaItem> iter = locRefList.iterator(); iter
                             .hasNext();) {
-                        AbstractJavaItem ref = iter.next();
+                        JavaItem ref = iter.next();
                         if (!ref.equals(javaItem)) {
-                            graphData.put(ref, new HashSet<AbstractJavaItem>());
+                            graphData.put(ref, new HashSet<JavaItem>());
                         }
                     }
 
@@ -110,14 +110,14 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
             @Override
             @SuppressWarnings("unchecked")
             public void finished() {
-				Graph<AbstractJavaItem, JavaDependency> builtGraph = (Graph<AbstractJavaItem, JavaDependency>) getValue();
+				Graph<JavaItem, JavaDependency> builtGraph = (Graph<JavaItem, JavaDependency>) getValue();
             	if (builtGraph!=null) {           
 
             		Application instance = Application.getInstance();
             		AbstractJavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
             		String label = selectedNode.getJavaItem().getLabel();
             		            		
-            		Application.getInstance().getGraphAreaController().showGraph(label, (Graph<AbstractJavaItem, JavaDependency>) getValue());    	
+            		Application.getInstance().getGraphAreaController().showGraph(label, (Graph<JavaItem, JavaDependency>) getValue());    	
             	}       
             }
 
@@ -126,7 +126,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
         worker.start();
     }
     
-    public abstract List<? extends AbstractJavaItem> getReferences(AbstractJavaItem dbObject);
+    public abstract List<? extends JavaItem> getReferences(JavaItem dbObject);
     
     public static class ShowLinksWithJarsAction extends AbstractShowDependenciesAction {
         private static final long serialVersionUID = 1L;
@@ -136,7 +136,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithJarsAction.label"));
         }
         @Override
-        public List<Location> getReferences(AbstractJavaItem dbObject) {
+        public List<Location> getReferences(JavaItem dbObject) {
             return  ReferenceTools.getAllReferencesGroupByLocation(dbObject);
         }
     }
@@ -149,7 +149,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithPackagesAction.label"));
         }
         @Override
-        public List<Package> getReferences(AbstractJavaItem dbObject) {
+        public List<Package> getReferences(JavaItem dbObject) {
             return  ReferenceTools.getAllReferencesGroupByPackage(dbObject);
         }
     }
@@ -162,7 +162,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithClassesAction.label"));
         }
         @Override
-        public List<Class> getReferences(AbstractJavaItem dbObject) {
+        public List<Class> getReferences(JavaItem dbObject) {
             return  ReferenceTools.getAllReferencesGroupByClass(dbObject);
         }
     }

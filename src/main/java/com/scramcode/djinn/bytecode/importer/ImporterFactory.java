@@ -1,6 +1,6 @@
 package com.scramcode.djinn.bytecode.importer;
 
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
 
@@ -9,7 +9,7 @@ public final class ImporterFactory {
 	private ImporterFactory() {		
 	}
 
-	public static AbstractImporter createImporterFor(AbstractJavaItem javaItem, ImportListener listener) {
+	public static AbstractImporter createImporterFor(JavaItem javaItem, ImportListener listener) {
 		AbstractImporter importer = null;
 		if (javaItem instanceof Project) {
 			importer = new EclipseProjectImporter(((Project)javaItem).getDirectory());

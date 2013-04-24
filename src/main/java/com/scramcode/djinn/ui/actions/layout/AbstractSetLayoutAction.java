@@ -6,7 +6,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import com.scramcode.djinn.db.data.JavaDependency;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.panels.GraphAreaController;
 
@@ -23,12 +23,12 @@ public abstract class AbstractSetLayoutAction extends AbstractAction {
 	
 	public void actionPerformed(ActionEvent arg0) {
 		GraphAreaController graphAreaController = Application.getInstance().getGraphAreaController();
-		Graph<AbstractJavaItem, JavaDependency> graph = graphAreaController.getActiveGraph();
+		Graph<JavaItem, JavaDependency> graph = graphAreaController.getActiveGraph();
 		if (graph!=null) {
-			Layout<AbstractJavaItem, JavaDependency> layout = getLayout(graph);
+			Layout<JavaItem, JavaDependency> layout = getLayout(graph);
 			graphAreaController.changeLayout(layout);
 		}		
 	}
 
-	public abstract Layout<AbstractJavaItem, JavaDependency> getLayout(Graph<AbstractJavaItem, JavaDependency> graph);
+	public abstract Layout<JavaItem, JavaDependency> getLayout(Graph<JavaItem, JavaDependency> graph);
 }

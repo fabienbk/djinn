@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.scramcode.djinn.db.data.Class;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
 import com.scramcode.djinn.db.data.Project;
@@ -42,13 +42,13 @@ import com.scramcode.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
  */
 public class ReferenceTools {             
 
-    public static List<AbstractJavaItem> getReferences(
-            AbstractJavaItem sourceObject,
-            AbstractJavaItem destinationObject,
+    public static List<JavaItem> getReferences(
+            JavaItem sourceObject,
+            JavaItem destinationObject,
             GranularityLevel granularityLevel) {
 
         // Get all references of the source object, at the requested granularity
-        List<? extends AbstractJavaItem> references = null;        
+        List<? extends JavaItem> references = null;        
         switch(granularityLevel) {
             case CLASS: {
                 references = getAllReferencesGroupByClass(sourceObject);
@@ -63,8 +63,8 @@ public class ReferenceTools {
             }
         }
         // Filter references not contained by destination object
-        List<AbstractJavaItem> result = new ArrayList<AbstractJavaItem>();
-        for(AbstractJavaItem dbo : references) {
+        List<JavaItem> result = new ArrayList<JavaItem>();
+        for(JavaItem dbo : references) {
             if (dbo.isContainedBy(destinationObject)) {
                 result.add(dbo);
             }
@@ -73,9 +73,9 @@ public class ReferenceTools {
         return result;
     }
 
-    public static List<AbstractJavaItem> getTopLevelItems() {
+    public static List<JavaItem> getTopLevelItems() {
         Connection conn = ConnectionManager.getInstance().getConnection();
-        ArrayList<AbstractJavaItem> topLevelItemList = new ArrayList<AbstractJavaItem>();
+        ArrayList<JavaItem> topLevelItemList = new ArrayList<JavaItem>();
         QueryHelper<Project> queryHelper = new QueryHelper<Project>();
         List<Project> projectNodeList = queryHelper.executeQuery(conn,
                 "SELECT * FROM PROJECTS", 
@@ -98,7 +98,7 @@ public class ReferenceTools {
         return topLevelItemList;
     }
     
-    public static List<Class> getAllReferencesGroupByClass(AbstractJavaItem dbObject) {
+    public static List<Class> getAllReferencesGroupByClass(JavaItem dbObject) {
         
         DatabaseModel dbInstance = DatabaseModel.getInstance();
         Table dbObjectTable = dbInstance.getTable(dbObject.getMappedTable());
@@ -128,7 +128,7 @@ public class ReferenceTools {
 
     }
 
-    public static List<Location> getAllReferencesGroupByLocation(AbstractJavaItem sourceItem) {
+    public static List<Location> getAllReferencesGroupByLocation(JavaItem sourceItem) {
         
         DatabaseModel dbInstance = DatabaseModel.getInstance();
         Table dbObjectTable = dbInstance.getTable(sourceItem.getMappedTable());
@@ -159,7 +159,7 @@ public class ReferenceTools {
         return referencesList;        
     }
 
-    public static List<Package> getAllReferencesGroupByPackage(AbstractJavaItem dbObject) {
+    public static List<Package> getAllReferencesGroupByPackage(JavaItem dbObject) {
 
         DatabaseModel dbInstance = DatabaseModel.getInstance();
         Table dbObjectTable = dbInstance.getTable(dbObject.getMappedTable());

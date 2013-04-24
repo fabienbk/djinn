@@ -1,7 +1,7 @@
 package com.scramcode.djinn.ui.actions.layout;
 
 import com.scramcode.djinn.db.data.JavaDependency;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 
 import edu.uci.ics.jung.algorithms.layout.FRLayout;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -16,8 +16,8 @@ public class FRLayoutAction extends AbstractSetLayoutAction {
 	}
 	
 	@Override
-	public Layout<AbstractJavaItem, JavaDependency> getLayout(Graph<AbstractJavaItem, JavaDependency> graph) {	
-		return new FRLayout<AbstractJavaItem, JavaDependency>(graph);
+	public Layout<JavaItem, JavaDependency> getLayout(Graph<JavaItem, JavaDependency> graph) {	
+		return new FRLayout<JavaItem, JavaDependency>(graph);
 	}
 	
 }

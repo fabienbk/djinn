@@ -33,14 +33,14 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import com.scramcode.djinn.db.data.JavaDependency;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.logic.ReferenceTools;
 import com.scramcode.djinn.model.DependencyListModel;
 import com.scramcode.djinn.model.GraphGranularityComboBoxModel;
 import com.scramcode.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
-import com.scramcode.djinn.model.workspace.ClassNode;
 import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
+import com.scramcode.djinn.model.workspace.ClassNode;
 import com.scramcode.djinn.model.workspace.LocationNode;
 import com.scramcode.djinn.model.workspace.PackageNode;
 import com.scramcode.djinn.util.AbstractSwingWorker;
@@ -54,11 +54,11 @@ import edu.uci.ics.jung.graph.Graph;
  */
 public class DependencyGraphPanelController implements TreeExpansionListener, TreeSelectionListener, ActionListener {
     
-    private Graph<AbstractJavaItem, JavaDependency> graph;
+    private Graph<JavaItem, JavaDependency> graph;
     private DependencyGraphPanel graphPanel;
     private DependencyDetailsPanel detailsPanel;
     
-    public DependencyGraphPanelController(Graph<AbstractJavaItem, JavaDependency> graphInfo) {
+    public DependencyGraphPanelController(Graph<JavaItem, JavaDependency> graphInfo) {
         this.graph = graphInfo;        
         this.graphPanel = new DependencyGraphPanel(graphInfo);
                 
@@ -87,7 +87,7 @@ public class DependencyGraphPanelController implements TreeExpansionListener, Tr
         return graphPanel;
     }
     
-    public Graph<AbstractJavaItem, JavaDependency>  getGraph() {
+    public Graph<JavaItem, JavaDependency>  getGraph() {
         return graph;
     }
     
@@ -116,8 +116,8 @@ public class DependencyGraphPanelController implements TreeExpansionListener, Tr
             detailsPanel.getDependencyList().setModel(new DependencyListModel());
             detailsPanel.getDependencyList().repaint();
           
-            final AbstractJavaItem fromDBOject = javaDependency.getSourceItem();
-            final AbstractJavaItem toDBOject = javaDependency.getDestinationItem();
+            final JavaItem fromDBOject = javaDependency.getSourceItem();
+            final JavaItem toDBOject = javaDependency.getDestinationItem();
             
             // Current selected granularity
             final GranularityLevel granularityLevel = ((GraphGranularityComboBoxModel)detailsPanel.getGranularityComboBox().getModel()).getGranularity();
@@ -146,7 +146,7 @@ public class DependencyGraphPanelController implements TreeExpansionListener, Tr
                 @Override
                 public void finished() {
                     if (getValue() != null) {                        
-                        DependencyListModel model = new DependencyListModel((List<AbstractJavaItem>)getValue());                        
+                        DependencyListModel model = new DependencyListModel((List<JavaItem>)getValue());                        
                         detailsPanel.getDependencyList().setModel(model);                        
                     }                    
                 }
@@ -185,7 +185,7 @@ public class DependencyGraphPanelController implements TreeExpansionListener, Tr
 		if (selectionPath == null) {
 			return;
 		}
-		final AbstractJavaItem fromJavaItem = ((AbstractJavaItemTreeNode)selectionPath.getLastPathComponent()).getJavaItem();
+		final JavaItem fromJavaItem = ((AbstractJavaItemTreeNode)selectionPath.getLastPathComponent()).getJavaItem();
 
 		// Get the current granularity
 		final GranularityLevel granularityLevel 
@@ -195,7 +195,7 @@ public class DependencyGraphPanelController implements TreeExpansionListener, Tr
 		// Get the current selected 'target' vertex in the graph
 		Set<JavaDependency> pickedEdges = graphPanel.getPickedState().getPicked();
 		JavaDependency pickedEdge = pickedEdges.iterator().next();            
-		final AbstractJavaItem toJavaItem = pickedEdge.getDestinationItem();
+		final JavaItem toJavaItem = pickedEdge.getDestinationItem();
 		            
 		AbstractSwingWorker  worker = new AbstractSwingWorker() {
 		    @Override
@@ -206,7 +206,7 @@ public class DependencyGraphPanelController implements TreeExpansionListener, Tr
 		    @Override
 		    public void finished() {
 		        if (getValue() != null) {                        
-		            DependencyListModel model =  new DependencyListModel((List<AbstractJavaItem>)getValue());		            
+		            DependencyListModel model =  new DependencyListModel((List<JavaItem>)getValue());		            
 		            detailsPanel.getDependencyList().setModel(model);                        
 		        }                    
 		    }

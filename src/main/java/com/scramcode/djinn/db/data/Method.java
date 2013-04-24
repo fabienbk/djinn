@@ -84,7 +84,7 @@ public class Method extends AbstractJavaItem {
     }
 
     @Override
-    public boolean isContainedBy(AbstractJavaItem destinationObject) {
+    public boolean isContainedBy(JavaItem destinationObject) {
         return false;
     }
 }

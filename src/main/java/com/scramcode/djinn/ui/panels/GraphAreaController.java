@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import com.scramcode.djinn.db.data.JavaDependency;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.ui.Application;
 
 
@@ -40,7 +40,7 @@ public class GraphAreaController {
         this.graphAreaTabbedPane = application.getApplicationFrame().getGraphAreaPanel().getTabbedPane();
     }
     
-    public void showGraph(String title, Graph<AbstractJavaItem, JavaDependency>  graphInfo) {
+    public void showGraph(String title, Graph<JavaItem, JavaDependency>  graphInfo) {
         DependencyGraphPanelController graphController = new DependencyGraphPanelController(graphInfo);
         addTab(title, graphController.getPanel());     
     }
@@ -54,7 +54,7 @@ public class GraphAreaController {
         graphAreaTabbedPane.remove(tabNames.get(title));        
     }
     
-    public Graph<AbstractJavaItem, JavaDependency> getActiveGraph() {
+    public Graph<JavaItem, JavaDependency> getActiveGraph() {
     	DependencyGraphPanel dependencyGraphPanel = (DependencyGraphPanel)graphAreaTabbedPane.getSelectedComponent();
     	if (dependencyGraphPanel != null) {
     		return dependencyGraphPanel.getGraph();
@@ -62,7 +62,7 @@ public class GraphAreaController {
     	return null;
     }
 
-    public void changeLayout(Layout<AbstractJavaItem, JavaDependency> newLayout) {
+    public void changeLayout(Layout<JavaItem, JavaDependency> newLayout) {
     	DependencyGraphPanel dependencyGraphPanel = (DependencyGraphPanel)graphAreaTabbedPane.getSelectedComponent();
     	dependencyGraphPanel.getVisualizationViewer().setGraphLayout(newLayout);
     }

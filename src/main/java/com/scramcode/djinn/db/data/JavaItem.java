@@ -16,6 +16,6 @@ public interface JavaItem {
     
     public Color getColor();
     
-    public boolean isContainedBy(AbstractJavaItem destinationObject);
+    public boolean isContainedBy(JavaItem destinationObject);
     
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.Icon;
 
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
 import com.scramcode.djinn.model.workspace.ClassNode;
@@ -32,8 +32,8 @@ public class DependencyListModel extends AbstractListModel {
         });
     }
     
-    public DependencyListModel(List<AbstractJavaItem> javaItemList) {
-        for (AbstractJavaItem object : javaItemList) {
+    public DependencyListModel(List<JavaItem> javaItemList) {
+        for (JavaItem object : javaItemList) {
             if (object instanceof Location) {
                 nodeList.add(new LocationNode(null, (Location)object));
             }

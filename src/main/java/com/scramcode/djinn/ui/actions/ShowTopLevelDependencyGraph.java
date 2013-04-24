@@ -27,7 +27,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import com.scramcode.djinn.db.data.DataHelper;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.logic.ReferenceTools;
@@ -63,15 +63,15 @@ public class ShowTopLevelDependencyGraph extends AbstractAction {
                 updateProgress(0);
                 
                 Application instance = Application.getInstance();
-                List<AbstractJavaItem> topLevelItems = ReferenceTools.getTopLevelItems();                
-                Map<AbstractJavaItem, Set<AbstractJavaItem>> graphData = new HashMap<AbstractJavaItem, Set<AbstractJavaItem>>();
-                for (AbstractJavaItem javaItem : topLevelItems) {
-                	graphData.put(javaItem, new HashSet<AbstractJavaItem>());
+                List<JavaItem> topLevelItems = ReferenceTools.getTopLevelItems();                
+                Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
+                for (JavaItem javaItem : topLevelItems) {
+                	graphData.put(javaItem, new HashSet<JavaItem>());
 				}
                 int progress = 0;                    
                 int delta = 100 / topLevelItems.size();
                 
-                for (AbstractJavaItem javaItem : topLevelItems) {
+                for (JavaItem javaItem : topLevelItems) {
                 	if (javaItem instanceof Project) {
                 		// Get all locations and transform them into vertices
                         List<Location> locationsList = DataHelper.getLocations(ConnectionManager.getInstance().getConnection(),  (Project)javaItem);	

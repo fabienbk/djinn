@@ -28,7 +28,7 @@ import javax.swing.Action;
 import javax.swing.JOptionPane;
 
 import com.scramcode.djinn.db.data.DataHelper;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.logic.ReferenceTools;
@@ -69,17 +69,17 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                 Application instance = Application.getInstance();
                 AbstractJavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
                 
-                AbstractJavaItem javaItem = selectedNode.getJavaItem();
+                JavaItem javaItem = selectedNode.getJavaItem();
                 
                 if (javaItem instanceof Project) {
                                     
-                    Map<AbstractJavaItem, Set<AbstractJavaItem>> graphData = new HashMap<AbstractJavaItem, Set<AbstractJavaItem>>();
+                    Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
                                         
                     // Get all locations and transform them into vertices
                     List<Location> locationsList = DataHelper.getLocations(ConnectionManager.getInstance().getConnection(),  (Project)javaItem);
                     
                     for (Location element : locationsList) {
-                        graphData.put(element, new HashSet<AbstractJavaItem>());
+                        graphData.put(element, new HashSet<JavaItem>());
                     }
                                             
                     int progress = 0;                    
@@ -93,11 +93,11 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                         // Get the references of the current element
                         List<Location> elementRefList = ReferenceTools.getAllReferencesGroupByLocation(element);                        
                         
-                        Set<AbstractJavaItem> elementRefListFiltered = new HashSet<AbstractJavaItem>();
+                        Set<JavaItem> elementRefListFiltered = new HashSet<JavaItem>();
                         
                         // Check that all references are located in the vertices set
                         // Otherwise we have a dependency that is outside the project - delete it.
-                        for (AbstractJavaItem elementRef : elementRefList) {
+                        for (JavaItem elementRef : elementRefList) {
                             if (!locationsList.contains(elementRef)) {
                                 JOptionPane.showConfirmDialog(null, Messages.getString("warning.referenceIsOutsideTheProject"), 
                                         Messages.getString("warning"), JOptionPane.OK_OPTION, JOptionPane.WARNING_MESSAGE);                                

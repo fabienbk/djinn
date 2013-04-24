@@ -90,7 +90,7 @@ public class Package extends AbstractJavaItem {
     }
     
     @Override
-    public boolean isContainedBy(AbstractJavaItem destinationObject) {        
+    public boolean isContainedBy(JavaItem destinationObject) {        
         if (destinationObject instanceof Location) {           
             return getLocationKey() == destinationObject.getKey();
         }

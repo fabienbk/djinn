@@ -3,7 +3,6 @@ package com.scramcode.djinn.ui.dialogs;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.AbstractAction;
@@ -14,6 +13,7 @@ import com.scramcode.djinn.bytecode.importer.AbstractImporter;
 import com.scramcode.djinn.bytecode.importer.ImportListener;
 import com.scramcode.djinn.bytecode.importer.ImporterFactory;
 import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
@@ -92,9 +92,9 @@ public class WorkspaceEditorDialogController {
 		
 		workspaceEditorDialog.getClearButton().setAction(new AbstractAction("Clear selected", Images.getIcon("Delete.icon")) {		
 			public void actionPerformed(ActionEvent e) {
-				List<AbstractJavaItem> selectedValuesList = workspaceEditorDialog.getList().getSelectedValuesList();
-				for (AbstractJavaItem javaItem : selectedValuesList) {
-					workspaceEditorListModel.remove(javaItem);
+				Object[] selectedValues = workspaceEditorDialog.getList().getSelectedValues();
+				for (Object javaItem : selectedValues) {
+					workspaceEditorListModel.remove((JavaItem)javaItem);
 				}
 			}
 		});
@@ -117,7 +117,7 @@ public class WorkspaceEditorDialogController {
 	}
 	
 
-	public void createWorkspace(final ArrayList<AbstractJavaItem> list) {
+	public void createWorkspace(final ArrayList<JavaItem> list) {
         new AbstractSwingWorker(true) {
         	@Override
             public Object construct() {
@@ -125,7 +125,7 @@ public class WorkspaceEditorDialogController {
 				
         		ArrayList<String> importErrors = new ArrayList<String>();
         		final AtomicInteger i = new AtomicInteger(0);        		
-                for (AbstractJavaItem javaItem : list) {				
+                for (JavaItem javaItem : list) {				
                 	AbstractImporter importer = ImporterFactory.createImporterFor(javaItem, new ImportListener() {
 						public void updateImportProgress(int percent) {
 							updateProgress(percent/list.size() + i.get()*(100/list.size()));

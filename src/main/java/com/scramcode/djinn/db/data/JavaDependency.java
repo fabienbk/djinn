@@ -2,25 +2,25 @@ package com.scramcode.djinn.db.data;
 
 public class JavaDependency {
 
-	private AbstractJavaItem sourceItem;
-	private AbstractJavaItem destinationItem;
+	private JavaItem sourceItem;
+	private JavaItem destinationItem;
 		
-	public JavaDependency(AbstractJavaItem sourceItem, AbstractJavaItem destinationItem) {
+	public JavaDependency(JavaItem sourceItem, JavaItem destinationItem) {
 		super();
 		this.sourceItem = sourceItem;
 		this.destinationItem = destinationItem;
 	}
 	
-	public AbstractJavaItem getSourceItem() {
+	public JavaItem getSourceItem() {
 		return sourceItem;
 	}
-	public void setSourceItem(AbstractJavaItem sourceItem) {
+	public void setSourceItem(JavaItem sourceItem) {
 		this.sourceItem = sourceItem;
 	}
-	public AbstractJavaItem getDestinationItem() {
+	public JavaItem getDestinationItem() {
 		return destinationItem;
 	}
-	public void setDestinationItem(AbstractJavaItem destinationItem) {
+	public void setDestinationItem(JavaItem destinationItem) {
 		this.destinationItem = destinationItem;
 	}
 	
