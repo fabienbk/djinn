@@ -6,7 +6,7 @@ import javax.swing.AbstractListModel;
 
 import com.scramcode.djinn.db.data.JavaItem;
 
-public class WorkspaceEditorListModel extends AbstractListModel<JavaItem> {
+public class WorkspaceEditorListModel extends AbstractListModel {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -22,13 +22,13 @@ public class WorkspaceEditorListModel extends AbstractListModel<JavaItem> {
 	
 	public void addJavaItem(JavaItem javaItem) {
 		list.add(javaItem);
-		fireContentsChanged((Object)javaItem, list.size(), list.size());
+		fireContentsChanged(javaItem, list.size(), list.size());
 	}
 
 	public void remove(JavaItem javaItem) {
 		boolean remove = list.remove(javaItem);
 		if (remove) {
-			fireContentsChanged((Object)javaItem, list.size(), list.size());
+			fireContentsChanged(javaItem, list.size(), list.size());
 		}
 	}
 
