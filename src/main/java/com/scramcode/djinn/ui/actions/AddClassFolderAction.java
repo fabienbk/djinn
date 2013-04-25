@@ -76,12 +76,11 @@ public class AddClassFolderAction extends AbstractAction {
                 
                 Connection conn = ConnectionManager.getInstance().getConnection();
                 
-                int locKey =
-                    DataHelper.putLocation(conn, 
-                            new Location(path, Location.DIR_LOCATION_TYPE, projectKey));
+                Location location = new Location(path, Location.DIR_LOCATION_TYPE, projectKey);
+                DataHelper.putLocation(conn, location);
                 
                 // visit the jar
-                r.accept(new DefLocationVisitor(locKey));
+                r.accept(new DefLocationVisitor(location));
                 
                 controller.refreshNode(selectedNode);
                 

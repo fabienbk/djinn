@@ -33,10 +33,10 @@ public class JarImporter extends AbstractImporter {
 			Connection conn = ConnectionManager.getInstance().getConnection();
 			
 			Location location = new Location(path, Location.JAR_LOCATION_TYPE);
-			int locKey = DataHelper.putLocation(conn, location);
+			DataHelper.putLocation(conn, location);
 			
 			// visit the jar
-			jarReader.accept(new DefLocationVisitor(locKey));		 
+			jarReader.accept(new DefLocationVisitor(location));		 
 			
 			fireProgressUpdate(100);
 		} catch (Exception ex) {

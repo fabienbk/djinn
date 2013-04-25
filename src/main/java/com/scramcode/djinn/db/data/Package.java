@@ -31,11 +31,13 @@ public class Package extends AbstractJavaItem {
     
     private int packageKey;
     private int locationKey;
+    private Integer projectKey;
     private String qname;  
     
-    public Package(String qname, int locationKey) {
+    public Package(String qname, int locationKey, Integer projectKey) {
         this.qname = qname;
         this.locationKey = locationKey;
+        this.projectKey = projectKey;
     }
     
     @Override
@@ -46,7 +48,8 @@ public class Package extends AbstractJavaItem {
     public Package(ResultSet rs) throws SQLException {
         this.packageKey = rs.getInt("package_key");
         this.qname = rs.getString("qname");
-        this.locationKey = rs.getInt("location_key");  
+        this.locationKey = rs.getInt("location_key");
+        this.projectKey = rs.getInt("projectKey");  
     }
     
     
@@ -96,6 +99,10 @@ public class Package extends AbstractJavaItem {
         }
         return false;
     }
+
+	public Integer getProjectKey() {
+		return projectKey;
+	}
     
 
 }

@@ -91,7 +91,7 @@ public class EclipseProjectImporter extends AbstractImporter {
 			else {
 				throw new DjinnException("Unknown location type = " + eclipseProjectItemLocation.getType());
 			}            
-			locationReader.accept(new DefLocationVisitor(eclipseProjectItemLocation.getKey()));
+			locationReader.accept(new DefLocationVisitor(eclipseProjectItemLocation));
 
 			progress+=delta;
 		}        

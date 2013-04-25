@@ -19,26 +19,26 @@ package com.scramcode.djinn.bytecode;
 import java.io.InputStream;
 import java.util.HashMap;
 
-
 import org.objectweb.asm.ClassReader;
 
 import com.scramcode.djinn.db.data.DataHelper;
+import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
 
 public class DefLocationVisitor implements LocationVisitor {
 
-    private int locationKey;
+    private Location location;
     private HashMap<String, Package> packageMap;    
     
-    public DefLocationVisitor(int locationKey) {
-        this.locationKey = locationKey;
+    public DefLocationVisitor(Location location) {
+        this.location = location;
         this.packageMap = new HashMap<String, Package>();
     }
 
     public void visitPackage(String packageQualifiedName) {
         java.sql.Connection conn = ConnectionManager.getInstance().getConnection();
-        Package packageObject = new Package(packageQualifiedName, locationKey);
+        Package packageObject = new Package(packageQualifiedName, location.getKey(), location.getProjectKey());
         DataHelper.putPackage(conn, packageObject);
         packageMap.put(packageQualifiedName, packageObject);
     }
@@ -47,7 +47,7 @@ public class DefLocationVisitor implements LocationVisitor {
         try {
             Package packageObj = packageMap.get(classPackage);            
             ClassReader classReader = new ClassReader(byteCodeInputStream);                
-            classReader.accept(new DefClassVisitor(packageObj.getKey(), locationKey), ClassReader.SKIP_DEBUG & ClassReader.SKIP_FRAMES);            
+            classReader.accept(new DefClassVisitor(packageObj, location), ClassReader.SKIP_DEBUG & ClassReader.SKIP_FRAMES);            
         }
         catch (Exception e) {
         	System.err.println("Can't read bytecode of " + className + " in package " + classPackage);

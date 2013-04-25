@@ -21,7 +21,6 @@ import java.sql.Connection;
 import java.util.Iterator;
 import java.util.Set;
 
-
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
@@ -31,6 +30,7 @@ import org.objectweb.asm.MethodVisitor;
 import com.scramcode.djinn.db.data.Class;
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Field;
+import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Method;
 import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.util.NameTools;
@@ -43,14 +43,14 @@ public final class DefClassVisitor implements ClassVisitor {
     
     private Connection connection = ConnectionManager.getInstance().getConnection();
     
-    private int packageKey;
-    private int locationKey;
+    private Location location;
+    private com.scramcode.djinn.db.data.Package packageObj;
     private Class clazz;    
     private TypeSet typeSet;
     
-    public DefClassVisitor(int packageKey, int locationKey) {
-        this.locationKey=locationKey;
-        this.packageKey=packageKey;
+    public DefClassVisitor(com.scramcode.djinn.db.data.Package packageObj, Location location) {
+        this.location=location;
+        this.packageObj=packageObj;
         this.typeSet = new TypeSet();
     }
 
@@ -63,7 +63,7 @@ public final class DefClassVisitor implements ClassVisitor {
     }    
 
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-        this.clazz = new Class(NameTools.getUnqualifiedClassName(name), name, access, packageKey, locationKey);
+        this.clazz = new Class(NameTools.getUnqualifiedClassName(name), name, access, packageObj.getKey(), location.getKey(), location.getProjectKey());
         
         // finally, save class in database                        
         DataHelper.putClass(connection, clazz);

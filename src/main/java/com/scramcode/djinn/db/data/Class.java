@@ -34,13 +34,15 @@ public class Class extends AbstractJavaItem {
     private int access;
     private int packageKey;
     private int locationKey;
-    private String canonicalName;    
+    private Integer projectKey;    
+    private String canonicalName;
     
-    public Class(String name, String canonicalName, int access, int packageKey, int locationKey) {
+    public Class(String name, String canonicalName, int access, int packageKey, int locationKey, Integer projectKey) {
         this.name = name;        
         this.access = access;
         this.packageKey = packageKey;
         this.locationKey = locationKey;
+        this.projectKey = projectKey;
         this.canonicalName = canonicalName;        
     }
     
@@ -51,6 +53,7 @@ public class Class extends AbstractJavaItem {
         this.access = rs.getInt("access");
         this.packageKey = rs.getInt("package_key");
         this.locationKey = rs.getInt("location_key");
+        this.projectKey =  rs.getInt("project_key");
     }    
     
     public int getKey() {
@@ -106,6 +109,10 @@ public class Class extends AbstractJavaItem {
     public ImageIcon getImage() {
         return ICON;
     }
+    
+    public Integer getProjectKey() {
+		return projectKey;
+	}
 
     @Override
     public Color getColor() {

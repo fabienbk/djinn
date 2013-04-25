@@ -20,7 +20,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import com.scramcode.djinn.db.data.Class;
 import com.scramcode.djinn.db.data.JavaItem;
@@ -189,5 +192,17 @@ public class ReferenceTools {
         return referencesList;
 
     }
+
+	public static Set<JavaItem> getAllReferencesFromSubSet(JavaItem javaItem, List<JavaItem> topLevelItems) {
+		Map<Integer, JavaItem> topLevelMap = new HashMap<Integer, JavaItem>();
+		for (JavaItem topLevelJavaItem : topLevelItems) {
+			topLevelMap.put(topLevelJavaItem.getKey(), topLevelJavaItem);			
+		}
+		
+		QueryHelper<JavaItem> queryHelper = new QueryHelper<JavaItem>();
+		/*queryHelper.executeQuery(ConnectionManager.getInstance().getConnection(), 
+				"SELECT item_key FROM WORKSPACE WHERE ", rowConverter)*/
+		return null;
+	}
 
 }    

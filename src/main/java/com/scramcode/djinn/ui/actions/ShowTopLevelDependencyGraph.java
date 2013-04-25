@@ -62,24 +62,17 @@ public class ShowTopLevelDependencyGraph extends AbstractAction {
                 updateMessage("Computing Dependencies...");
                 updateProgress(0);
                 
-                Application instance = Application.getInstance();
+                Application application = Application.getInstance();
                 List<JavaItem> topLevelItems = ReferenceTools.getTopLevelItems();                
                 Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
-                for (JavaItem javaItem : topLevelItems) {
-                	graphData.put(javaItem, new HashSet<JavaItem>());
-				}
+                
                 int progress = 0;                    
                 int delta = 100 / topLevelItems.size();
                 
                 for (JavaItem javaItem : topLevelItems) {
-                	if (javaItem instanceof Project) {
-                		// Get all locations and transform them into vertices
-                        List<Location> locationsList = DataHelper.getLocations(ConnectionManager.getInstance().getConnection(),  (Project)javaItem);	
-                	}
-                }    
-                
-                //TODO compute dependencies
-                    
+                	graphData.put(javaItem, ReferenceTools.getAllReferencesFromSubSet(javaItem, topLevelItems));
+				}    
+                                    
                 updateMessage("Done!");
                 updateProgress(100);
                     

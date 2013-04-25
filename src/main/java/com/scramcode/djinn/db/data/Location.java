@@ -41,7 +41,7 @@ public class Location extends AbstractJavaItem {
     private Integer projectKey;
 
     /** full constructor */
-    public Location(String absolutePath, int type, int projectKey) {
+    public Location(String absolutePath, int type, Integer projectKey) {
         this.absolutePath = absolutePath;        
         this.type = type;
         this.projectKey = projectKey;

@@ -62,16 +62,21 @@ public final class DataHelper {
     
     public static int putClass(Connection conn, Class clazz) { 
         QueryHelper.executeUpdate(conn, 
-                "INSERT INTO CLASSES (name, access, package_key, cname, location_key) VALUES (?,?,?,?,?)",
+                "INSERT INTO CLASSES (name, access, package_key, cname, location_key, project_key) VALUES (?,?,?,?,?,?)",
                 clazz.getName(), 
                 clazz.getAccess(), 
                 clazz.getPackageKey(),
                 clazz.getCanonicalName(),
-                clazz.getLocationKey()
+                clazz.getLocationKey(),
+                clazz.getProjectKey()
         );
-        int k = QueryHelper.callIdentity(conn);
-        clazz.setKey(k);
-        return k;
+        int generatedKey = QueryHelper.callIdentity(conn);
+        clazz.setKey(generatedKey);
+        
+        QueryHelper.executeUpdate(conn, "INSERT INTO WORKSPACE (item_key,type,parent_project_key,parent_location_key,parent_package_key) VALUES (?,?,?,?,?)", 
+        		generatedKey, "Class", clazz.getProjectKey(), clazz.getLocationKey(), clazz.getPackageKey());
+        
+        return generatedKey;
     }
     
     public static void putField(Connection conn, Field field) {                
@@ -94,31 +99,21 @@ public final class DataHelper {
         method.setKey(k);
     }   
     
-    public static int putPackage(Connection conn, Package packageObject) {                       
-        QueryHelper.executeUpdate(conn, "INSERT INTO PACKAGES (qname, location_key) VALUES (?, ?)", 
+    public static int putPackage(Connection conn, Package packageObject) {      
+        QueryHelper.executeUpdate(conn, "INSERT INTO PACKAGES (qname, location_key, project_key) VALUES (?, ?, ?)", 
                 packageObject.getQname(), 
-                packageObject.getLocationKey());
+                packageObject.getLocationKey(),
+                packageObject.getProjectKey());
         int k = QueryHelper.callIdentity(conn);
         packageObject.setKey(k);
+        
+        QueryHelper.executeUpdate(conn, "INSERT INTO WORKSPACE (item_key,type,parent_project_key,parent_location_key) VALUES (?,?,?,?)", 
+        		k, "Package", packageObject.getProjectKey(), packageObject.getLocationKey());
         return k;        
     }    
 
     public static void putClassReference(Connection conn, int classKey, String desc) {        
         QueryHelper.executeUpdate(conn, "INSERT INTO CLASS_REFERENCES (class_key, cname) VALUES (?, ?)", classKey, desc);                    
-    }
-
-    public static List<Package> getPackages(Connection conn, final Location location) {
-        QueryHelper<Package> qhelper = new QueryHelper<Package>();        
-        return qhelper.executeQuery(conn,
-                "SELECT package_key, qname FROM PACKAGES WHERE location_key=" + location.getKey(), 
-                new RowConverter<Package>() {
-                    public Package getRow(ResultSet rs) throws SQLException {                        
-                        Package p = new Package( rs.getString(2), location.getKey() );
-                        p.setKey(rs.getInt(1));
-                        return p;
-                    }            
-                }
-        );
     }
     
     public static List<Location> getLocations(Connection conn, final Project project) {

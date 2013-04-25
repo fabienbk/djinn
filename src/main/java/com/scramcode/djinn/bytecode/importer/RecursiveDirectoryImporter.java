@@ -76,7 +76,7 @@ public class RecursiveDirectoryImporter extends AbstractImporter {
 							location);
 		            		            
 					// Visit the jar
-					locReader.accept(new DefLocationVisitor(location.getKey()));
+					locReader.accept(new DefLocationVisitor(location));
 					
 				} catch (IOException e) {
 					//TODO Display a warning somewhere
