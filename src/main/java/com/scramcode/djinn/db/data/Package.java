@@ -49,9 +49,8 @@ public class Package extends AbstractJavaItem {
         this.packageKey = rs.getInt("package_key");
         this.qname = rs.getString("qname");
         this.locationKey = rs.getInt("location_key");
-        this.projectKey = rs.getInt("projectKey");  
+        this.projectKey = rs.getInt("project_key");          
     }
-    
     
     public int getKey() {
         return this.packageKey;
