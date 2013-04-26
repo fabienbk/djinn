@@ -18,7 +18,6 @@ package com.scramcode.djinn.ui.actions;
 
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,14 +25,10 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import com.scramcode.djinn.db.data.DataHelper;
+import com.scramcode.djinn.db.data.JavaDependency;
 import com.scramcode.djinn.db.data.JavaItem;
-import com.scramcode.djinn.db.data.Location;
-import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.logic.ReferenceTools;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.graph.GraphTools;
-import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.i18n.Messages;
 import com.scramcode.djinn.util.AbstractSwingWorker;
@@ -62,15 +57,16 @@ public class ShowTopLevelDependencyGraph extends AbstractAction {
                 updateMessage("Computing Dependencies...");
                 updateProgress(0);
                 
-                Application application = Application.getInstance();
                 List<JavaItem> topLevelItems = ReferenceTools.getTopLevelItems();                
                 Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
                 
                 int progress = 0;                    
-                int delta = 100 / topLevelItems.size();
+                int delta = 100 / topLevelItems.size();                
                 
                 for (JavaItem javaItem : topLevelItems) {
                 	graphData.put(javaItem, ReferenceTools.getAllReferencesFromSubSet(javaItem, topLevelItems));
+                	updateMessage("Checking " + javaItem.getLabel() + "...");
+                	updateProgress(progress+=delta);                    
 				}    
                                     
                 updateMessage("Done!");
@@ -82,16 +78,12 @@ public class ShowTopLevelDependencyGraph extends AbstractAction {
             /**
              * Display the graph, once built
              */
-            @Override
+            @SuppressWarnings("unchecked")
+			@Override
             public void finished() {
-            	Graph builtGraph = (Graph) getValue();
-            	if (builtGraph!=null) {
-            	
-            		Application instance = Application.getInstance();
-            		AbstractJavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
-            		String projetName = selectedNode.getJavaItem().getLabel();
-            		
-                        Application.getInstance().getGraphAreaController().showGraph(projetName, (Graph) getValue());    	
+            	Graph<JavaItem, JavaDependency> builtGraph = (Graph<JavaItem, JavaDependency>) getValue();
+            	if (builtGraph!=null) {            	            		
+            		Application.getInstance().getGraphAreaController().showGraph("Top level item graph", (Graph<JavaItem, JavaDependency>) getValue());    	
             	}            	
             }
             

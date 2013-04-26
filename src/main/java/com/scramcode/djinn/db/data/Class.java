@@ -136,11 +136,14 @@ public class Class extends AbstractJavaItem {
     @Override
     public boolean isContainedBy(JavaItem destinationObject) {
         if (destinationObject instanceof Package) {
-            return getPackageKey() == destinationObject.getKey();
+            return packageKey == destinationObject.getKey();
         }
-        if (destinationObject instanceof Location) {           
-            return getLocationKey() == destinationObject.getKey();
+        else if (destinationObject instanceof Location) {           
+            return locationKey == destinationObject.getKey();
         }
+        else if (destinationObject instanceof Project) {
+        	return projectKey == destinationObject.getKey();
+        }        
         return false;
     }
 

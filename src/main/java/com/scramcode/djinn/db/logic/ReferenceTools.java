@@ -20,9 +20,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.scramcode.djinn.db.data.Class;
@@ -43,14 +42,44 @@ import com.scramcode.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
  * 
  * @author Fabien Benoit <fabien.benoit@gmail.com>
  */
-public class ReferenceTools {             
+public final class ReferenceTools {             
 
+	private ReferenceTools() {		
+	}
+	
     public static List<JavaItem> getReferences(
             JavaItem sourceObject,
             JavaItem destinationObject,
             GranularityLevel granularityLevel) {
 
-        // Get all references of the source object, at the requested granularity
+        List<? extends JavaItem> references = getAllReferences(sourceObject, granularityLevel);
+
+        // Filter references not contained by destination object
+        List<JavaItem> result = new ArrayList<JavaItem>();
+        for(JavaItem reference : references) {
+            if (reference.isContainedBy(destinationObject)) {
+                result.add(reference);
+            }
+        }
+        
+        return result;
+    }
+    
+    public static boolean detectReference(JavaItem sourceObject, JavaItem destinationObject) {
+
+        List<? extends JavaItem> references = getAllReferences(sourceObject, GranularityLevel.CLASS);
+
+        for(JavaItem reference : references) {
+            if (reference.isContainedBy(destinationObject)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+	private static List<? extends JavaItem> getAllReferences(JavaItem sourceObject, GranularityLevel granularityLevel) {
+		// Get all references of the source object, at the requested granularity
         List<? extends JavaItem> references = null;        
         switch(granularityLevel) {
             case CLASS: {
@@ -65,16 +94,8 @@ public class ReferenceTools {
                 references = getAllReferencesGroupByPackage(sourceObject);
             }
         }
-        // Filter references not contained by destination object
-        List<JavaItem> result = new ArrayList<JavaItem>();
-        for(JavaItem dbo : references) {
-            if (dbo.isContainedBy(destinationObject)) {
-                result.add(dbo);
-            }
-        }
-        
-        return result;
-    }
+		return references;
+	}
 
     public static List<JavaItem> getTopLevelItems() {
         Connection conn = ConnectionManager.getInstance().getConnection();
@@ -193,16 +214,14 @@ public class ReferenceTools {
 
     }
 
-	public static Set<JavaItem> getAllReferencesFromSubSet(JavaItem javaItem, List<JavaItem> topLevelItems) {
-		Map<Integer, JavaItem> topLevelMap = new HashMap<Integer, JavaItem>();
-		for (JavaItem topLevelJavaItem : topLevelItems) {
-			topLevelMap.put(topLevelJavaItem.getKey(), topLevelJavaItem);			
+	public static Set<JavaItem> getAllReferencesFromSubSet(JavaItem sourceJavaItem, List<JavaItem> destinationJavaItemList) {
+		HashSet<JavaItem> result = new HashSet<JavaItem>();
+		for (JavaItem destinationJavaItem : destinationJavaItemList) {			
+			if (detectReference(sourceJavaItem, destinationJavaItem)) {
+				result.add(destinationJavaItem);
+			}
 		}
-		
-		QueryHelper<JavaItem> queryHelper = new QueryHelper<JavaItem>();
-		/*queryHelper.executeQuery(ConnectionManager.getInstance().getConnection(), 
-				"SELECT item_key FROM WORKSPACE WHERE ", rowConverter)*/
-		return null;
+		return result;		
 	}
 
 }    

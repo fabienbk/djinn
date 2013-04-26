@@ -23,8 +23,12 @@ import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 
-public class Project extends AbstractJavaItem {
+import com.scramcode.djinn.ui.i18n.Images;
 
+public class Project extends AbstractJavaItem {
+    
+	public static final ImageIcon ICON = Images.getIcon("Project.graph.icon");
+    
     private int projectKey;
     private String projectName;
 	private File directory;
@@ -68,7 +72,7 @@ public class Project extends AbstractJavaItem {
     
     @Override
     public ImageIcon getImage() {
-        return null;
+        return ICON;
     }
     
     @Override
