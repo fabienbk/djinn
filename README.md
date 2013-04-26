@@ -12,7 +12,7 @@ ivy) and then produce information that facilitate migration to these systems;
 * Locate, and fix cyclic dependencies;
 * Understand how a project is structured to gain comprehension quicker.
 
-![screenshot](http://blog.scramcode.com/static/img/djinn-graph-example.png)
+![screenshot](http://fabienbk.github.io/djinn/images/screens/djinn0.2.0.png)
 
 There is still a lot of work to do - the tool only provides basic functionality currently.
 
@@ -39,4 +39,4 @@ If you're a clicky person, flip the executable permission flag, and you should b
 Getting Started
 ---------------
 
-*Section to be done after 0.2 release
+* Section to be done after 0.2 release
