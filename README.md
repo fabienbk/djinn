@@ -39,4 +39,4 @@ If you're a clicky person, flip the executable permission flag, and you should b
 Getting Started
 ---------------
 
-* Section to be done after 0.2 release
+There is a work-in-progress [tutorial here](http://blog.scramcode.com/post/9/explore-java-dependencies-with-djinn/). Stay tuned, better stuff will come soon.
