@@ -16,6 +16,11 @@ ivy) and then produce information that facilitate migration to these systems;
 
 There is still a lot of work to do - the tool only provides basic functionality currently.
 
+Quick start
+-----------
+
+[Click here](http://fabienbk.github.io/djinn/jnlp/djinn.jnlp) to quickly run the appliation through java webstart (although you may not have the latest version). 
+
 Building and running
 --------------------
 
