@@ -16,15 +16,12 @@
  */
 package com.scramcode.djinn.db.logic;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import com.scramcode.djinn.db.data.Clazz;
-import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;

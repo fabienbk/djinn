@@ -23,8 +23,6 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
-import sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
-
 import com.scramcode.djinn.db.logic.JavaItemVistor;
 import com.scramcode.djinn.ui.i18n.Images;
 

@@ -18,7 +18,6 @@ package com.scramcode.djinn.ui.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.sql.Connection;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;

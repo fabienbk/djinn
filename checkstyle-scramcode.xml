@@ -24,7 +24,9 @@
       <property name="maxProtected" value="40"/>
       <property name="maxPublic" value="40"/>
     </module>
-    <module name="AbstractClassName"/>
+    <module name="AbstractClassName">
+      <property name="format" value="^Abstract.*$"/>
+    </module>
     <module name="ClassTypeParameterName"/>
     <module name="ConstantName"/>
     <module name="LocalFinalVariableName"/>

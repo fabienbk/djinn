@@ -7,7 +7,7 @@ import com.scramcode.djinn.db.data.Method;
 import com.scramcode.djinn.db.data.Package;
 import com.scramcode.djinn.db.data.Project;
 
-public abstract class JavaItemVistor {
+public class JavaItemVistor {
 
 	private boolean memberVisitEnabled;
 	private boolean classVisitEnabled = true;
