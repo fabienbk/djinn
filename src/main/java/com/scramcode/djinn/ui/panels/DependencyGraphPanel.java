@@ -26,6 +26,7 @@ import javax.imageio.ImageIO;
 import javax.swing.Icon;
 import javax.swing.JPanel;
 
+import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
 
 import com.scramcode.djinn.db.data.JavaDependency;
@@ -37,6 +38,8 @@ import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.visualization.GraphZoomScrollPane;
 import edu.uci.ics.jung.visualization.RenderContext;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.control.EditingPopupGraphMousePlugin;
+import edu.uci.ics.jung.visualization.control.LensMagnificationGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.PickingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.control.PluggableGraphMouse;
 import edu.uci.ics.jung.visualization.picking.PickedState;
@@ -75,6 +78,7 @@ public class DependencyGraphPanel extends JPanel {
         
         final PluggableGraphMouse graphMouse = new PluggableGraphMouse();
         graphMouse.add( new PickingGraphMousePlugin<JavaItem, JavaDependency>() );
+        graphMouse.add( new PopupGraphPlugin() );
         
         visualizationViewer.setGraphMouse(graphMouse);
         

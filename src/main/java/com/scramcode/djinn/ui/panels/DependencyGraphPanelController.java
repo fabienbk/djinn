@@ -116,31 +116,31 @@ public class DependencyGraphPanelController implements TreeExpansionListener, Tr
             detailsPanel.getDependencyList().setModel(new DependencyListModel());
             detailsPanel.getDependencyList().repaint();
           
-            final JavaItem fromDBOject = javaDependency.getSourceItem();
-            final JavaItem toDBOject = javaDependency.getDestinationItem();
+            final JavaItem sourceItem = javaDependency.getSourceItem();
+            final JavaItem destinationItem = javaDependency.getDestinationItem();
             
             // Current selected granularity
             final GranularityLevel granularityLevel = ((GraphGranularityComboBoxModel)detailsPanel.getGranularityComboBox().getModel()).getGranularity();
                 
-            if (fromDBOject instanceof Location) {
-                LocationNode locationNode = new LocationNode(null, (Location)fromDBOject);
+            if (sourceItem instanceof Location) {
+                LocationNode locationNode = new LocationNode(null, (Location)sourceItem);
                 locationNode.refresh();
                 ((DefaultTreeModel)detailsPanel.getNodeTree().getModel()).setRoot(locationNode);
             }
-            else if (fromDBOject instanceof com.scramcode.djinn.db.data.Package) {
-                PackageNode packageNode = new PackageNode(null, (com.scramcode.djinn.db.data.Package)fromDBOject);
+            else if (sourceItem instanceof com.scramcode.djinn.db.data.Package) {
+                PackageNode packageNode = new PackageNode(null, (com.scramcode.djinn.db.data.Package)sourceItem);
                 packageNode.refresh();
                 ((DefaultTreeModel)detailsPanel.getNodeTree().getModel()).setRoot(packageNode);
             }
-            else if (fromDBOject instanceof com.scramcode.djinn.db.data.Clazz) {
-                ClassNode classNode = new ClassNode(null, (com.scramcode.djinn.db.data.Clazz)fromDBOject, false);                
+            else if (sourceItem instanceof com.scramcode.djinn.db.data.Clazz) {
+                ClassNode classNode = new ClassNode(null, (com.scramcode.djinn.db.data.Clazz)sourceItem, false);                
                 ((DefaultTreeModel)detailsPanel.getNodeTree().getModel()).setRoot(classNode);
             }
             
             AbstractSwingWorker worker = new AbstractSwingWorker() {            	
                 @Override
                 public Object construct() {
-                    return ReferenceTools.getReferences(fromDBOject, toDBOject, granularityLevel);
+                    return ReferenceTools.getReferences(sourceItem, destinationItem, granularityLevel);
                 }
                 
                 @Override
