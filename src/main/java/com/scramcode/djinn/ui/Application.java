@@ -31,7 +31,6 @@ import com.scramcode.djinn.ui.actions.ImportEclipseProjectAction;
 import com.scramcode.djinn.ui.actions.NewWorkspaceAction;
 import com.scramcode.djinn.ui.actions.QuitAction;
 import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
-import com.scramcode.djinn.ui.actions.ShowSQLQueryManager;
 import com.scramcode.djinn.ui.actions.ShowTopLevelDependencyGraph;
 import com.scramcode.djinn.ui.actions.layout.FRLayoutAction;
 import com.scramcode.djinn.ui.actions.layout.KKLayoutAction;
@@ -39,7 +38,6 @@ import com.scramcode.djinn.ui.actions.layout.SpringLayoutAction;
 import com.scramcode.djinn.ui.dialogs.WorkspaceEditorDialogController;
 import com.scramcode.djinn.ui.menu.ApplicationMenu;
 import com.scramcode.djinn.ui.panels.GraphAreaController;
-import com.scramcode.djinn.ui.panels.SQLQueryPanelController;
 import com.scramcode.djinn.ui.panels.WorkspaceTreeController;
 
 public final class Application {
@@ -52,7 +50,6 @@ public final class Application {
 	// Controllers
 	private WorkspaceTreeController workspaceTreeController;
 	private GraphAreaController graphAreaController;
-	private SQLQueryPanelController sqlPanelController;
 	private WorkspaceEditorDialogController workspaceEditorDialogController;
 	
 	private static Application instance = new Application();
@@ -76,7 +73,6 @@ public final class Application {
 		rootActionMap.put(ShowLinksWithClassesAction.class, new ShowLinksWithClassesAction(true));
 
 		rootActionMap.put(DumpReferencesAction.class, new DumpReferencesAction(true));
-		rootActionMap.put(ShowSQLQueryManager.class, new ShowSQLQueryManager(true));
 		rootActionMap.put(ImportEclipseProjectAction.class, new ImportEclipseProjectAction(true));
 		rootActionMap.put(ImportDirectoryAction.class, new ImportDirectoryAction(true));
 
@@ -92,13 +88,11 @@ public final class Application {
 		menuBar.getLayoutMenu().add(rootActionMap.get(FRLayoutAction.class));
 		menuBar.getLayoutMenu().add(rootActionMap.get(KKLayoutAction.class));
 		menuBar.getLayoutMenu().add(rootActionMap.get(SpringLayoutAction.class));
-		menuBar.getToolsMenu().add(rootActionMap.get(ShowSQLQueryManager.class));
 		menuBar.getHelpMenu().add(rootActionMap.get(AboutDialogAction.class));
 
 		// Controllers
 		workspaceTreeController = new WorkspaceTreeController(this);
 		graphAreaController = new GraphAreaController(this);
-		sqlPanelController = new SQLQueryPanelController();
 		workspaceEditorDialogController = new WorkspaceEditorDialogController(this);
 	}
 
@@ -126,10 +120,6 @@ public final class Application {
 		return this.graphAreaController;
 	}
 
-	public SQLQueryPanelController getSQLPanelController() {
-		return this.sqlPanelController;
-	}
-	
 	public WorkspaceEditorDialogController getWorkspaceEditorDialogController() {
 		return workspaceEditorDialogController;
 	}

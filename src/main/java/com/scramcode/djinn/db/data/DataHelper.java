@@ -16,117 +16,48 @@
  */
 package com.scramcode.djinn.db.data;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
-import com.scramcode.djinn.db.mgmt.QueryHelper;
-import com.scramcode.djinn.db.mgmt.RowConverter;
-
 
 public final class DataHelper {
-        
+	
+	private static Workspace workspace = new Workspace();
+	        
 	private DataHelper() {		
 	}
 	
-    public static int putProject(Connection conn, Project project) {
-        QueryHelper.executeUpdate(conn, "INSERT INTO PROJECTS (project_name, directory) VALUES (?, ?)", project.getProjectName(), project.getDirectory().getAbsolutePath());
-        int generatedKey = QueryHelper.callIdentity(conn); 
-        project.setKey(generatedKey);
-        
-        QueryHelper.executeUpdate(conn, "INSERT INTO WORKSPACE (item_key,type) VALUES (?, ?)", generatedKey, "Project");
-        return generatedKey;        
+    public static void putProject(Project project) {
+    	workspace.addProject(project);
     }
 
-
-//    	item_key,type,parent_project_key,parent_location_key,parent_package_key,parent_class_key
-
-	public static int putLocation(Connection conn, Location location) {                
-        QueryHelper.executeUpdate(conn, "INSERT INTO LOCATIONS (absolute_path, type, project_key) VALUES (?,?,?)",
-                location.getAbsolutePath(),
-                location.getType(),
-                location.getProjectKey());
-        int generatedKey = QueryHelper.callIdentity(conn); 
-        location.setKey(generatedKey);        
-        
-        if (location.getProjectKey() == null) {
-        	QueryHelper.executeUpdate(conn, "INSERT INTO WORKSPACE (item_key,type) VALUES (?, ?)", generatedKey, "Location");
-        }
-        else {
-        	QueryHelper.executeUpdate(conn, "INSERT INTO WORKSPACE (item_key,type,parent_project_key) VALUES (?, ?, ?)", generatedKey, "Location", location.getProjectKey());
-        }
-        
-        return generatedKey;        
+	public static void putLocation(Location location) {                
+		workspace.addLocation(location);        
     }
     
-    public static int putClass(Connection conn, Class clazz) { 
-        QueryHelper.executeUpdate(conn, 
-                "INSERT INTO CLASSES (name, access, package_key, cname, location_key, project_key) VALUES (?,?,?,?,?,?)",
-                clazz.getName(), 
-                clazz.getAccess(), 
-                clazz.getPackageKey(),
-                clazz.getCanonicalName(),
-                clazz.getLocationKey(),
-                clazz.getProjectKey()
-        );
-        int generatedKey = QueryHelper.callIdentity(conn);
-        clazz.setKey(generatedKey);
-        
-        QueryHelper.executeUpdate(conn, "INSERT INTO WORKSPACE (item_key,type,parent_project_key,parent_location_key,parent_package_key) VALUES (?,?,?,?,?)", 
-        		generatedKey, "Class", clazz.getProjectKey(), clazz.getLocationKey(), clazz.getPackageKey());
-        
-        return generatedKey;
+    public static void putClass(Clazz clazz) { 
+        workspace.addClazz(clazz);
     }
     
-    public static void putField(Connection conn, Field field) {                
-        QueryHelper.executeUpdate(conn, "INSERT INTO FIELDS (name, access, class_key) VALUES (?,?,?)",
-                field.getName(),
-                field.getAccess(),
-                field.getClassKey()
-        );
-        int k = QueryHelper.callIdentity(conn);
-        field.setKey(k);
+    public static void putField(Field field) {                
+        workspace.addField(field);
     }
     
-    public static void putMethod(Connection conn, Method method) {                
-        QueryHelper.executeUpdate(conn, "INSERT INTO METHODS (name, access, class_key) VALUES (?,?,?)",
-                method.getName(), 
-                method.getAccess(),
-                method.getClassKey()
-        );
-        int k = QueryHelper.callIdentity(conn);
-        method.setKey(k);
+    public static void putMethod(Method method) {                    	
+    	workspace.addMethod(method);
     }   
     
-    public static int putPackage(Connection conn, Package packageObject) {      
-        QueryHelper.executeUpdate(conn, "INSERT INTO PACKAGES (qname, location_key, project_key) VALUES (?, ?, ?)", 
-                packageObject.getQname(), 
-                packageObject.getLocationKey(),
-                packageObject.getProjectKey());
-        int k = QueryHelper.callIdentity(conn);
-        packageObject.setKey(k);
-        
-        QueryHelper.executeUpdate(conn, "INSERT INTO WORKSPACE (item_key,type,parent_project_key,parent_location_key) VALUES (?,?,?,?)", 
-        		k, "Package", packageObject.getProjectKey(), packageObject.getLocationKey());
-        return k;        
+    public static void putPackage(Package packageObject) {      
+    	workspace.addPackage(packageObject);        
     }    
 
-    public static void putClassReference(Connection conn, int classKey, String desc) {        
-        QueryHelper.executeUpdate(conn, "INSERT INTO CLASS_REFERENCES (class_key, cname) VALUES (?, ?)", classKey, desc);                    
+    public static void putClassReference(Clazz clazz, String desc) {    	
+    	workspace.addClassReference(clazz, desc);                          
     }
-    
-    public static List<Location> getLocations(Connection conn, final Project project) {
-        QueryHelper<Location> qhelper = new QueryHelper<Location>();        
-        return qhelper.executeQuery(conn,
-                "SELECT location_key, absolute_path, type, project_key FROM LOCATIONS WHERE project_key = " + project.getKey(), 
-                new RowConverter<Location>() {
-                    public Location getRow(ResultSet rs) throws SQLException {                        
-                        Location l = new Location( rs.getString(2), rs.getInt(3), project.getKey() );
-                        l.setKey(rs.getInt(1));
-                        return l;
-                    }            
-                }
-        );
-    }    
+
+	public static Workspace getWorkspace() {
+		return workspace;		
+	}
+
+	public static void resetWorkspace() {
+		workspace = new Workspace();
+	}
+
 }

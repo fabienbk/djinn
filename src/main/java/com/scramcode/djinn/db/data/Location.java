@@ -18,11 +18,14 @@ package com.scramcode.djinn.db.data;
 
 import java.awt.Color;
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+
+import com.scramcode.djinn.db.logic.JavaItemVistor;
 import com.scramcode.djinn.ui.i18n.Images;
 
 
@@ -34,43 +37,24 @@ public class Location extends AbstractJavaItem {
    
     public static final ImageIcon ICON = Images.getIcon("Jar.graph.icon");
     
-    private int locationKey;
     private String absolutePath;
     private int type;    
     private File pathFile;
-    private Integer projectKey;
-
+	private Project project;
+	private List<Package> packages = new ArrayList<Package>();
+    
     /** full constructor */
-    public Location(String absolutePath, int type, Integer projectKey) {
+    public Location(String absolutePath, int type, Project project) {
         this.absolutePath = absolutePath;        
         this.type = type;
-        this.projectKey = projectKey;
+        this.project = project;
         this.pathFile = new File(absolutePath);
+        
+        if (project != null) {
+        	project.getLocations().add(this);
+        }
     }
-
-    public Location(ResultSet rs) throws SQLException {
-        this.locationKey = rs.getInt("location_key");
-        this.absolutePath = rs.getString("absolute_path");
-        this.type = rs.getInt("type");
-        this.projectKey = rs.getInt("project_key");
-        this.pathFile = new File(absolutePath);        
-    }
-
-    public Location(String absolutePath, int type) {
-    	 this.absolutePath = absolutePath;        
-         this.type = type;
-         this.projectKey = null;
-         this.pathFile = new File(absolutePath);
-	}
-
-	public int getKey() {
-        return this.locationKey;
-    }
-
-    public void setKey(int locationKey) {
-        this.locationKey = locationKey;
-    }
-
+ 
     public String getAbsolutePath() {
         return this.absolutePath;
     }
@@ -91,17 +75,10 @@ public class Location extends AbstractJavaItem {
         return this.pathFile;
     }
 
-    public Integer getProjectKey() {
-        return this.projectKey;
-    }
+    public Project getProject() {
+		return project;
+	}
 
-    public void setProjectKey(int projectKey) {
-        this.projectKey = projectKey;
-    }
-    
-    public String getMappedTable() {
-        return "LOCATIONS";
-    }
     
     @Override
     public String getLabel() {
@@ -118,9 +95,26 @@ public class Location extends AbstractJavaItem {
         return Color.yellow;
     }
 
-    @Override
-    public boolean isContainedBy(JavaItem destinationObject) {
-        return false;
-    }
+	public List<Package> getPackages() {
+		return packages;
+	}
+	
+	@Override
+	public void accept(JavaItemVistor javaItemVistor) {
+		javaItemVistor.visitLocation(this);
+		for (Package packageObj : packages) {
+			packageObj.accept(javaItemVistor);
+		}		
+	}
+	
+	@Override
+	public boolean isContainedBy(JavaItem destinationObject) {
+		if (project != null) {
+			return getKey() == project.getKey();					
+		}
+		else {
+			return false;
+		}		
+	}
     
 }

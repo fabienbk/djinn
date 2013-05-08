@@ -40,8 +40,8 @@ public class DependencyListModel extends AbstractListModel {
             if (object instanceof Package) {
                 nodeList.add(new PackageNode(null, (Package)object));
             }
-            if (object instanceof com.scramcode.djinn.db.data.Class) {
-                nodeList.add(new ClassNode(null, (com.scramcode.djinn.db.data.Class)object));
+            if (object instanceof com.scramcode.djinn.db.data.Clazz) {
+                nodeList.add(new ClassNode(null, (com.scramcode.djinn.db.data.Clazz)object));
             }
             
         }

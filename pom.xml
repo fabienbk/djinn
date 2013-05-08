@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>djinn</groupId>
 	<artifactId>djinn</artifactId>
-	<version>0.2.0</version>
+	<version>0.3.0</version>
 	<name>djinn</name>
-	<description>java dependency tool</description>
+	<description>Java Dependency Explorer</description>
 
 	<repositories>
 		<repository>
@@ -44,6 +44,7 @@
 			</resource>
 		</resources>
 		<plugins>
+			<!-- Compiler plugin -->
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
@@ -52,6 +53,8 @@
 					<target>1.6</target>
 				</configuration>
 			</plugin>
+
+			<!-- Assembly plugin -->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -67,6 +70,50 @@
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 			</plugin>
+
+			<!-- JNLP -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>webstart-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jnlp-inline</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<jnlp>
+						<outputFile>djinn.jnlp</outputFile>
+						<mainClass>com.scramcode.djinn.Launcher</mainClass>
+					</jnlp>
+					<jnlpExtensions />
+					<verbose>false</verbose>
+					
+					<sign>
+                        <keystore>djinn-keystore</keystore>
+                        <keypass>arizona2010</keypass>
+                        <storepass>changeit</storepass>
+                        <alias>djinn-alias</alias>
+                        <validity>3650</validity>
+                        <dnameCn>Fabien Benoit-Koch</dnameCn>
+                        <dnameOu>Scramcode</dnameOu>
+                        <dnameO>Scramcode</dnameO>
+                        <dnameL></dnameL>
+                        <dnameSt></dnameSt>
+                        <dnameC></dnameC>
+                        <verify>true</verify>
+                        <keystoreConfig>
+                            <delete>true</delete>
+                            <gen>true</gen>
+                        </keystoreConfig>
+                    </sign>
+                    <pack200>false</pack200>
+                    <gzip>true</gzip>                    
+				</configuration>
+			</plugin>
+
 
 		</plugins>
 	</build>
@@ -93,12 +140,7 @@
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-visualization</artifactId>
 			<version>2.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>2.2.9</version>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>asm</groupId>
 			<artifactId>asm-all</artifactId>

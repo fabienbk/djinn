@@ -24,7 +24,6 @@ import org.objectweb.asm.ClassReader;
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 
 public class DefLocationVisitor implements LocationVisitor {
 
@@ -37,9 +36,8 @@ public class DefLocationVisitor implements LocationVisitor {
     }
 
     public void visitPackage(String packageQualifiedName) {
-        java.sql.Connection conn = ConnectionManager.getInstance().getConnection();
-        Package packageObject = new Package(packageQualifiedName, location.getKey(), location.getProjectKey());
-        DataHelper.putPackage(conn, packageObject);
+        Package packageObject = new Package(packageQualifiedName, location);
+        DataHelper.putPackage(packageObject);
         packageMap.put(packageQualifiedName, packageObject);
     }
 

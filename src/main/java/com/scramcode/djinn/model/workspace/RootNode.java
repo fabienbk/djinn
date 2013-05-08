@@ -16,19 +16,16 @@
  */
 package com.scramcode.djinn.model.workspace;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Icon;
 
+import com.scramcode.djinn.db.data.DataHelper;
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
-import com.scramcode.djinn.db.mgmt.QueryHelper;
-import com.scramcode.djinn.db.mgmt.RowConverter;
+import com.scramcode.djinn.db.data.Workspace;
 import com.scramcode.djinn.ui.i18n.Images;
 import com.scramcode.djinn.ui.i18n.Messages;
 
@@ -42,31 +39,19 @@ public class RootNode extends AbstractJavaItemTreeNode {
     }
 
     protected Vector<AbstractJavaItemTreeNode> computeChildren() {
-        Connection conn = ConnectionManager.getInstance().getConnection();
-        Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();
-        QueryHelper<ProjectNode> queryHelper = new QueryHelper<ProjectNode>();
-        List<ProjectNode> projectNodeList = queryHelper.executeQuery(conn,
-                "SELECT * FROM PROJECTS", 
-                new RowConverter<ProjectNode>(){
-                    public ProjectNode getRow(ResultSet rs) throws SQLException {       
-                        Project project = new Project(rs);
-                        ProjectNode projectNode = new ProjectNode(RootNode.this, project);                        
-                        return projectNode;
-                    }            
-        });
-        children.addAll(projectNodeList);
-        
-        QueryHelper<LocationNode> queryHelper2 = new QueryHelper<LocationNode>();
-        List<LocationNode> topLevelLocationNodeList = queryHelper2.executeQuery(conn,
-                "SELECT * FROM LOCATIONS WHERE PROJECT_KEY IS NULL", 
-                new RowConverter<LocationNode>(){
-                    public LocationNode getRow(ResultSet rs) throws SQLException {                    	
-                    	Location location = new Location(rs);                     
-                    	LocationNode locationNode = new LocationNode(RootNode.this, location);                        
-                        return locationNode;
-                    }            
-        });
-        children.addAll(topLevelLocationNodeList);
+    	Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();
+    	Workspace workspace = DataHelper.getWorkspace();    	
+    	List<JavaItem> topLevelItems = workspace.getTopLevelItems();
+    	for (JavaItem javaItem : topLevelItems) {
+    		if (javaItem instanceof Project) {
+    			ProjectNode projectNode = new ProjectNode(RootNode.this, (Project)javaItem);
+    			children.add(projectNode);
+    		}
+    		else if (javaItem instanceof Location) {    			
+    			LocationNode locationNode = new LocationNode(RootNode.this, (Location)javaItem);
+    			children.add(locationNode);
+    		}
+		}    	
         return children;
     }
     

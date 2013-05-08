@@ -16,9 +16,6 @@
  */
 package com.scramcode.djinn.model.workspace;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
@@ -26,9 +23,6 @@ import javax.swing.Icon;
 
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
-import com.scramcode.djinn.db.mgmt.QueryHelper;
-import com.scramcode.djinn.db.mgmt.RowConverter;
 import com.scramcode.djinn.ui.i18n.Images;
 
 
@@ -40,21 +34,15 @@ public class ProjectNode extends AbstractJavaItemTreeNode {
         super(parent, project);
     }
         
-    protected Vector<AbstractJavaItemTreeNode> computeChildren() {
-        Connection conn = ConnectionManager.getInstance().getConnection();
+    protected Vector<AbstractJavaItemTreeNode> computeChildren() {        
         Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();
-        QueryHelper<LocationNode> queryHelper = new QueryHelper<LocationNode>();
-        List<LocationNode> projectNodeList = queryHelper.executeQuery(conn,
-                "SELECT * FROM LOCATIONS WHERE project_key = " + getJavaItem().getKey(),
-                new RowConverter<LocationNode>(){
-                    public LocationNode getRow(ResultSet rs) throws SQLException {
-                        Location location = new Location(rs);
-                        LocationNode locationNode = new LocationNode(ProjectNode.this, location);                                            
-                        return locationNode;
-                    }            
-        });
+        Project project = (Project)getJavaItem();
+        List<Location> locations = project.getLocations();
+        for (Location location : locations) {
+        	LocationNode locationNode = new LocationNode(ProjectNode.this, location);                                                          
+        	children.add(locationNode);			
+		}
         
-        children.addAll(projectNodeList);
         return children;
     }
 

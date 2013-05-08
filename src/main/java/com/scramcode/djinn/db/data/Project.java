@@ -18,75 +18,72 @@ package com.scramcode.djinn.db.data;
 
 import java.awt.Color;
 import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import sun.security.krb5.internal.crypto.dk.ArcFourCrypto;
+
+import com.scramcode.djinn.db.logic.JavaItemVistor;
 import com.scramcode.djinn.ui.i18n.Images;
 
 public class Project extends AbstractJavaItem {
-    
+
 	public static final ImageIcon ICON = Images.getIcon("Project.graph.icon");
-    
-    private int projectKey;
-    private String projectName;
+
+	private String projectName;
 	private File directory;
-        
-    /**
-     * @param key
-     * @param name
-     */
-    public Project(String name, File directory) {        
-        this.projectName = name;
-        this.directory = directory;
-    }
-    
-    public Project(ResultSet rs) throws SQLException {
-        this.projectKey = rs.getInt("project_key");
-        this.projectName = rs.getString("project_name");
-        this.directory = new File(rs.getString("directory"));
-    }    
-    
-    public String getMappedTable() {
-        return "PROJECTS";
-    }
 
-    public int getKey() {
-        return this.projectKey;
-    }
-    public void setKey(int projectKey) {
-        this.projectKey = projectKey;
-    }
-    public String getProjectName() {
-        return this.projectName;
-    }
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
-    
-    @Override
-    public String getLabel() {
-        return projectName;
-    }
-    
-    @Override
-    public ImageIcon getImage() {
-        return ICON;
-    }
-    
-    @Override
-    public Color getColor() {
-        return Color.BLUE;
-    }
+	private List<Location> locations = new ArrayList<Location>();
 
-    @Override
-    public boolean isContainedBy(JavaItem destinationObject) {
-        return false;
-    }
-    
-    public File getDirectory() {
+	public Project(String name, File directory) {
+		this.projectName = name;
+		this.directory = directory;
+	}
+
+	public String getProjectName() {
+		return this.projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	@Override
+	public String getLabel() {
+		return projectName;
+	}
+
+	@Override
+	public ImageIcon getImage() {
+		return ICON;
+	}
+
+	@Override
+	public Color getColor() {
+		return Color.BLUE;
+	}
+
+	public File getDirectory() {
 		return directory;
 	}
-       
+
+	public List<Location> getLocations() {
+		return locations;
+	}
+	
+	@Override
+	public void accept(JavaItemVistor javaItemVistor) {
+		javaItemVistor.visitProject(this);
+		for (Location location : locations) {
+			location.accept(javaItemVistor);
+		}
+	}
+	
+	@Override
+	public boolean isContainedBy(JavaItem destinationObject) {	
+		return false;
+	}
+
 }

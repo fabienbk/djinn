@@ -25,6 +25,7 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaDependency;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.logic.ReferenceTools;
@@ -57,7 +58,7 @@ public class ShowTopLevelDependencyGraph extends AbstractAction {
                 updateMessage("Computing Dependencies...");
                 updateProgress(0);
                 
-                List<JavaItem> topLevelItems = ReferenceTools.getTopLevelItems();                
+                List<JavaItem> topLevelItems = DataHelper.getWorkspace().getTopLevelItems();                
                 Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
                 
                 int progress = 0;                    

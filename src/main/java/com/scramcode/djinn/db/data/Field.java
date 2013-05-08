@@ -17,40 +17,25 @@
 package com.scramcode.djinn.db.data;
 
 import java.awt.Color;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 
+import com.scramcode.djinn.db.logic.JavaItemVistor;
+
 public class Field extends AbstractJavaItem {
 
-    private int fieldKey;
-    private int classKey;
+    private Clazz clazz;
     private String name;
     private int access;
 
     /** full constructor */
-    public Field(String name, int access, int classKey) {
+    public Field(String name, int access, Clazz clazz) {
         this.name = name;
-        this.classKey = classKey;
         this.access = access;
-    }
-    
-    public Field(ResultSet rs) throws SQLException {
-        this.name = rs.getString("field_key");
-        this.name = rs.getString("name");
-        this.classKey = rs.getInt("class_key");
-        this.access = rs.getInt("access");
-    }    
-
-    public int getKey() {
-        return this.fieldKey;
+        this.clazz = clazz;
+        clazz.getFields().add(this);
     }
 
-    public void setKey(int fieldKey) {
-        this.fieldKey = fieldKey;
-    }
-    
     public int getAccess() {
         return this.access;
     }
@@ -66,18 +51,10 @@ public class Field extends AbstractJavaItem {
     public void setName(String name) {
         this.name = name;
     }
-
-    public int getClassKey() {
-        return this.classKey;
-    }
-
-    public void setClassKey(int classKey) {
-        this.classKey = classKey;
-    }
     
-    public String getMappedTable() {
-        return "FIELDS";
-    }
+    public Clazz getClazz() {
+		return clazz;
+	}
 
     @Override
     public String getLabel() {
@@ -93,10 +70,16 @@ public class Field extends AbstractJavaItem {
     public Color getColor() {
         return Color.RED;
     }
-
+    
     @Override
-    public boolean isContainedBy(JavaItem destinationObject) {
-        return false;
+    public void accept(JavaItemVistor javaItemVistor) {
+    	javaItemVistor.visitField(this);
     }
+    
+    @Override
+    public boolean isContainedBy(JavaItem destinationObject) {    
+    	return false;
+    }
+    
     
 }

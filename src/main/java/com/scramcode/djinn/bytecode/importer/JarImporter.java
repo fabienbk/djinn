@@ -1,14 +1,12 @@
 package com.scramcode.djinn.bytecode.importer;
 
 import java.io.File;
-import java.sql.Connection;
 import java.util.jar.JarFile;
 
 import com.scramcode.djinn.bytecode.DefLocationVisitor;
 import com.scramcode.djinn.bytecode.JarReader;
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Location;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.util.DjinnException;
 
 public class JarImporter extends AbstractImporter {
@@ -30,10 +28,9 @@ public class JarImporter extends AbstractImporter {
 
 			// the jar visitor
 			JarReader jarReader = new JarReader(new JarFile(path));
-			Connection conn = ConnectionManager.getInstance().getConnection();
-			
-			Location location = new Location(path, Location.JAR_LOCATION_TYPE);
-			DataHelper.putLocation(conn, location);
+						
+			Location location = new Location(path, Location.JAR_LOCATION_TYPE, null);
+			DataHelper.putLocation(location);
 			
 			// visit the jar
 			jarReader.accept(new DefLocationVisitor(location));		 

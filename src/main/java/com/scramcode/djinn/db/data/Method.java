@@ -17,51 +17,27 @@
 package com.scramcode.djinn.db.data;
 
 import java.awt.Color;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
+
+import com.scramcode.djinn.db.logic.JavaItemVistor;
 
 /** @author Hibernate CodeGenerator */
 public class Method extends AbstractJavaItem {
 
-    private int methodKey;
     private int access;
     private String name;
-    private int classKey;
+    private Clazz clazz;
     
-    public Method(String name, int access, int classKey) {        
+    public Method(String name, int access, Clazz clazz) {        
         this.access = access;
-        this.classKey = classKey;
+        this.clazz = clazz;
         this.name = name;
+        clazz.getMethods().add(this);
     }
     
-    @Override
-    public String getMappedTable() {
-        return "METHODS";
-    }
-
-    public Method(ResultSet rs) throws SQLException {
-        this.access = rs.getInt("access");
-        this.classKey = rs.getInt("class_key");
-        this.methodKey = rs.getInt("method_key");
-        this.name = rs.getString("name");
-    }    
-
-    public int getKey() {
-        return this.methodKey;
-    }
-
-    public void setKey(int methodKey) {
-        this.methodKey = methodKey;
-    }
-
     public int getAccess() {
         return this.access;
-    }
-
-    public int getClassKey() {
-        return this.classKey;
     }
 
     public String getName() {
@@ -83,8 +59,18 @@ public class Method extends AbstractJavaItem {
         return Color.red;
     }
 
+    public Clazz getClazz() {
+		return clazz;
+	}
+    
+    @Override
+    public void accept(JavaItemVistor javaItemVistor) {
+    	javaItemVistor.visitMethod(this);
+    }
+    
     @Override
     public boolean isContainedBy(JavaItem destinationObject) {
-        return false;
+    	return false;
     }
+    
 }

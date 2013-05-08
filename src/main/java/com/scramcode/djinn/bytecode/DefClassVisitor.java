@@ -17,7 +17,6 @@
  */
 package com.scramcode.djinn.bytecode;
 
-import java.sql.Connection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -27,12 +26,11 @@ import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
-import com.scramcode.djinn.db.data.Class;
+import com.scramcode.djinn.db.data.Clazz;
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Field;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Method;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.util.NameTools;
 
 /**
@@ -40,12 +38,10 @@ import com.scramcode.djinn.util.NameTools;
  * @author Fabien Benoit <fabien.benoit@gmail.com>
  */
 public final class DefClassVisitor implements ClassVisitor {
-    
-    private Connection connection = ConnectionManager.getInstance().getConnection();
-    
+       
     private Location location;
     private com.scramcode.djinn.db.data.Package packageObj;
-    private Class clazz;    
+    private Clazz clazz;    
     private TypeSet typeSet;
     
     public DefClassVisitor(com.scramcode.djinn.db.data.Package packageObj, Location location) {
@@ -63,10 +59,10 @@ public final class DefClassVisitor implements ClassVisitor {
     }    
 
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-        this.clazz = new Class(NameTools.getUnqualifiedClassName(name), name, access, packageObj.getKey(), location.getKey(), location.getProjectKey());
+        this.clazz = new Clazz(NameTools.getUnqualifiedClassName(name), name, access, packageObj);
         
         // finally, save class in database                        
-        DataHelper.putClass(connection, clazz);
+        DataHelper.putClass(clazz);
     }
 
     public void visitSource(String source, String debug) {     
@@ -82,8 +78,8 @@ public final class DefClassVisitor implements ClassVisitor {
     }
 
     public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-        Field field = new Field(name, access, clazz.getKey());        
-        DataHelper.putField(connection, field);        
+        Field field = new Field(name, access, clazz);        
+        DataHelper.putField(field);        
         
         typeSet.addDesc(desc); // add class reference
         
@@ -91,8 +87,8 @@ public final class DefClassVisitor implements ClassVisitor {
     }
 
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-        Method method = new Method(name, access, clazz.getKey());
-        DataHelper.putMethod(connection, method);
+        Method method = new Method(name, access, clazz);
+        DataHelper.putMethod(method);
         
         typeSet.addMethodDesc(desc); // add class reference
                 
@@ -103,7 +99,7 @@ public final class DefClassVisitor implements ClassVisitor {
     public void visitEnd() {        
         Set<String> clazzReferences = typeSet.getSet();
         for (Iterator<String> iter = clazzReferences.iterator(); iter.hasNext();) {
-            DataHelper.putClassReference(connection, clazz.getKey(), iter.next());
+            DataHelper.putClassReference(clazz, iter.next());
         }        
     }
     

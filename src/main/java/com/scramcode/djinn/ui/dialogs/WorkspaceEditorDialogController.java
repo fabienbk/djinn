@@ -12,11 +12,10 @@ import javax.swing.filechooser.FileFilter;
 import com.scramcode.djinn.bytecode.importer.AbstractImporter;
 import com.scramcode.djinn.bytecode.importer.ImportListener;
 import com.scramcode.djinn.bytecode.importer.ImporterFactory;
-import com.scramcode.djinn.db.data.AbstractJavaItem;
+import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.i18n.Images;
 import com.scramcode.djinn.util.AbstractSwingWorker;
@@ -57,7 +56,7 @@ public class WorkspaceEditorDialogController {
 				if (showOpenDialog == JFileChooser.APPROVE_OPTION) {				
 					File[] list = fileChooser.getSelectedFiles();
 					for (File file : list) {
-						workspaceEditorListModel.addJavaItem(new Location(file.getAbsolutePath(), Location.DIR_LOCATION_TYPE));
+						workspaceEditorListModel.addJavaItem(new Location(file.getAbsolutePath(), Location.DIR_LOCATION_TYPE, null));
 					}
 				}
 			}
@@ -84,7 +83,7 @@ public class WorkspaceEditorDialogController {
 				if (showOpenDialog == JFileChooser.APPROVE_OPTION) {
 					File[] list = fileChooser.getSelectedFiles();
 					for (File file : list) {
-						workspaceEditorListModel.addJavaItem(new Location(file.getAbsolutePath(), Location.JAR_LOCATION_TYPE));
+						workspaceEditorListModel.addJavaItem(new Location(file.getAbsolutePath(), Location.JAR_LOCATION_TYPE, null));
 					}					
 				}					
 			}
@@ -121,7 +120,7 @@ public class WorkspaceEditorDialogController {
         new AbstractSwingWorker(true) {
         	@Override
             public Object construct() {
-        		ConnectionManager.getInstance().resetDatabase();
+        		DataHelper.resetWorkspace();
 				
         		ArrayList<String> importErrors = new ArrayList<String>();
         		final AtomicInteger i = new AtomicInteger(0);        		
@@ -146,13 +145,15 @@ public class WorkspaceEditorDialogController {
                 }
                 
                 System.err.println("import errors:" + importErrors);
+                
+                DataHelper.getWorkspace().resolveReferences();
                 return null;
             }
             
             @Override
             public void finished() {
             	workspaceEditorListModel.getList().clear();
-            	workspaceEditorDialog.setVisible(false);
+            	workspaceEditorDialog.setVisible(false);            	            	
                 Application.getInstance().getWorkspaceTreeController().refresh();
             }
             

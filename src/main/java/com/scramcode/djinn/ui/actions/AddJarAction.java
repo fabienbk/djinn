@@ -29,7 +29,7 @@ import com.scramcode.djinn.bytecode.DefLocationVisitor;
 import com.scramcode.djinn.bytecode.JarReader;
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Location;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
+import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
 import com.scramcode.djinn.model.workspace.ProjectNode;
 import com.scramcode.djinn.ui.Application;
@@ -78,12 +78,11 @@ public class AddJarAction extends AbstractAction {
                     JarReader r = new JarReader(new JarFile(path));
                     
                     // the selected project key
-                    int projectKey = ((ProjectNode)selectedNode).getJavaItem().getKey();
+                    ProjectNode selectedProjectNode = (ProjectNode)selectedNode;
+    				Project project = (Project)selectedProjectNode.getJavaItem();
                     
-                    Connection conn = ConnectionManager.getInstance().getConnection();
-                    
-                    Location location = new Location(path, Location.JAR_LOCATION_TYPE, projectKey);
-					DataHelper.putLocation(conn, location);
+                    Location location = new Location(path, Location.JAR_LOCATION_TYPE, project);
+					DataHelper.putLocation(location);
                     
                     // visit the jar
                     r.accept(new DefLocationVisitor(location));

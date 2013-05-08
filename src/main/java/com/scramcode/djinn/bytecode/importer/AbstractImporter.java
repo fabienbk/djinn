@@ -21,7 +21,6 @@ import java.util.ArrayList;
 
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Project;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.util.DjinnException;
 
 /**
@@ -49,7 +48,7 @@ public abstract class AbstractImporter {
 
 	public Project createAndSaveProject(String name, File directory) {
 	    Project p = new Project(name, directory);
-	    DataHelper.putProject(ConnectionManager.getInstance().getConnection(), p);
+	    DataHelper.putProject(p);
 	    return p;
 	}
 	

@@ -4,11 +4,11 @@ import java.awt.Color;
 
 import javax.swing.ImageIcon;
 
+import com.scramcode.djinn.db.logic.JavaItemVistor;
+
 public interface JavaItem {
 
-	public int getKey();	
-    
-    public String getMappedTable();    
+	public long getKey();	
     
     public String getLabel();
     
@@ -16,6 +16,7 @@ public interface JavaItem {
     
     public Color getColor();
     
-    public boolean isContainedBy(JavaItem destinationObject);
-    
+    public void accept(JavaItemVistor javaItemVistor);
+
+	boolean isContainedBy(JavaItem destinationObject);
 }

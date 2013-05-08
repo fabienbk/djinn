@@ -132,8 +132,8 @@ public class DependencyGraphPanelController implements TreeExpansionListener, Tr
                 packageNode.refresh();
                 ((DefaultTreeModel)detailsPanel.getNodeTree().getModel()).setRoot(packageNode);
             }
-            else if (fromDBOject instanceof com.scramcode.djinn.db.data.Class) {
-                ClassNode classNode = new ClassNode(null, (com.scramcode.djinn.db.data.Class)fromDBOject, false);                
+            else if (fromDBOject instanceof com.scramcode.djinn.db.data.Clazz) {
+                ClassNode classNode = new ClassNode(null, (com.scramcode.djinn.db.data.Clazz)fromDBOject, false);                
                 ((DefaultTreeModel)detailsPanel.getNodeTree().getModel()).setRoot(classNode);
             }
             

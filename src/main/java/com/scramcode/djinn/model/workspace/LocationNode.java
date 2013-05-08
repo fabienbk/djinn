@@ -16,9 +16,6 @@
  */
 package com.scramcode.djinn.model.workspace;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
@@ -26,9 +23,6 @@ import javax.swing.Icon;
 
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
-import com.scramcode.djinn.db.mgmt.QueryHelper;
-import com.scramcode.djinn.db.mgmt.RowConverter;
 import com.scramcode.djinn.ui.i18n.Images;
 
 
@@ -41,20 +35,14 @@ public class LocationNode extends AbstractJavaItemTreeNode {
     }
     
     @Override
-    protected Vector<AbstractJavaItemTreeNode> computeChildren() {
-        Connection conn = ConnectionManager.getInstance().getConnection();
-        Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();
-        QueryHelper<PackageNode> queryHelper = new QueryHelper<PackageNode>();
-        List<PackageNode> projectNodeList = queryHelper.executeQuery(conn,
-                "SELECT * FROM PACKAGES WHERE location_key = " + getJavaItem().getKey(), 
-                new RowConverter<PackageNode>(){
-            public PackageNode getRow(ResultSet rs) throws SQLException {                
-                Package packageObj = new Package(rs);                        
-                PackageNode packageNode = new PackageNode(LocationNode.this, packageObj);
-                return packageNode;
-            }            
-        });
-        children.addAll(projectNodeList);
+    protected Vector<AbstractJavaItemTreeNode> computeChildren() {        
+    	Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();
+    	Location location = (Location)getJavaItem();
+    	List<Package> packages = location.getPackages();
+    	for (Package packageObject : packages) {
+    		PackageNode packageNode = new PackageNode(LocationNode.this, packageObject);
+			children.add(packageNode);			
+		}
         return children;
     }
 

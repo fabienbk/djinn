@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="http://fabienbk.github.io/djinn/jnlp" href="$outputFile">
+ <information>
+    <title>Djinn</title>
+    <vendor>Scramcode</vendor>
+    <homepage href="https://github.com/fabienbk/djinn"/>
+    <description kind="one-line">Djinn</description>
+    <description kind="short">Djinn - Java dependency Explorer</description>
+    <description kind="tooltip">Djinn - Java dependency Explorer</description>
+    <icon href="http://timefinder.sourceforge.net/jnlp/shamrockwhite.jpg" kind="default"/>
+    <shortcut online="false"><desktop/><menu submenu="Djinn"/></shortcut>
+ </information>
+ <security>
+ <all-permissions/>
+ </security>
+ <resources>
+    <j2se version="1.6+" initial-heap-size="32m" max-heap-size="128m" />
+    <property name="jnlp.versionEnabled" value="true"/>
+    $dependencies
+ </resources>
+ <application-desc main-class="$mainClass">
+ </application-desc>
+</jnlp>

@@ -17,11 +17,12 @@
 package com.scramcode.djinn.db.data;
 
 import java.awt.Color;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import com.scramcode.djinn.db.logic.JavaItemVistor;
 import com.scramcode.djinn.ui.i18n.Images;
 
 
@@ -29,37 +30,18 @@ public class Package extends AbstractJavaItem {
     
     public static final ImageIcon ICON = Images.getIcon("Package.graph.icon");
     
-    private int packageKey;
-    private int locationKey;
-    private Integer projectKey;
-    private String qname;  
+    private Location location;
+    private String qname;
+
+	private List<Clazz> clazzes = new ArrayList<Clazz>();  
     
-    public Package(String qname, int locationKey, Integer projectKey) {
+    public Package(String qname, Location location) {
         this.qname = qname;
-        this.locationKey = locationKey;
-        this.projectKey = projectKey;
+        this.location = location;
+        
+        location.getPackages().add(this);
     }
     
-    @Override
-    public String getMappedTable() {
-        return "PACKAGES";
-    }
-
-    public Package(ResultSet rs) throws SQLException {
-        this.packageKey = rs.getInt("package_key");
-        this.qname = rs.getString("qname");
-        this.locationKey = rs.getInt("location_key");
-        this.projectKey = rs.getInt("project_key");          
-    }
-    
-    public int getKey() {
-        return this.packageKey;
-    }
-
-    public void setKey(int packageKey) {
-        this.packageKey = packageKey;
-    }
-
     public String getQname() {
         return this.qname;
     }
@@ -67,15 +49,7 @@ public class Package extends AbstractJavaItem {
     public void setQname(String qname) {
         this.qname = qname;
     }
-
-    public int getLocationKey() {
-        return this.locationKey;
-    }
-
-    public void setLocationKey(int locationKey) {
-        this.locationKey = locationKey;
-    }
-
+    
     @Override
     public String getLabel() {
         return qname;
@@ -91,17 +65,26 @@ public class Package extends AbstractJavaItem {
         return Color.ORANGE;
     }
     
-    @Override
-    public boolean isContainedBy(JavaItem destinationObject) {        
-        if (destinationObject instanceof Location) {           
-            return getLocationKey() == destinationObject.getKey();
-        }
-        return false;
-    }
-
-	public Integer getProjectKey() {
-		return projectKey;
+    public Location getLocation() {
+		return location;
 	}
-    
 
+	public List<Clazz> getClasses() {
+		return clazzes;
+	}
+
+	@Override
+	public void accept(JavaItemVistor javaItemVistor) {
+		javaItemVistor.visitPackage(this);
+		if (javaItemVistor.isClassVisitEnabled()) {
+			for (Clazz clazz : clazzes) {
+				clazz.accept(javaItemVistor);
+			}
+		}		
+	}
+
+	@Override
+	public boolean isContainedBy(JavaItem destinationObject) {
+		return location.getKey() == destinationObject.getKey() || location.isContainedBy(destinationObject);
+	}
 }

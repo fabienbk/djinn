@@ -27,7 +27,7 @@ import java.util.Set;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import com.scramcode.djinn.db.data.Class;
+import com.scramcode.djinn.db.data.Clazz;
 import com.scramcode.djinn.db.data.JavaDependency;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
@@ -73,9 +73,9 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
                 JavaItem javaItem = selectedNode.getJavaItem();
 
                 if (javaItem instanceof Location || javaItem instanceof Package
-                        || javaItem instanceof Class) {
+                        || javaItem instanceof Clazz) {
                     
-                    Set<JavaItem> locRefList = new HashSet<JavaItem>(getReferences(javaItem));
+                    Set locRefList = getReferences(javaItem);                    
                     
                     updateMessage("Creating Graph...");
                     updateProgress(70);
@@ -126,7 +126,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
         worker.start();
     }
     
-    public abstract List<? extends JavaItem> getReferences(JavaItem dbObject);
+    public abstract Set<? extends JavaItem> getReferences(JavaItem dbObject);
     
     public static class ShowLinksWithJarsAction extends AbstractShowDependenciesAction {
         private static final long serialVersionUID = 1L;
@@ -136,7 +136,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithJarsAction.label"));
         }
         @Override
-        public List<Location> getReferences(JavaItem dbObject) {
+        public Set<Location> getReferences(JavaItem dbObject) {
             return  ReferenceTools.getAllReferencesGroupByLocation(dbObject);
         }
     }
@@ -149,7 +149,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithPackagesAction.label"));
         }
         @Override
-        public List<Package> getReferences(JavaItem dbObject) {
+        public Set<Package> getReferences(JavaItem dbObject) {
             return  ReferenceTools.getAllReferencesGroupByPackage(dbObject);
         }
     }
@@ -162,7 +162,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
             putValue(Action.NAME, Messages.getString("ShowLinksWithClassesAction.label"));
         }
         @Override
-        public List<Class> getReferences(JavaItem dbObject) {
+        public Set<Clazz> getReferences(JavaItem dbObject) {
             return  ReferenceTools.getAllReferencesGroupByClass(dbObject);
         }
     }

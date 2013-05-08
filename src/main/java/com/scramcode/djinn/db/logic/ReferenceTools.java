@@ -16,7 +16,6 @@
  */
 package com.scramcode.djinn.db.logic;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -24,16 +23,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.scramcode.djinn.db.data.Class;
+import com.scramcode.djinn.db.data.Clazz;
+import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
-import com.scramcode.djinn.db.data.Project;
-import com.scramcode.djinn.db.meta.DatabaseModel;
-import com.scramcode.djinn.db.meta.Table;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
-import com.scramcode.djinn.db.mgmt.QueryHelper;
-import com.scramcode.djinn.db.mgmt.RowConverter;
 import com.scramcode.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
 
 
@@ -52,7 +46,7 @@ public final class ReferenceTools {
             JavaItem destinationObject,
             GranularityLevel granularityLevel) {
 
-        List<? extends JavaItem> references = getAllReferences(sourceObject, granularityLevel);
+        Set<? extends JavaItem> references = getAllReferences(sourceObject, granularityLevel);
 
         // Filter references not contained by destination object
         List<JavaItem> result = new ArrayList<JavaItem>();
@@ -65,22 +59,29 @@ public final class ReferenceTools {
         return result;
     }
     
-    public static boolean detectReference(JavaItem sourceObject, JavaItem destinationObject) {
-
-        List<? extends JavaItem> references = getAllReferences(sourceObject, GranularityLevel.CLASS);
-
-        for(JavaItem reference : references) {
-            if (reference.isContainedBy(destinationObject)) {
-                return true;
-            }
+    public static boolean detectReference(JavaItem sourceObject, final JavaItem destinationObject) {    	
+        JavaItemVistor visitor = new JavaItemVistor() {
+        	public void visitClazz(Clazz clazz) {
+        		List<Clazz> references = clazz.getReferences();
+        		for (Clazz referencedClazz :  references) {
+					if (referencedClazz.isContainedBy(destinationObject)) {
+						throw new AbortVisitException();
+					}
+				}
+        	}
+        };        
+        try {
+        	sourceObject.accept(visitor);
+        	return false;
         }
-        
-        return false;
+        catch(AbortVisitException e) {
+        	return true;
+        }        
     }
 
-	private static List<? extends JavaItem> getAllReferences(JavaItem sourceObject, GranularityLevel granularityLevel) {
+	private static Set<? extends JavaItem> getAllReferences(JavaItem sourceObject, GranularityLevel granularityLevel) {
 		// Get all references of the source object, at the requested granularity
-        List<? extends JavaItem> references = null;        
+        Set<? extends JavaItem> references = null;        
         switch(granularityLevel) {
             case CLASS: {
                 references = getAllReferencesGroupByClass(sourceObject);
@@ -96,121 +97,44 @@ public final class ReferenceTools {
         }
 		return references;
 	}
-
-    public static List<JavaItem> getTopLevelItems() {
-        Connection conn = ConnectionManager.getInstance().getConnection();
-        ArrayList<JavaItem> topLevelItemList = new ArrayList<JavaItem>();
-        QueryHelper<Project> queryHelper = new QueryHelper<Project>();
-        List<Project> projectNodeList = queryHelper.executeQuery(conn,
-                "SELECT * FROM PROJECTS", 
-                new RowConverter<Project>(){
-                    public Project getRow(ResultSet rs) throws SQLException {       
-                        return new Project(rs);                        
-                    }            
-        });
-        topLevelItemList.addAll(projectNodeList);
-        
-        QueryHelper<Location> queryHelper2 = new QueryHelper<Location>();
-        List<Location> topLevelLocationNodeList = queryHelper2.executeQuery(conn,
-                "SELECT * FROM LOCATIONS WHERE PROJECT_KEY IS NULL", 
-                new RowConverter<Location>(){
-                    public Location getRow(ResultSet rs) throws SQLException {                    	
-                    	return new Location(rs);                     
-                    }            
-        });
-        topLevelItemList.addAll(topLevelLocationNodeList);
-        return topLevelItemList;
-    }
-    
-    public static List<Class> getAllReferencesGroupByClass(JavaItem dbObject) {
-        
-        DatabaseModel dbInstance = DatabaseModel.getInstance();
-        Table dbObjectTable = dbInstance.getTable(dbObject.getMappedTable());
-        Table classRefTable = dbInstance.getTable("CLASS_REFERENCES");        
-
-        String getRefsJoinClause = 
-            dbInstance.getJoinClause(dbObjectTable, classRefTable);
-
-        // Methods and Field level are not supported
-
-        QueryHelper<Class> queryHelper = new QueryHelper<Class>();
-        List<Class> referencesList = queryHelper.executeQuery(
-                ConnectionManager.getInstance().getConnection(),                
-                "SELECT DISTINCT CLASSES.* FROM " 
-                + "(SELECT DISTINCT cname "
-                + " FROM " + getRefsJoinClause
-                + " WHERE " + dbObjectTable.getPrimaryKeyFieldName() + " = " + dbObject.getKey() + ") T1"
-                + " JOIN CLASSES ON CLASSES.cname = T1.cname ",                
-                new RowConverter<Class>() {
-                    public Class getRow(ResultSet rs) throws SQLException {
-                        Class p = new Class(rs);
-                        return p;
-                    }            
-                });
-
-        return referencesList;
-
+	
+    public static Set<Clazz> getAllReferencesGroupByClass(JavaItem javaItem) {
+    	final Set<Clazz> clazzReferencesSet = new HashSet<Clazz>();
+        JavaItemVistor visitor = new JavaItemVistor() {
+        	public void visitClazz(Clazz clazz) {
+        		clazzReferencesSet.addAll(clazz.getReferences());
+        	}
+        };
+        javaItem.accept(visitor);
+        return clazzReferencesSet;
     }
 
-    public static List<Location> getAllReferencesGroupByLocation(JavaItem sourceItem) {
-        
-        DatabaseModel dbInstance = DatabaseModel.getInstance();
-        Table dbObjectTable = dbInstance.getTable(sourceItem.getMappedTable());
-        Table classRefTable = dbInstance.getTable("CLASS_REFERENCES");
-
-        String getRefsJoinClause = 
-            dbInstance.getJoinClause(dbObjectTable, classRefTable);
-
-        // Methods and Field level are not supported
-
-        QueryHelper<Location> queryHelper = new QueryHelper<Location>();
-        List<Location> referencesList = queryHelper.executeQuery(
-                ConnectionManager.getInstance().getConnection(),                
-                "SELECT DISTINCT LOCATIONS.* FROM " 
-                + "(SELECT DISTINCT cname "
-                + " FROM " + getRefsJoinClause
-                + " WHERE " + dbObjectTable.getPrimaryKeyFieldName() + " = " + sourceItem.getKey() + ") T1"
-                + " JOIN CLASSES ON CLASSES.cname = T1.cname " 
-                + " JOIN PACKAGES ON CLASSES.package_key = PACKAGES.package_key " 
-                + " JOIN LOCATIONS ON PACKAGES.location_key = LOCATIONS.location_key",                
-                new RowConverter<Location>() {
-                    public Location getRow(ResultSet rs) throws SQLException {
-                        Location loc = new Location(rs);
-                        return loc;
-                    }            
-                });
-
-        return referencesList;        
+    public static Set<Location> getAllReferencesGroupByLocation(JavaItem javaItem) {
+    	final Set<Location> locationReferencesSet = new HashSet<Location>();
+        JavaItemVistor visitor = new JavaItemVistor() {
+        	public void visitClazz(Clazz clazz) {
+        		List<Clazz> references = clazz.getReferences();
+        		for (Clazz reference : references) {
+					locationReferencesSet.add(reference.getPackage().getLocation());
+				}
+        	}
+        };
+        javaItem.accept(visitor);
+        return locationReferencesSet;     
     }
 
-    public static List<Package> getAllReferencesGroupByPackage(JavaItem dbObject) {
-
-        DatabaseModel dbInstance = DatabaseModel.getInstance();
-        Table dbObjectTable = dbInstance.getTable(dbObject.getMappedTable());
-        Table classRefTable = dbInstance.getTable("CLASS_REFERENCES");        
-
-        String getRefsJoinClause = 
-            dbInstance.getJoinClause(dbObjectTable, classRefTable);
-
-        // Methods and Field level are not supported
-
-        QueryHelper<Package> queryHelper = new QueryHelper<Package>();
-        List<Package> referencesList = queryHelper.executeQuery(
-                ConnectionManager.getInstance().getConnection(),                
-                "SELECT DISTINCT PACKAGES.* FROM " 
-                + "(SELECT DISTINCT cname "
-                + " FROM " + getRefsJoinClause
-                + " WHERE " + dbObjectTable.getPrimaryKeyFieldName() + " = " + dbObject.getKey() + ") T1"
-                + " JOIN CLASSES ON CLASSES.cname = T1.cname " 
-                + " JOIN PACKAGES ON CLASSES.package_key = PACKAGES.package_key ",                
-                new RowConverter<Package>() {
-                    public Package getRow(ResultSet rs) throws SQLException {
-                        Package p = new Package(rs);
-                        return p;
-                    }            
-                });
-
-        return referencesList;
+    public static Set<Package> getAllReferencesGroupByPackage(JavaItem javaItem) {
+    	final Set<Package> packageReferencesSet = new HashSet<Package>();
+        JavaItemVistor visitor = new JavaItemVistor() {
+        	public void visitClazz(Clazz clazz) {
+        		List<Clazz> references = clazz.getReferences();
+        		for (Clazz reference : references) {
+					packageReferencesSet.add(reference.getPackage());
+				}
+        	}
+        };
+        javaItem.accept(visitor);
+        return packageReferencesSet;     
 
     }
 

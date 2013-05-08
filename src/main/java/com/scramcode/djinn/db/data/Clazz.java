@@ -17,53 +17,41 @@
 package com.scramcode.djinn.db.data;
 
 import java.awt.Color;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import com.scramcode.djinn.db.logic.JavaItemVistor;
 import com.scramcode.djinn.ui.i18n.Images;
 
 
-public class Class extends AbstractJavaItem {
+public class Clazz extends AbstractJavaItem {
     
     public static final ImageIcon ICON = Images.getIcon("Class.graph.icon");
-    
-    private int classKey;
+
     private String name;
     private int access;
-    private int packageKey;
-    private int locationKey;
-    private Integer projectKey;    
+    
+    private Package packageObject;
+    
     private String canonicalName;
     
-    public Class(String name, String canonicalName, int access, int packageKey, int locationKey, Integer projectKey) {
+    private List<Clazz> references = new ArrayList<Clazz>();
+
+	private List<Method> methods = new ArrayList<Method>();
+
+	private List<Field> fields = new ArrayList<Field>();
+        
+    public Clazz(String name, String canonicalName, int access, Package packageObject) {
         this.name = name;        
         this.access = access;
-        this.packageKey = packageKey;
-        this.locationKey = locationKey;
-        this.projectKey = projectKey;
+        this.packageObject = packageObject;
         this.canonicalName = canonicalName;        
+        
+        packageObject.getClasses().add(this);
     }
-    
-    public Class(ResultSet rs) throws SQLException {
-        this.classKey = rs.getInt("class_key");   
-        this.name = rs.getString("name");
-        this.canonicalName = rs.getString("cname"); 
-        this.access = rs.getInt("access");
-        this.packageKey = rs.getInt("package_key");
-        this.locationKey = rs.getInt("location_key");
-        this.projectKey =  rs.getInt("project_key");
-    }    
-    
-    public int getKey() {
-        return this.classKey;
-    }
-
-    public void setKey(int classKey) {
-        this.classKey = classKey;
-    }
-
+        
     public java.lang.String getName() {
         return this.name;
     }
@@ -80,13 +68,9 @@ public class Class extends AbstractJavaItem {
         this.canonicalName = canonicalName;
     }
     
-    public int getPackageKey() {
-        return this.packageKey;
-    }
-
-    public void setPackageKey(int packageKey) {
-        this.packageKey = packageKey;
-    }
+	public Package getPackage() {
+		return packageObject;
+	}
 
     public int getAccess() {
         return this.access;
@@ -110,41 +94,48 @@ public class Class extends AbstractJavaItem {
         return ICON;
     }
     
-    public Integer getProjectKey() {
-		return projectKey;
-	}
-
     @Override
     public Color getColor() {
         return Color.green;
     }
 
-    /**
-     * @return the locationKey
-     */
-    public int getLocationKey() {
-        return locationKey;
-    }
+	public void addReference(Clazz referencedClazz) {
+		references.add(referencedClazz);
+	}
 
-    /**
-     * @param locationKey the locationKey to set
-     */
-    public void setLocationKey(int locationKey) {
-        this.locationKey = locationKey;
-    }
+	public void clearReferences() {
+		references.clear();
+	}
 
-    @Override
-    public boolean isContainedBy(JavaItem destinationObject) {
-        if (destinationObject instanceof Package) {
-            return packageKey == destinationObject.getKey();
-        }
-        else if (destinationObject instanceof Location) {           
-            return locationKey == destinationObject.getKey();
-        }
-        else if (destinationObject instanceof Project) {
-        	return projectKey == destinationObject.getKey();
-        }        
-        return false;
-    }
+	public List<Method >getMethods() {		
+		return methods;
+	}
+
+	public List<Field> getFields() {
+		return fields;
+	}
+	
+	@Override
+	public void accept(JavaItemVistor javaItemVistor) {
+		javaItemVistor.visitClazz(this);
+		
+		if (javaItemVistor.isMemberVisitEnabled()) {
+			for (Method method : methods) {
+				method.accept(javaItemVistor);
+			}
+			
+			for (Field field : fields) {
+				field.accept(javaItemVistor);
+			}		
+		}
+	}
+	
+	public List<Clazz> getReferences() {
+		return references;
+	}
+
+	public boolean isContainedBy(JavaItem destinationObject) {		
+		return packageObject.getKey() == destinationObject.getKey() || packageObject.isContainedBy(destinationObject);		
+	}
 
 }

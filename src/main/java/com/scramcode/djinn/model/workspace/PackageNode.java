@@ -16,19 +16,13 @@
  */
 package com.scramcode.djinn.model.workspace;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Icon;
 
-import com.scramcode.djinn.db.data.Class;
+import com.scramcode.djinn.db.data.Clazz;
 import com.scramcode.djinn.db.data.Package;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
-import com.scramcode.djinn.db.mgmt.QueryHelper;
-import com.scramcode.djinn.db.mgmt.RowConverter;
 import com.scramcode.djinn.ui.i18n.Images;
 
 
@@ -41,20 +35,14 @@ public class PackageNode extends AbstractJavaItemTreeNode {
     }
     
     @Override
-    protected Vector<AbstractJavaItemTreeNode> computeChildren() {
-        Connection conn = ConnectionManager.getInstance().getConnection();
-        Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();
-        QueryHelper<ClassNode> queryHelper = new QueryHelper<ClassNode>();
-        List<ClassNode> projectNodeList = queryHelper.executeQuery(conn,
-                "SELECT * FROM CLASSES WHERE package_key = " + getJavaItem().getKey(), 
-                new RowConverter<ClassNode>(){
-            public ClassNode getRow(ResultSet rs) throws SQLException {       
-                Class classObj = new Class(rs);                        
-                ClassNode classNode = new ClassNode(PackageNode.this, classObj);
-                return classNode;
-            }            
-        });
-        children.addAll(projectNodeList);
+    protected Vector<AbstractJavaItemTreeNode> computeChildren() {        
+        Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();        
+        Package packageObject = (Package)getJavaItem();
+        List<Clazz> classes = packageObject.getClasses();
+        for (Clazz clazz : classes) {
+        	ClassNode classNode = new ClassNode(PackageNode.this, clazz);        
+        	children.add(classNode);			
+		}        
         return children;
     }
 

@@ -32,7 +32,6 @@ import com.scramcode.djinn.bytecode.JarReader;
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.util.DjinnException;
 
 
@@ -70,10 +69,8 @@ public class RecursiveDirectoryImporter extends AbstractImporter {
 					JarReader locReader = new JarReader(new JarFile(file));
 					
 					// Create location for this jar					
-					Location location = new Location(file.getAbsolutePath(), 
-							Location.JAR_LOCATION_TYPE, project.getKey());					
-					DataHelper.putLocation(ConnectionManager.getInstance().getConnection(), 
-							location);
+					Location location = new Location(file.getAbsolutePath(), Location.JAR_LOCATION_TYPE, project);					
+					DataHelper.putLocation(location);
 		            		            
 					// Visit the jar
 					locReader.accept(new DefLocationVisitor(location));

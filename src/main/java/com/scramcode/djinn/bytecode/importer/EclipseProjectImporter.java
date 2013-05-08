@@ -37,7 +37,6 @@ import com.scramcode.djinn.bytecode.LocationReader;
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.util.DjinnException;
 
 
@@ -64,7 +63,7 @@ public class EclipseProjectImporter extends AbstractImporter {
 		File classPathFile = scanForClasspath();
 		Project project = createAndSaveProject(directory.getName(), directory);
 
-		List<Location> locations = createAndSaveLocations(classPathFile, project.getKey());
+		List<Location> locations = createAndSaveLocations(classPathFile, project);
 
 		double progress = 0;
 		double delta = 100d / locations.size();
@@ -107,7 +106,7 @@ public class EclipseProjectImporter extends AbstractImporter {
 		throw new DjinnException("Can't locate .classpath file in " + directory.getName());
 	}
 
-	public List<Location> createAndSaveLocations(File classPathFile, final int projectKey) throws DjinnException {        
+	public List<Location> createAndSaveLocations(File classPathFile, Project project) throws DjinnException {        
 
 		List<Location> locationList = new ArrayList<Location>();
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -145,11 +144,9 @@ public class EclipseProjectImporter extends AbstractImporter {
 			}
 
 
-			Location location = new Location(path, type, projectKey);
+			Location location = new Location(path, type, project);
 			locationList.add(location);
-			DataHelper.putLocation(ConnectionManager.getInstance().getConnection(), location);
-
-
+			DataHelper.putLocation(location);
 		}
 
 		return locationList;

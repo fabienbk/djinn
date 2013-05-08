@@ -16,20 +16,13 @@
  */
 package com.scramcode.djinn.model.workspace;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
 import java.util.Vector;
 
 import javax.swing.Icon;
 
-import com.scramcode.djinn.db.data.Class;
+import com.scramcode.djinn.db.data.Clazz;
 import com.scramcode.djinn.db.data.Field;
 import com.scramcode.djinn.db.data.Method;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
-import com.scramcode.djinn.db.mgmt.QueryHelper;
-import com.scramcode.djinn.db.mgmt.RowConverter;
 import com.scramcode.djinn.ui.i18n.Images;
 
 
@@ -38,11 +31,11 @@ public class ClassNode extends AbstractJavaItemTreeNode {
     private static final Icon ICON = Images.getIcon("Class.icon");
     private boolean showChildren = true;    
     
-    public ClassNode(PackageNode parent, Class dataObject) {
+    public ClassNode(PackageNode parent, Clazz dataObject) {
         super(parent, dataObject);
     }
     
-    public ClassNode(PackageNode parent, Class dataObject, boolean showChildren) {
+    public ClassNode(PackageNode parent, Clazz dataObject, boolean showChildren) {
         super(parent, dataObject);
         this.showChildren = showChildren;
     }
@@ -58,36 +51,21 @@ public class ClassNode extends AbstractJavaItemTreeNode {
     }
 
     @Override
-    protected Vector<AbstractJavaItemTreeNode> computeChildren() {
-        Connection conn = ConnectionManager.getInstance().getConnection();
+    protected Vector<AbstractJavaItemTreeNode> computeChildren() {        
         Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();
         
-        if (showChildren) {         
-            QueryHelper<MethodNode> queryHelper = new QueryHelper<MethodNode>();
-            List<MethodNode> methodNodeList = queryHelper.executeQuery(conn,
-                    "SELECT * FROM METHODS WHERE class_key = " + getJavaItem().getKey(), 
-                    new RowConverter<MethodNode>(){
-                public MethodNode getRow(ResultSet rs) throws SQLException {       
-                    Method method = new Method(rs);                        
-                    MethodNode methodNode = new MethodNode(ClassNode.this, method);
-                    return methodNode;
-                }            
-            });
-
-            QueryHelper<FieldNode> queryHelper2 = new QueryHelper<FieldNode>();        
-            List<FieldNode> fieldNodeList = queryHelper2.executeQuery(conn,
-                    "SELECT * FROM FIELDS WHERE class_key = " + getJavaItem().getKey(), 
-                    new RowConverter<FieldNode>(){
-                public FieldNode getRow(ResultSet rs) throws SQLException {       
-                    Field field = new Field(rs);                        
-                    FieldNode fieldNode = new FieldNode(ClassNode.this, field);
-                    return fieldNode;
-                }            
-            });
-
-            children.addAll(methodNodeList);
-            children.addAll(fieldNodeList);
-        
+        if (showChildren) {                             	
+        	Clazz clazz = (Clazz)getJavaItem();
+        	        	                       
+        	for (Method method : clazz.getMethods()) {
+        		MethodNode methodNode = new MethodNode(ClassNode.this, method);                        
+        		children.add(methodNode);
+			}
+        	                       
+        	for (Field field: clazz.getFields()) {
+                FieldNode fieldNode = new FieldNode(ClassNode.this, field);
+            	children.add(fieldNode);
+			}        
         }
         return children;
     }    

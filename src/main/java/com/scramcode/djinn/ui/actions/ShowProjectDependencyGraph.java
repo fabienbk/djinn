@@ -27,12 +27,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 
-import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.logic.ReferenceTools;
-import com.scramcode.djinn.db.mgmt.ConnectionManager;
 import com.scramcode.djinn.graph.GraphTools;
 import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
 import com.scramcode.djinn.ui.Application;
@@ -76,7 +74,8 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                     Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
                                         
                     // Get all locations and transform them into vertices
-                    List<Location> locationsList = DataHelper.getLocations(ConnectionManager.getInstance().getConnection(),  (Project)javaItem);
+                    Project project = (Project)javaItem;
+					List<Location> locationsList = project.getLocations();
                     
                     for (Location element : locationsList) {
                         graphData.put(element, new HashSet<JavaItem>());
@@ -91,7 +90,7 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                         updateProgress(progress);
                                                 
                         // Get the references of the current element
-                        List<Location> elementRefList = ReferenceTools.getAllReferencesGroupByLocation(element);                        
+                        Set<Location> elementRefList = ReferenceTools.getAllReferencesGroupByLocation(element);                        
                         
                         Set<JavaItem> elementRefListFiltered = new HashSet<JavaItem>();
                         
