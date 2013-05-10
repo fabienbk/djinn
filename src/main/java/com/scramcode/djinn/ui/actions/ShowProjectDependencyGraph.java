@@ -32,7 +32,6 @@ import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.db.logic.ReferenceTools;
 import com.scramcode.djinn.graph.GraphTools;
-import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.i18n.Images;
 import com.scramcode.djinn.ui.i18n.Messages;
@@ -65,10 +64,8 @@ public class ShowProjectDependencyGraph extends AbstractAction {
                 updateProgress(0);
                 
                 Application instance = Application.getInstance();
-                AbstractJavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
-                
-                JavaItem javaItem = selectedNode.getJavaItem();
-                
+                JavaItem javaItem = instance.getWorkspaceTreeController().getSelection().get(0);
+                                
                 if (javaItem instanceof Project) {
                                     
                     Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
@@ -124,13 +121,11 @@ public class ShowProjectDependencyGraph extends AbstractAction {
             @Override
             public void finished() {
             	Graph builtGraph = (Graph) getValue();
-            	if (builtGraph!=null) {
-            	
+            	if (builtGraph!=null) {            	
             		Application instance = Application.getInstance();
-            		AbstractJavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
-            		String projetName = selectedNode.getJavaItem().getLabel();
-            		
-                        Application.getInstance().getGraphAreaController().showGraph(projetName, (Graph) getValue());    	
+            		JavaItem javaItem = instance.getWorkspaceTreeController().getSelection().get(0);
+            		String projetName = javaItem.getLabel();
+            		Application.getInstance().getGraphAreaController().showGraph(projetName, (Graph) getValue());    	
             	}            	
             }
             

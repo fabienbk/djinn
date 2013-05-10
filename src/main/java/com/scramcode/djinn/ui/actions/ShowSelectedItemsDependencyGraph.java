@@ -21,11 +21,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaDependency;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.logic.ReferenceTools;
@@ -41,19 +41,23 @@ import edu.uci.ics.jung.graph.Graph;
  * Show the complete dependencies between top level items of the workspace.
  * @author Fabien Benoit <fabien.benoit@gmail.com>
  */
-public class ShowTopLevelDependencyGraph extends AbstractAction {
+public class ShowSelectedItemsDependencyGraph extends AbstractAction {
     
     private static final long serialVersionUID = 1L;    
-
-    public ShowTopLevelDependencyGraph() {
-        putValue(Action.NAME, Messages.getString("ShowTopLevelDependencyGraph.label"));
+    
+    public ShowSelectedItemsDependencyGraph() {
+        putValue(Action.NAME, Messages.getString("ShowSelectedItemsDependencyGraph.label"));
     }
     
-    @Override
-    public boolean isEnabled() {
-    	final Application instance = Application.getInstance();
-		return instance != null && instance.getWorkspaceTreeController().getRootNode().getChildCount() > 1;
-    }
+    private static Logger logger = Logger.getLogger(ShowSelectedItemsDependencyGraph.class.getName());
+    
+    /*public boolean checkEnabled() {   	
+    	if (Application.getInstance() != null) {
+    		List<JavaItem> selection = Application.getInstance().getWorkspaceTreeController().getSelection();    		
+    		return selection!= null && selection.size() > 1;    		    	
+    	}    	    	
+    	return false;
+    }*/
     
     public void actionPerformed(ActionEvent e) {    	
     	    	    	
@@ -64,14 +68,17 @@ public class ShowTopLevelDependencyGraph extends AbstractAction {
                 updateMessage("Computing Dependencies...");
                 updateProgress(0);
                 
-                List<JavaItem> topLevelItems = DataHelper.getWorkspace().getTopLevelItems();                
+                List<JavaItem> selectedItems = Application.getInstance().getWorkspaceTreeController().getSelection();
+                
+                logger.info("selectedItems: " + selectedItems);
+                                
                 Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
                 
                 int progress = 0;                    
-                int delta = 100 / topLevelItems.size();                
+                int delta = 100 / selectedItems.size();                
                 
-                for (JavaItem javaItem : topLevelItems) {
-                	graphData.put(javaItem, ReferenceTools.getAllReferencesFromSubSet(javaItem, topLevelItems));
+                for (JavaItem javaItem : selectedItems) {
+                	graphData.put(javaItem, ReferenceTools.getAllReferencesFromSubSet(javaItem, selectedItems));
                 	updateMessage("Checking " + javaItem.getLabel() + "...");
                 	updateProgress(progress+=delta);                    
 				}    

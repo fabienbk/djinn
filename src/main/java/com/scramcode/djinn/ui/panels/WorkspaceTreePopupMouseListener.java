@@ -19,23 +19,26 @@ package com.scramcode.djinn.ui.panels;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JPopupMenu;
+import com.scramcode.djinn.ui.menu.WorkspaceTreeContextMenu;
 
 
 public class WorkspaceTreePopupMouseListener extends MouseAdapter {
 
-    private JPopupMenu menuToDisplay;
+    private WorkspaceTreeContextMenu menuToDisplay;
     
-    public WorkspaceTreePopupMouseListener(JPopupMenu menuToDisplay) {
+    public WorkspaceTreePopupMouseListener(WorkspaceTreeContextMenu menuToDisplay) {
         this.menuToDisplay = menuToDisplay;
     }
     
-    public void mousePressed(MouseEvent e) {
-        if (e.isPopupTrigger()) {            
+    @Override
+	public void mousePressed(MouseEvent e) {
+        if (e.isPopupTrigger()) {        	
+        	menuToDisplay.refresh();
             menuToDisplay.show(e.getComponent(), e.getX(), e.getY());          
         }
     }
-    public void mouseReleased(MouseEvent e) {
+    @Override
+	public void mouseReleased(MouseEvent e) {
         if (e.isPopupTrigger()) {            
             menuToDisplay.show(e.getComponent(), e.getX(), e.getY());
         }

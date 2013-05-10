@@ -33,8 +33,13 @@ public class DirectoryReader implements LocationReader {
     
     public void visitDirectory(LocationVisitor visitor, File visitedDirectory) {        
         
-        File[] files = visitedDirectory.listFiles();
+        File[] files = visitedDirectory.listFiles();        
         int numberOfJavaClasses = 0;
+        
+        if (files == null) {
+        	return;
+        }
+        
         for (int i = 0; i < files.length; i++) {
             if (files[i].isFile() && files[i].getName().endsWith(".class")) {
                 numberOfJavaClasses++;

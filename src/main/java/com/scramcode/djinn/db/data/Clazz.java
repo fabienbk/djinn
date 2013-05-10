@@ -134,8 +134,13 @@ public class Clazz extends AbstractJavaItem {
 		return references;
 	}
 
-	public boolean isContainedBy(JavaItem destinationObject) {		
+	public boolean isContainedBy(JavaItem destinationObject) {				
 		return packageObject.getKey() == destinationObject.getKey() || packageObject.isContainedBy(destinationObject);		
+	}
+	
+	@Override
+	public String toString() {	
+		return getName() +":"+ packageObject + ":"+packageObject.getLocation() + ":"+ packageObject.getLocation().getProject();
 	}
 
 }

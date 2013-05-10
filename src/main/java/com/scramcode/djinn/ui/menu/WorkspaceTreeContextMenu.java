@@ -16,6 +16,7 @@
  */
 package com.scramcode.djinn.ui.menu;
 
+import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
@@ -24,18 +25,23 @@ import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWi
 import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWithJarsAction;
 import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWithPackagesAction;
 import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
+import com.scramcode.djinn.ui.actions.ShowSelectedItemsDependencyGraph;
 import com.scramcode.djinn.ui.actions.ShowTopLevelDependencyGraph;
 import com.scramcode.djinn.ui.i18n.Images;
 import com.scramcode.djinn.ui.i18n.Messages;
 
 
-public class DBObjectContextMenu extends JPopupMenu {
+public class WorkspaceTreeContextMenu extends JPopupMenu {
 
     /** Comment for <code>serialVersionUID</code> */
     private static final long serialVersionUID = 1L;
+    
+    private ActionMap actionMap = null;
 
-    public DBObjectContextMenu(ActionMap actionMap) {        
+    public WorkspaceTreeContextMenu(ActionMap actionMap) {      
+    	this.actionMap = actionMap;
     	this.add(actionMap.get(ShowTopLevelDependencyGraph.class));
+    	this.add(actionMap.get(ShowSelectedItemsDependencyGraph.class));
     	this.add(actionMap.get(ShowProjectDependencyGraph.class));
         
         JMenu showLinksMenu = new JMenu(Messages.getString("ShowLinks.label"));                
@@ -46,4 +52,14 @@ public class DBObjectContextMenu extends JPopupMenu {
         
         this.add(showLinksMenu);
     }
+
+	public void refresh() {
+		Object[] allKeys = actionMap.keys();		
+		if (allKeys != null) {
+			for (Object key : allKeys) {
+				final Action action = actionMap.get(key);
+				action.setEnabled(action.isEnabled());
+			}
+		}
+	}
 }

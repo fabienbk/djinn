@@ -18,6 +18,7 @@ package com.scramcode.djinn.db.data;
 
 
 
+
 public abstract class AbstractJavaItem implements JavaItem {                     
     
 	private static long keygen;
@@ -34,7 +35,7 @@ public abstract class AbstractJavaItem implements JavaItem {
 	
     @Override    
     public String toString() {
-        return getLabel();
+        return "["+getClass().getSimpleName()+"] "+ getLabel();        
     }
     
     @Override

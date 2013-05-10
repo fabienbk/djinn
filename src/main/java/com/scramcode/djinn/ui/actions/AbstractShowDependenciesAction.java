@@ -20,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,7 +34,6 @@ import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
 import com.scramcode.djinn.db.logic.ReferenceTools;
 import com.scramcode.djinn.graph.GraphTools;
-import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.i18n.Images;
 import com.scramcode.djinn.ui.i18n.Messages;
@@ -52,10 +52,18 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
 
     private static final long serialVersionUID = 1L;
     
-    public AbstractShowDependenciesAction(boolean enabled) {
-        setEnabled(enabled);
+    public AbstractShowDependenciesAction() {
     }
 
+    @Override
+    public boolean isEnabled() {
+    	if (Application.getInstance() != null) {
+    		List<JavaItem> selection = Application.getInstance().getWorkspaceTreeController().getSelection();
+			return selection != null && selection.size() == 1;			
+    	}
+    	return false;
+    }
+    
     public void actionPerformed(ActionEvent e) {
 
         AbstractSwingWorker worker = new AbstractSwingWorker(true) {
@@ -66,10 +74,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
                 updateProgress(0);
 
                 Application instance = Application.getInstance();
-                AbstractJavaItemTreeNode selectedNode = instance.getWorkspaceTreeController()
-                        .getSelectedNode();
-
-                JavaItem javaItem = selectedNode.getJavaItem();
+                JavaItem javaItem = instance.getWorkspaceTreeController().getSelection().get(0);                
 
                 if (javaItem instanceof Location || javaItem instanceof Package
                         || javaItem instanceof Clazz) {
@@ -113,8 +118,8 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
             	if (builtGraph!=null) {           
 
             		Application instance = Application.getInstance();
-            		AbstractJavaItemTreeNode selectedNode = instance.getWorkspaceTreeController().getSelectedNode();
-            		String label = selectedNode.getJavaItem().getLabel();
+            		JavaItem javaItem = instance.getWorkspaceTreeController().getSelection().get(0);
+            		String label = javaItem.toString();
             		            		
             		Application.getInstance().getGraphAreaController().showGraph(label, (Graph<JavaItem, JavaDependency>) getValue());    	
             	}       
@@ -129,8 +134,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
     
     public static class ShowLinksWithJarsAction extends AbstractShowDependenciesAction {
         private static final long serialVersionUID = 1L;
-        public ShowLinksWithJarsAction(boolean enabled) {
-            super(enabled);
+        public ShowLinksWithJarsAction() {
             putValue(Action.SMALL_ICON, Images.getIcon("ShowLinksWithJarsAction.icon"));
             putValue(Action.NAME, Messages.getString("ShowLinksWithJarsAction.label"));
         }
@@ -142,8 +146,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
     
     public static class ShowLinksWithPackagesAction extends AbstractShowDependenciesAction {
         private static final long serialVersionUID = 1L;
-        public ShowLinksWithPackagesAction(boolean enabled) {
-            super(enabled);
+        public ShowLinksWithPackagesAction() {
             putValue(Action.SMALL_ICON, Images.getIcon("ShowLinksWithPackagesAction.icon"));
             putValue(Action.NAME, Messages.getString("ShowLinksWithPackagesAction.label"));
         }
@@ -155,8 +158,7 @@ public abstract class AbstractShowDependenciesAction extends AbstractAction {
     
     public static class ShowLinksWithClassesAction extends AbstractShowDependenciesAction {
         private static final long serialVersionUID = 1L;
-        public ShowLinksWithClassesAction(boolean enabled) {
-            super(enabled);
+        public ShowLinksWithClassesAction() {
             putValue(Action.SMALL_ICON, Images.getIcon("ShowLinksWithClassesAction.icon"));
             putValue(Action.NAME, Messages.getString("ShowLinksWithClassesAction.label"));
         }

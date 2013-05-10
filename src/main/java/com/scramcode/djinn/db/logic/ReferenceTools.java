@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.scramcode.djinn.db.data.Clazz;
+import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
@@ -33,8 +34,8 @@ import com.scramcode.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
  * 
  * @author Fabien Benoit <fabien.benoit@gmail.com>
  */
-public final class ReferenceTools {             
-
+public final class ReferenceTools {
+	
 	private ReferenceTools() {		
 	}
 	
@@ -56,19 +57,27 @@ public final class ReferenceTools {
         return result;
     }
     
-    public static boolean detectReference(JavaItem sourceObject, final JavaItem destinationObject) {    	
+    public static boolean detectReference(JavaItem sourceObject, final JavaItem destinationObject) { 
+    	System.out.println("Checking dependency on : " + sourceObject + " -> " + destinationObject);
         JavaItemVistor visitor = new JavaItemVistor() {
-        	public void visitClazz(Clazz clazz) {
+        	@Override
+			public void visitClazz(Clazz clazz) {
         		List<Clazz> references = clazz.getReferences();
+        		
+        		System.out.println("list of ref for " + clazz + " : " + DataHelper.getWorkspace().getUnresolvedRefs().get(clazz.getKey()));
+        		
         		for (Clazz referencedClazz :  references) {
 					if (referencedClazz.isContainedBy(destinationObject)) {
+						System.out.println("    -> found! on " + referencedClazz.getCanonicalName());
 						throw new AbortVisitException();
 					}
+					
 				}
         	}
         };        
         try {
         	sourceObject.accept(visitor);
+        	System.out.println("    -> NOT found!");
         	return false;
         }
         catch(AbortVisitException e) {
@@ -98,7 +107,8 @@ public final class ReferenceTools {
     public static Set<Clazz> getAllReferencesGroupByClass(JavaItem javaItem) {
     	final Set<Clazz> clazzReferencesSet = new HashSet<Clazz>();
         JavaItemVistor visitor = new JavaItemVistor() {
-        	public void visitClazz(Clazz clazz) {
+        	@Override
+			public void visitClazz(Clazz clazz) {
         		clazzReferencesSet.addAll(clazz.getReferences());
         	}
         };
@@ -109,7 +119,8 @@ public final class ReferenceTools {
     public static Set<Location> getAllReferencesGroupByLocation(JavaItem javaItem) {
     	final Set<Location> locationReferencesSet = new HashSet<Location>();
         JavaItemVistor visitor = new JavaItemVistor() {
-        	public void visitClazz(Clazz clazz) {
+        	@Override
+			public void visitClazz(Clazz clazz) {
         		List<Clazz> references = clazz.getReferences();
         		for (Clazz reference : references) {
 					locationReferencesSet.add(reference.getPackage().getLocation());
@@ -123,7 +134,8 @@ public final class ReferenceTools {
     public static Set<Package> getAllReferencesGroupByPackage(JavaItem javaItem) {
     	final Set<Package> packageReferencesSet = new HashSet<Package>();
         JavaItemVistor visitor = new JavaItemVistor() {
-        	public void visitClazz(Clazz clazz) {
+        	@Override
+			public void visitClazz(Clazz clazz) {
         		List<Clazz> references = clazz.getReferences();
         		for (Clazz reference : references) {
 					packageReferencesSet.add(reference.getPackage());
@@ -136,9 +148,11 @@ public final class ReferenceTools {
     }
 
 	public static Set<JavaItem> getAllReferencesFromSubSet(JavaItem sourceJavaItem, List<JavaItem> destinationJavaItemList) {
+		System.out.println("getAllReferencesFromSubSet : " + sourceJavaItem + " to " + destinationJavaItemList);
+		
 		HashSet<JavaItem> result = new HashSet<JavaItem>();
-		for (JavaItem destinationJavaItem : destinationJavaItemList) {			
-			if (detectReference(sourceJavaItem, destinationJavaItem)) {
+		for (JavaItem destinationJavaItem : destinationJavaItemList) {						
+			if (sourceJavaItem.getKey() != destinationJavaItem.getKey() && detectReference(sourceJavaItem, destinationJavaItem)) {				
 				result.add(destinationJavaItem);
 			}
 		}

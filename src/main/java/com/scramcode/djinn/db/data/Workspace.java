@@ -23,7 +23,7 @@ public class Workspace {
 	private Map<Long, Field> fields = new HashMap<Long, Field>();
 	private Map<Long, Method> methods = new HashMap<Long, Method>();
 	
-	private Map<Long, String> unresolvedRefs = new HashMap<Long, String>();
+	private Map<Long, List<String>> unresolvedRefs = new HashMap<Long, List<String>>();
 	
 	public Workspace() {		
 	}
@@ -65,7 +65,14 @@ public class Workspace {
 	}
 
 	public void addClassReference(Clazz clazz, String referenceQName) {
-		unresolvedRefs.put(clazz.getKey(), referenceQName);
+		if (unresolvedRefs.containsKey(clazz.getKey())) {
+			unresolvedRefs.get(clazz.getKey()).add(referenceQName);	
+		}
+		else {
+			List<String> newList = new ArrayList<String>();
+			newList.add(referenceQName);
+			unresolvedRefs.put(clazz.getKey(), newList);
+		}		
 	}
 	
 	public void resolveReferences() {
@@ -74,17 +81,27 @@ public class Workspace {
 			clazz.clearReferences();
 		}
 		
-		Set<Entry<Long, String>> entrySet = unresolvedRefs.entrySet();
-		for (Entry<Long, String> entry : entrySet) {
-			Clazz clazz = clazzes.get(entry.getKey());
+		Set<Entry<Long, List<String>>> unresolvedRefsSet = unresolvedRefs.entrySet();
+		for (Entry<Long, List<String>> unreslovedRefList : unresolvedRefsSet) {
 			
-			List<Clazz> referenceList = clazzesByName.get(entry.getValue());
-			if (referenceList!=null && referenceList.size() > 0) {
-				for (Clazz referencedClazz : referenceList) {
-					clazz.addReference(referencedClazz);
-				}	
+			Clazz clazz = clazzes.get(unreslovedRefList.getKey());
+			
+			List<String> unreslovedRefListForClass = unreslovedRefList.getValue();
+			for (String unreslovedRef : unreslovedRefListForClass) {				
+				List<Clazz> referenceList = clazzesByName.get(unreslovedRef);
+				if (referenceList!=null && referenceList.size() > 0) {
+					for (Clazz referencedClazz : referenceList) {
+						clazz.addReference(referencedClazz);
+						System.out.println(clazz + " ===> " + referencedClazz);
+					}
+				}		
+				
 			}			
 		}
+	}
+	
+	public Map<Long, List<String>> getUnresolvedRefs() {
+		return unresolvedRefs;
 	}
 	
 	public List<JavaItem> getTopLevelItems() {

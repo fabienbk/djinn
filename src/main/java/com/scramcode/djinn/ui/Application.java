@@ -23,14 +23,12 @@ import com.scramcode.djinn.ui.actions.AboutDialogAction;
 import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWithClassesAction;
 import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWithJarsAction;
 import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWithPackagesAction;
-import com.scramcode.djinn.ui.actions.AddClassFolderAction;
-import com.scramcode.djinn.ui.actions.AddJarAction;
-import com.scramcode.djinn.ui.actions.DumpReferencesAction;
 import com.scramcode.djinn.ui.actions.ImportDirectoryAction;
 import com.scramcode.djinn.ui.actions.ImportEclipseProjectAction;
 import com.scramcode.djinn.ui.actions.NewWorkspaceAction;
 import com.scramcode.djinn.ui.actions.QuitAction;
 import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
+import com.scramcode.djinn.ui.actions.ShowSelectedItemsDependencyGraph;
 import com.scramcode.djinn.ui.actions.ShowTopLevelDependencyGraph;
 import com.scramcode.djinn.ui.actions.layout.FRLayoutAction;
 import com.scramcode.djinn.ui.actions.layout.KKLayoutAction;
@@ -60,19 +58,18 @@ public final class Application {
 
 		// Creating actions
 		
-		rootActionMap.put(NewWorkspaceAction.class, new NewWorkspaceAction(true));
-		rootActionMap.put(AddClassFolderAction.class, new AddClassFolderAction(true));
-		rootActionMap.put(AddJarAction.class, new AddJarAction(true));
+		rootActionMap.put(NewWorkspaceAction.class, new NewWorkspaceAction(true));		
 		rootActionMap.put(QuitAction.class, new QuitAction());
 		rootActionMap.put(AboutDialogAction.class, new AboutDialogAction());
 
 		rootActionMap.put(ShowTopLevelDependencyGraph.class, new ShowTopLevelDependencyGraph());
+		rootActionMap.put(ShowSelectedItemsDependencyGraph.class, new ShowSelectedItemsDependencyGraph());
 		rootActionMap.put(ShowProjectDependencyGraph.class, new ShowProjectDependencyGraph(true));
-		rootActionMap.put(ShowLinksWithJarsAction.class, new ShowLinksWithJarsAction(true));
-		rootActionMap.put(ShowLinksWithPackagesAction.class, new ShowLinksWithPackagesAction(true));
-		rootActionMap.put(ShowLinksWithClassesAction.class, new ShowLinksWithClassesAction(true));
+		
+		rootActionMap.put(ShowLinksWithJarsAction.class, new ShowLinksWithJarsAction());
+		rootActionMap.put(ShowLinksWithPackagesAction.class, new ShowLinksWithPackagesAction());
+		rootActionMap.put(ShowLinksWithClassesAction.class, new ShowLinksWithClassesAction());
 
-		rootActionMap.put(DumpReferencesAction.class, new DumpReferencesAction(true));
 		rootActionMap.put(ImportEclipseProjectAction.class, new ImportEclipseProjectAction(true));
 		rootActionMap.put(ImportDirectoryAction.class, new ImportDirectoryAction(true));
 

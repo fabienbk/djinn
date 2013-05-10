@@ -17,8 +17,10 @@
  */
 package com.scramcode.djinn.ui.panels;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.ActionMap;
-import javax.swing.JPopupMenu;
 import javax.swing.JTree;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -28,23 +30,25 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
 import com.scramcode.djinn.model.workspace.RootNode;
 import com.scramcode.djinn.ui.Application;
-import com.scramcode.djinn.ui.menu.DBObjectContextMenu;
-
+import com.scramcode.djinn.ui.menu.WorkspaceTreeContextMenu;
 
 public class WorkspaceTreeController implements 
     TreeSelectionListener,
     TreeExpansionListener,
     TreeWillExpandListener, TreeModelListener {
 
-    public DefaultTreeModel treeModel = null;
-    public JTree tree = null;
-    public AbstractJavaItemTreeNode selectedNode = null;
-    public AbstractJavaItemTreeNode rootNode = null;
+	private DefaultTreeModel treeModel = null;
+    private JTree tree = null;
+    private AbstractJavaItemTreeNode rootNode = null;
+	
+    private List<JavaItem> selection = new ArrayList<JavaItem>();
     
     public WorkspaceTreeController(Application application) {
         
@@ -56,7 +60,7 @@ public class WorkspaceTreeController implements
         tree.setCellRenderer(new WorkspaceTreeCellRenderer());        
         tree.setShowsRootHandles(true);
         tree.setSelectionRow(0);
-        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         
         tree.addTreeSelectionListener(this);
         tree.addTreeExpansionListener(this);
@@ -65,14 +69,25 @@ public class WorkspaceTreeController implements
         
         // JTree (nodes) Popup menu
         ActionMap actionMap = application.getRootActionMap();       
-        JPopupMenu popupMenu = new DBObjectContextMenu(actionMap);                         
+        WorkspaceTreeContextMenu popupMenu = new WorkspaceTreeContextMenu(actionMap);                         
         tree.addMouseListener(new WorkspaceTreePopupMouseListener(popupMenu));
         
         tree.collapseRow(0);        
     }
 
-    public void valueChanged(TreeSelectionEvent e) {           
-        this.selectedNode = (AbstractJavaItemTreeNode)e.getPath().getLastPathComponent();              
+    public void valueChanged(TreeSelectionEvent e) {    	
+    	selection.clear();
+        TreePath[] paths = tree.getSelectionModel().getSelectionPaths();
+        if (paths != null) {
+	        for (TreePath treePath : paths) {
+	        	Object[] pathObjects = treePath.getPath();
+	        	for (Object object : pathObjects) {
+					if (object instanceof AbstractJavaItemTreeNode && ((AbstractJavaItemTreeNode)object).getJavaItem() != null) {
+						selection.add(((AbstractJavaItemTreeNode)object).getJavaItem());
+					}
+				}        	
+			}
+        }
     }        
 
     public void treeExpanded(TreeExpansionEvent event) {
@@ -93,10 +108,6 @@ public class WorkspaceTreeController implements
         // Do nothing.
     }
   
-    public AbstractJavaItemTreeNode getSelectedNode() {
-        return this.selectedNode;
-    }
-
     public AbstractJavaItemTreeNode getRootNode() {
         return this.rootNode;
     }
@@ -128,5 +139,9 @@ public class WorkspaceTreeController implements
     public void treeStructureChanged(TreeModelEvent e) {
         tree.setSelectionPath(e.getTreePath());
     }
+    
+    public List<JavaItem> getSelection() {
+		return selection;
+	}
     
 }
