@@ -21,6 +21,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.table.JavaItemTableFactory;
@@ -37,6 +38,8 @@ public class DependencyDetailsPanel extends JPanel {
 
 	private JTable referencesTable;
 	private GranularityLevel granularityLevel = GranularityLevel.CLASS;
+	private JavaItem containerFilterItem = null;
+	private JLabel containerFilterName;
 	/**
 	 * Create the panel.
 	 */
@@ -55,18 +58,18 @@ public class DependencyDetailsPanel extends JPanel {
 		JLabel containerFilterLabel = new JLabel(ResourceBundle.getBundle("com.scramcode.djinn.ui.i18n.messages").getString("DependencyDetailsPanel.lblFilterByContainer.text")); //$NON-NLS-1$ //$NON-NLS-2$
 		containerFilterLabel.setFont(new Font("DejaVu Sans", Font.BOLD, 12));
 		
-		JLabel containerFilterName = new JLabel(ResourceBundle.getBundle("com.scramcode.djinn.ui.i18n.messages").getString("DependencyDetailsPanel.lblNewLabel.text_3")); //$NON-NLS-1$ //$NON-NLS-2$
+		containerFilterName = new JLabel(ResourceBundle.getBundle("com.scramcode.djinn.ui.i18n.messages").getString("DependencyDetailsPanel.lblNewLabel.text_3")); //$NON-NLS-1$ //$NON-NLS-2$
 		GroupLayout gl_destinationPanel = new GroupLayout(this);
 		gl_destinationPanel.setHorizontalGroup(
 			gl_destinationPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_destinationPanel.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(dependenciesLabel, GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+					.addComponent(dependenciesLabel, GroupLayout.PREFERRED_SIZE, 147, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(containerFilterLabel)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(containerFilterName)
-					.addGap(299))
+					.addContainerGap(586, Short.MAX_VALUE))
 				.addGroup(gl_destinationPanel.createSequentialGroup()
 					.addComponent(toolBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
@@ -193,5 +196,24 @@ public class DependencyDetailsPanel extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
 		}
+	}
+	public JLabel getContainerFilterName() {
+		return containerFilterName;
+	}
+	
+	public void setContainerFilterName(JavaItem javaItem) {
+		this.containerFilterItem = javaItem;
+		if (javaItem != null) {
+			containerFilterName.setIcon(javaItem.getSmallIcon());
+			containerFilterName.setText(javaItem.getLabel());
+		}
+		else {
+			containerFilterName.setText("none");
+			containerFilterName.setIcon(null);
+		}
+	}
+	
+	public JavaItem getContainerFilterItem() {
+		return containerFilterItem;
 	}
 }

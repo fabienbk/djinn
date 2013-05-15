@@ -160,11 +160,14 @@ public class WorkspaceTreeController implements
 		return selectionNode;	
 	}
 
-	public void select(JavaItem item) {
-		tree.setSelectionPath(new TreePath(item.getTreeNode().getPath()));		
+	public void select(JavaItem item, JavaItem filterItem) {
+		tree.setSelectionPath(new TreePath(item.getTreeNode().getPath()));
+		Application.getInstance().getApplicationFrame().getDependencyDetailsPanel().setContainerFilterName(filterItem);
 	}
 
-	public void select(Set<JavaItem> pickedVertices) {				
+	public void select(Set<JavaItem> pickedVertices) {
+		Application.getInstance().getApplicationFrame().getDependencyDetailsPanel().setContainerFilterName(null);
+		
 		TreePath[] paths = new TreePath[pickedVertices.size()];
 		int i = 0;
 		for (JavaItem javaItem : pickedVertices) {

@@ -47,14 +47,22 @@ public class DependencyDetailsPanelController {
 		    @Override
 		    public void finished() {
 		        if (getValue() != null) {                        
-		        	Set<JavaItem> value = (Set<JavaItem>)getValue();							          
+		        	Set<JavaItem> set = (Set<JavaItem>)getValue();		        	
 		            JTable referencesTable = dependencyDetailsPanel.getReferencesTable();
 					
 		            referencesTable.clearSelection();
 		            JavaItemTableModel model = (JavaItemTableModel)referencesTable.getModel();
-		            model.setList(new ArrayList(value));
-		            		            
-//					JavaItemTableFactory.resizeTable(referencesTable);
+		            
+		            ArrayList filteredList = new ArrayList();
+		            for (JavaItem javaItem : set) {
+		            	if (dependencyDetailsPanel.getContainerFilterItem() != null) {
+		            		if (!javaItem.isContainedBy(dependencyDetailsPanel.getContainerFilterItem())) {
+		            			continue;
+		            		}
+		            	}
+		            	filteredList.add(javaItem);
+					}
+					model.setList(filteredList);		            		            
 		        }                    
 		    }
 		    

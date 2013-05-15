@@ -54,6 +54,11 @@ public class GraphPanelController {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				Application.getInstance().getWorkspaceTreeController().select(pickedVertexState.getPicked());
+				
+				Set<JavaDependency> picked = pickedEdgeState.getPicked();
+				for (JavaDependency javaDependency : picked) {
+					pickedEdgeState.pick(javaDependency, false);
+				}
 			}
 		});		
 		this.pickedEdgeState = visualizationViewer.getPickedEdgeState();
@@ -66,7 +71,8 @@ public class GraphPanelController {
 				}
 				Set<JavaDependency> picked = pickedEdgeState.getPicked();
 				for (JavaDependency javaDependency : picked) {
-					Application.getInstance().getWorkspaceTreeController().select(javaDependency.getSourceItem());	
+					Application instance = Application.getInstance();										
+					instance.getWorkspaceTreeController().select(javaDependency.getSourceItem(), javaDependency.getDestinationItem());	
 				}
 			}
 		});		
