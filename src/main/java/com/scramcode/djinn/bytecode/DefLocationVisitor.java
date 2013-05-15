@@ -36,7 +36,7 @@ public class DefLocationVisitor implements LocationVisitor {
     }
 
     public void visitPackage(String packageQualifiedName) {
-        Package packageObject = new Package(packageQualifiedName, location);
+        Package packageObject = new Package(packageQualifiedName.replace('/', '.'), location);
         DataHelper.putPackage(packageObject);
         packageMap.put(packageQualifiedName, packageObject);
     }

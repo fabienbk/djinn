@@ -1,143 +1,184 @@
 package com.scramcode.djinn.ui.panels;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
+
+import java.awt.event.ActionEvent;
+import java.util.ResourceBundle;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
-import javax.swing.ListModel;
-import javax.swing.WindowConstants;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
+import com.scramcode.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
+import com.scramcode.djinn.ui.Application;
+import com.scramcode.djinn.ui.table.JavaItemTableFactory;
 
-import org.jdesktop.layout.GroupLayout;
-import org.jdesktop.layout.LayoutStyle;
+public class DependencyDetailsPanel extends JPanel {
+	private final Action groupByClassAction = new GroupByClassAction();
+	private final Action groupByPackageAction = new GroupByPackageAction();
+	private final Action groupByLocationAction = new GroupByLocationAction();
+	private final Action groupByProjectAction = new GroupByProjectAction();
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private final Action showInternalReferencesAction = new ShowInternalReferencesAction();
+	private final Action showExternalReferencesAction = new ShowExternalReferencesAction();
 
-import com.scramcode.djinn.model.GraphGranularityComboBoxModel;
+	private JTable referencesTable;
+	private GranularityLevel granularityLevel = GranularityLevel.CLASS;
+	/**
+	 * Create the panel.
+	 */
+	public DependencyDetailsPanel() {
+						
+		JToolBar toolBar = new JToolBar();
+		toolBar.setOrientation(SwingConstants.VERTICAL);
+		toolBar.setFloatable(false);
+		
+		JLabel destinationLabel = new JLabel(ResourceBundle.getBundle("com.scramcode.djinn.ui.i18n.messages").getString("DependencyDetailsPanel.lblNewLabel.text_2")); //$NON-NLS-1$ //$NON-NLS-2$
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		GroupLayout gl_destinationPanel = new GroupLayout(this);
+		gl_destinationPanel.setHorizontalGroup(
+			gl_destinationPanel.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_destinationPanel.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(destinationLabel, GroupLayout.DEFAULT_SIZE, 370, Short.MAX_VALUE)
+					.addGap(194))
+				.addGroup(Alignment.LEADING, gl_destinationPanel.createSequentialGroup()
+					.addComponent(toolBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 540, Short.MAX_VALUE))
+		);
+		gl_destinationPanel.setVerticalGroup(
+			gl_destinationPanel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_destinationPanel.createSequentialGroup()
+					.addGap(6)
+					.addComponent(destinationLabel)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_destinationPanel.createParallelGroup(Alignment.LEADING)
+						.addComponent(toolBar, GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE))
+					.addContainerGap())
+		);
+		
+		referencesTable = JavaItemTableFactory.createJTable();
+		scrollPane.setViewportView(referencesTable);
+		
+		JToggleButton groupByClassButton = new JToggleButton(ResourceBundle.getBundle("com.scramcode.djinn.ui.i18n.messages").getString("DependencyDetailsPanel2.tglbtnNewToggleButton.text")); //$NON-NLS-1$ //$NON-NLS-2$
+		groupByClassButton.setSelected(true);
+		buttonGroup.add(groupByClassButton);
+		groupByClassButton.setAction(groupByClassAction);
+		toolBar.add(groupByClassButton);
+		
+		JToggleButton groupByPackageButton = new JToggleButton(ResourceBundle.getBundle("com.scramcode.djinn.ui.i18n.messages").getString("DependencyDetailsPanel2.tglbtnNewToggleButton_1.text")); //$NON-NLS-1$ //$NON-NLS-2$
+		buttonGroup.add(groupByPackageButton);
+		groupByPackageButton.setAction(groupByPackageAction);
+		toolBar.add(groupByPackageButton);
+		
+		JToggleButton groupByLocationButton = new JToggleButton(ResourceBundle.getBundle("com.scramcode.djinn.ui.i18n.messages").getString("DependencyDetailsPanel2.tglbtnNewToggleButton_2.text")); //$NON-NLS-1$ //$NON-NLS-2$
+		buttonGroup.add(groupByLocationButton);
+		groupByLocationButton.setAction(groupByLocationAction);
+		toolBar.add(groupByLocationButton);
+		
+		JToggleButton groupByProjectButton = new JToggleButton(ResourceBundle.getBundle("com.scramcode.djinn.ui.i18n.messages").getString("DependencyDetailsPanel2.tglbtnNewToggleButton.text_1")); //$NON-NLS-1$ //$NON-NLS-2$
+		buttonGroup.add(groupByProjectButton);
+		groupByProjectButton.setAction(groupByProjectAction);
+		toolBar.add(groupByProjectButton);
+		
+		JSeparator separator = new JSeparator();
+		toolBar.add(separator);
+		
+		JToggleButton showInternalReferencesButton = new JToggleButton(ResourceBundle.getBundle("com.scramcode.djinn.ui.i18n.messages").getString("DependencyDetailsPanel2.tglbtnNewToggleButton.text_2")); //$NON-NLS-1$ //$NON-NLS-2$
+		showInternalReferencesButton.setSelected(true);
+		showInternalReferencesButton.setAction(showInternalReferencesAction);
+		toolBar.add(showInternalReferencesButton);
+		
+		JToggleButton showExternalReferencesButton = new JToggleButton("New toggle button");
+		showExternalReferencesButton.setSelected(true);
+		showExternalReferencesButton.setAction(showExternalReferencesAction);
+		toolBar.add(showExternalReferencesButton);
+		
+		setLayout(gl_destinationPanel);
 
-/**
-* This code was edited or generated using CloudGarden's Jigloo
-* SWT/Swing GUI Builder, which is free for non-commercial
-* use. If Jigloo is being used commercially (ie, by a corporation,
-* company or business for any purpose whatever) then you
-* should purchase a license for each developer using Jigloo.
-* Please visit www.cloudgarden.com for details.
-* Use of Jigloo implies acceptance of these licensing terms.
-* A COMMERCIAL LICENSE HAS NOT BEEN PURCHASED FOR
-* THIS MACHINE, SO JIGLOO OR THIS CODE CANNOT BE USED
-* LEGALLY FOR ANY CORPORATE OR COMMERCIAL PURPOSE.
-*/
-@SuppressWarnings({"rawtypes", "unchecked"})
-public class DependencyDetailsPanel extends javax.swing.JPanel {
-    
-    private static final long serialVersionUID = 541893182308632768L;
-    private JScrollPane treeScrollPane;
-    private JScrollPane listScrollPane;    
-	private JList dependencyList;
-    private JComboBox granularityComboBox;
-    private JLabel granularityLabel;
-    private JTree nodeTree;
-    private JLabel helpLabel;
+	}
 
-    /**
-    * Auto-generated main method to display this 
-    * JPanel inside a new JFrame.
-    */
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.getContentPane().add(new DependencyDetailsPanel());
-        frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }
-    
-    public DependencyDetailsPanel() {
-        super();
-        initGUI();
-    }
-    
-    private void initGUI() {
-        try {
-            GroupLayout thisLayout = new GroupLayout(this);
-            this.setLayout(thisLayout);
-            this.setPreferredSize(new java.awt.Dimension(573, 265));
-            {
-                helpLabel = new JLabel();
-                helpLabel.setText("Click on graph edges to show the dependency details");
-            }
-            {
-                treeScrollPane = new JScrollPane();
-                {
-                    nodeTree = new JTree();                    
-                    treeScrollPane.setViewportView(getNodeTree());
-                }
-            }
-            {
-                listScrollPane = new JScrollPane();
-                {
-                    
-					ListModel dependencyListModel = new DefaultComboBoxModel(new String[] { "Item One", "Item Two" });
-                    dependencyList = new JList();
-                    listScrollPane.setViewportView(getDependencyList());
-                    dependencyList.setModel(dependencyListModel);
-                }
-            }
-            {
-                granularityLabel = new JLabel();
-                granularityLabel.setText("Group by");
-            }
-            {
-                ComboBoxModel granularityComboBoxModel = new GraphGranularityComboBoxModel();
-                granularityComboBox = new JComboBox();
-                granularityComboBox.setModel(granularityComboBoxModel);
-            }
-            
-            thisLayout.setHorizontalGroup(thisLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(thisLayout.createParallelGroup()
-                    .add(thisLayout.createSequentialGroup()
-                        .add(helpLabel, 0, 744, Short.MAX_VALUE)
-                        .addPreferredGap(LayoutStyle.RELATED))
-                    .add(GroupLayout.LEADING, thisLayout.createSequentialGroup()
-                        .add(treeScrollPane, GroupLayout.PREFERRED_SIZE, 303, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.RELATED)
-                        .add(thisLayout.createParallelGroup()
-                            .add(GroupLayout.LEADING, listScrollPane, 0, 440, Short.MAX_VALUE)
-                            .add(GroupLayout.LEADING, thisLayout.createSequentialGroup()
-                                .add(granularityLabel, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.RELATED)
-                                .add(granularityComboBox, 0, 359, Short.MAX_VALUE)))))
-                .add(7));
-            thisLayout.setVerticalGroup(thisLayout.createSequentialGroup()
-                .addContainerGap()
-                .add(helpLabel, GroupLayout.PREFERRED_SIZE, 14, GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(LayoutStyle.RELATED)
-                .add(thisLayout.createParallelGroup()
-                    .add(GroupLayout.LEADING, treeScrollPane, 0, 221, Short.MAX_VALUE)
-                    .add(GroupLayout.LEADING, thisLayout.createSequentialGroup()
-                        .add(10)
-                        .add(thisLayout.createParallelGroup()
-                            .add(GroupLayout.BASELINE, granularityComboBox, GroupLayout.PREFERRED_SIZE, 25, GroupLayout.PREFERRED_SIZE)
-                            .add(GroupLayout.BASELINE, granularityLabel))
-                        .addPreferredGap(LayoutStyle.RELATED)
-                        .add(listScrollPane, 0, 180, Short.MAX_VALUE)))
-                .addContainerGap());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-        
-    public JTree getNodeTree() {
-        return nodeTree;
-    }
-    
-    public JComboBox getGranularityComboBox() {
-        return granularityComboBox;
-    }
-    
-    public JList getDependencyList() {
-        return dependencyList;
-    }
-
+	public JTable getReferencesTable() {
+		return referencesTable;
+	}
+	public GranularityLevel getGranularity() {
+		return granularityLevel ;
+	}
+	
+	private class GroupByClassAction extends AbstractAction {
+		public GroupByClassAction() {
+			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/obj16/class_obj.gif")));
+			putValue(SHORT_DESCRIPTION, "Group dependencies by Class");
+			setEnabled(true);			
+		}
+		public void actionPerformed(ActionEvent e) {
+			granularityLevel = GranularityLevel.CLASS;
+			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+		}
+	}
+	private class GroupByPackageAction extends AbstractAction {
+		public GroupByPackageAction() {
+			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/obj16/package_obj.gif")));
+			putValue(SHORT_DESCRIPTION, "Group dependencies by Package");
+		}
+		public void actionPerformed(ActionEvent e) {
+			granularityLevel = GranularityLevel.PACKAGE;
+			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+		}
+	}
+	private class GroupByLocationAction extends AbstractAction {
+		public GroupByLocationAction() {
+			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.ant.ui/icons/full/obj16/jar_l_obj.gif")));
+			putValue(SHORT_DESCRIPTION, "Group dependencies by Jar/Directory");
+		}
+		public void actionPerformed(ActionEvent e) {
+			granularityLevel = GranularityLevel.JAR;
+			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+		}
+	}
+	private class GroupByProjectAction extends AbstractAction {
+		public GroupByProjectAction() {
+			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.ui/icons/full/obj16/elements_obj.gif")));
+			putValue(SHORT_DESCRIPTION, "Group dependencies by Project");
+		}
+		public void actionPerformed(ActionEvent e) {
+			granularityLevel = GranularityLevel.PROJECT;
+			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+		}
+	}
+	private class ShowInternalReferencesAction extends AbstractAction {
+		public ShowInternalReferencesAction() {
+			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/elcl16/ch_callers.gif")));
+			putValue(SHORT_DESCRIPTION, "Show internal workspace dependencies");
+		}
+		public void actionPerformed(ActionEvent e) {			
+			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+		}
+	}
+	private class ShowExternalReferencesAction extends AbstractAction {
+		public ShowExternalReferencesAction() {
+			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/elcl16/ch_callees.gif")));
+			putValue(SHORT_DESCRIPTION, "Show external workspace dependencies");
+		}
+		public void actionPerformed(ActionEvent e) {
+			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+		}
+	}
+	
 }

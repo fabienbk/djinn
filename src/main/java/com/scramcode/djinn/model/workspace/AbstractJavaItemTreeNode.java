@@ -19,13 +19,15 @@ package com.scramcode.djinn.model.workspace;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.swing.Icon;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
 
 import com.scramcode.djinn.db.data.AbstractJavaItem;
 import com.scramcode.djinn.model.DecoratedNode;
 
 
-public abstract class AbstractJavaItemTreeNode implements TreeNode, DecoratedNode {    
+public abstract class AbstractJavaItemTreeNode extends DefaultMutableTreeNode implements DecoratedNode {    
     
     private AbstractJavaItem javaItem;    
     private AbstractJavaItemTreeNode parent;
@@ -39,7 +41,8 @@ public abstract class AbstractJavaItemTreeNode implements TreeNode, DecoratedNod
     public AbstractJavaItemTreeNode(AbstractJavaItemTreeNode parent, AbstractJavaItem dataObject) {
         this.parent = parent;
         this.children = new Vector<AbstractJavaItemTreeNode>();
-        this.javaItem = dataObject;                
+        this.javaItem = dataObject;           
+        this.javaItem.setTreeNode(this);
     }          
     
     public String getLabel() {
@@ -89,6 +92,11 @@ public abstract class AbstractJavaItemTreeNode implements TreeNode, DecoratedNod
 
     public AbstractJavaItem getJavaItem() {
         return this.javaItem;
+    }
+    
+    @Override
+    public Icon getIcon() {    
+    	return javaItem == null ? null : javaItem.getSmallIcon();
     }
 
 }

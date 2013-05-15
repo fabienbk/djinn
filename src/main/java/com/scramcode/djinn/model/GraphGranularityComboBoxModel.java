@@ -10,7 +10,7 @@ import javax.swing.ComboBoxModel;
 public class GraphGranularityComboBoxModel extends AbstractListModel implements ComboBoxModel {	
 
     public enum GranularityLevel {
-        JAR, PACKAGE, CLASS 
+        JAR, PACKAGE, CLASS, PROJECT 
     }
     
     private static final long serialVersionUID = 7974025009804311758L;

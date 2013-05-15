@@ -83,16 +83,17 @@ public class Workspace {
 		
 		Set<Entry<Long, List<String>>> unresolvedRefsSet = unresolvedRefs.entrySet();
 		for (Entry<Long, List<String>> unreslovedRefList : unresolvedRefsSet) {
-			
-			Clazz clazz = clazzes.get(unreslovedRefList.getKey());
-			
+						
+						
 			List<String> unreslovedRefListForClass = unreslovedRefList.getValue();
 			for (String unreslovedRef : unreslovedRefListForClass) {				
 				List<Clazz> referenceList = clazzesByName.get(unreslovedRef);
 				if (referenceList!=null && referenceList.size() > 0) {
 					for (Clazz referencedClazz : referenceList) {
+						
+						Clazz clazz = clazzes.get(unreslovedRefList.getKey());
 						clazz.addReference(referencedClazz);
-						System.out.println(clazz + " ===> " + referencedClazz);
+						
 					}
 				}		
 				

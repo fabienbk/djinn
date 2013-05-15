@@ -29,6 +29,8 @@ import com.scramcode.djinn.ui.i18n.Images;
 public class Package extends AbstractJavaItem {
     
     public static final ImageIcon ICON = Images.getIcon("Package.graph.icon");
+
+    public static final ImageIcon ICON_SMALL = Images.getIcon("Package.icon");    
     
     private Location location;
     private String qname;
@@ -40,6 +42,11 @@ public class Package extends AbstractJavaItem {
         this.location = location;
         
         location.getPackages().add(this);
+    }
+    
+    @Override
+    public JavaItem getParent() {    
+    	return location;
     }
     
     public String getQname() {
@@ -56,8 +63,13 @@ public class Package extends AbstractJavaItem {
     }
 
     @Override
-    public ImageIcon getImage() {
+    public ImageIcon getIcon() {
         return ICON;
+    }
+    
+    @Override
+    public ImageIcon getSmallIcon() {    
+    	return ICON_SMALL;
     }
     
     @Override
@@ -84,7 +96,7 @@ public class Package extends AbstractJavaItem {
 	}
 
 	@Override
-	public boolean isContainedBy(JavaItem destinationObject) {
+	public boolean isContainedBy(JavaItem destinationObject) {			
 		return location.getKey() == destinationObject.getKey() || location.isContainedBy(destinationObject);
 	}
 }

@@ -19,16 +19,11 @@ package com.scramcode.djinn.model.workspace;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.Icon;
-
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
-import com.scramcode.djinn.ui.i18n.Images;
 
 
 public class LocationNode extends AbstractJavaItemTreeNode {
-    
-    private static final Icon ICON = Images.getIcon("Jar.icon");
     
     public LocationNode(AbstractJavaItemTreeNode parent, Location location) {
         super(parent, location);        
@@ -45,9 +40,5 @@ public class LocationNode extends AbstractJavaItemTreeNode {
 		}
         return children;
     }
-
-    public Icon getIcon() {
-        return ICON;
-    }  
     
 }

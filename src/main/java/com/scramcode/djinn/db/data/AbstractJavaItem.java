@@ -16,6 +16,8 @@
  */
 package com.scramcode.djinn.db.data;
 
+import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
+
 
 
 
@@ -24,6 +26,8 @@ public abstract class AbstractJavaItem implements JavaItem {
 	private static long keygen;
 	
 	private long key = keygen++;
+
+	private AbstractJavaItemTreeNode treeNode;
 	
 	public AbstractJavaItem() {		
 	}
@@ -32,6 +36,8 @@ public abstract class AbstractJavaItem implements JavaItem {
 	public long getKey() {	
 		return key;
 	}
+	
+	public abstract JavaItem getParent();
 	
     @Override    
     public String toString() {
@@ -51,4 +57,12 @@ public abstract class AbstractJavaItem implements JavaItem {
         return (getClass().getName() + String.valueOf(getKey())).hashCode();
     }
    
+    @Override
+    public AbstractJavaItemTreeNode getTreeNode() {    
+    	return treeNode;
+    }
+    
+    public void setTreeNode(AbstractJavaItemTreeNode treeNode) {
+		this.treeNode = treeNode;
+	}
 }

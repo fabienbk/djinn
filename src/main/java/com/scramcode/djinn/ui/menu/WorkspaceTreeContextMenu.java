@@ -26,7 +26,6 @@ import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWi
 import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWithPackagesAction;
 import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
 import com.scramcode.djinn.ui.actions.ShowSelectedItemsDependencyGraph;
-import com.scramcode.djinn.ui.actions.ShowTopLevelDependencyGraph;
 import com.scramcode.djinn.ui.i18n.Images;
 import com.scramcode.djinn.ui.i18n.Messages;
 
@@ -40,7 +39,6 @@ public class WorkspaceTreeContextMenu extends JPopupMenu {
 
     public WorkspaceTreeContextMenu(ActionMap actionMap) {      
     	this.actionMap = actionMap;
-    	this.add(actionMap.get(ShowTopLevelDependencyGraph.class));
     	this.add(actionMap.get(ShowSelectedItemsDependencyGraph.class));
     	this.add(actionMap.get(ShowProjectDependencyGraph.class));
         

@@ -35,7 +35,7 @@ public class RootNode extends AbstractJavaItemTreeNode {
     private static final Icon ICON = Images.getIcon("Workspace.icon"); 
     
     public RootNode() {
-        super(null, null);
+        super(null);
     }
 
     protected Vector<AbstractJavaItemTreeNode> computeChildren() {

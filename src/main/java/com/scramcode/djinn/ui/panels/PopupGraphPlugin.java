@@ -2,15 +2,14 @@ package com.scramcode.djinn.ui.panels;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
-import javax.swing.ImageIcon;
 import javax.swing.JPopupMenu;
 
 import com.scramcode.djinn.db.data.JavaDependency;
 import com.scramcode.djinn.db.data.JavaItem;
+import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.i18n.Images;
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
@@ -27,6 +26,7 @@ public class PopupGraphPlugin extends AbstractPopupGraphMousePlugin {
 	public PopupGraphPlugin() {
 	}
 
+	
 	@SuppressWarnings({ "unchecked", "serial" })
 	protected void handlePopup(MouseEvent e) {
 		popup = new JPopupMenu();

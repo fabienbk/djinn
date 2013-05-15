@@ -18,7 +18,9 @@
 package com.scramcode.djinn.ui.panels;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.ActionMap;
 import javax.swing.JTree;
@@ -30,9 +32,11 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.scramcode.djinn.db.data.JavaDependency;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
 import com.scramcode.djinn.model.workspace.RootNode;
@@ -44,11 +48,12 @@ public class WorkspaceTreeController implements
     TreeExpansionListener,
     TreeWillExpandListener, TreeModelListener {
 
-	private DefaultTreeModel treeModel = null;
-    private JTree tree = null;
-    private AbstractJavaItemTreeNode rootNode = null;
+	private DefaultTreeModel treeModel;
+    private JTree tree;
+    private AbstractJavaItemTreeNode rootNode;
 	
     private List<JavaItem> selection = new ArrayList<JavaItem>();
+    private List<AbstractJavaItemTreeNode> selectionNode = new ArrayList<AbstractJavaItemTreeNode>();
     
     public WorkspaceTreeController(Application application) {
         
@@ -76,18 +81,25 @@ public class WorkspaceTreeController implements
     }
 
     public void valueChanged(TreeSelectionEvent e) {    	
+    	
     	selection.clear();
+    	selectionNode.clear();
+    	
         TreePath[] paths = tree.getSelectionModel().getSelectionPaths();
         if (paths != null) {
 	        for (TreePath treePath : paths) {
-	        	Object[] pathObjects = treePath.getPath();
-	        	for (Object object : pathObjects) {
-					if (object instanceof AbstractJavaItemTreeNode && ((AbstractJavaItemTreeNode)object).getJavaItem() != null) {
+	        	Object object = treePath.getLastPathComponent();
+	        	if (object instanceof AbstractJavaItemTreeNode && ((AbstractJavaItemTreeNode)object).getJavaItem() != null) {
+						selectionNode.add((AbstractJavaItemTreeNode)object);
 						selection.add(((AbstractJavaItemTreeNode)object).getJavaItem());
-					}
-				}        	
+				}				        	
 			}
         }
+        
+        if(selectionNode.size() == 1) {        
+        	Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection(selectionNode.get(0));
+        }
+        
     }        
 
     public void treeExpanded(TreeExpansionEvent event) {
@@ -143,5 +155,26 @@ public class WorkspaceTreeController implements
     public List<JavaItem> getSelection() {
 		return selection;
 	}
-    
+
+	public List<AbstractJavaItemTreeNode> getSelectionNode() {
+		return selectionNode;	
+	}
+
+	public void select(JavaItem item) {
+		tree.setSelectionPath(new TreePath(item.getTreeNode().getPath()));		
+	}
+
+	public void select(Set<JavaItem> pickedVertices) {				
+		TreePath[] paths = new TreePath[pickedVertices.size()];
+		int i = 0;
+		for (JavaItem javaItem : pickedVertices) {
+			paths[i] = new TreePath(javaItem.getTreeNode().getPath());
+			i++;
+		}
+		
+		tree.setExpandsSelectedPaths(true);
+		tree.setSelectionPaths(paths);
+		if (paths.length >0) tree.scrollPathToVisible(paths[0]);
+	}
+		
 }

@@ -18,15 +18,10 @@ package com.scramcode.djinn.model.workspace;
 
 import java.util.Vector;
 
-import javax.swing.Icon;
-
 import com.scramcode.djinn.db.data.Field;
-import com.scramcode.djinn.ui.i18n.Images;
 
 
 public class FieldNode extends AbstractJavaItemTreeNode {
-
-    private static final Icon ICON = Images.getIcon("Field.icon");
     
     public FieldNode(ClassNode parent, Field dataObject) {
         super(parent, dataObject);
@@ -40,10 +35,6 @@ public class FieldNode extends AbstractJavaItemTreeNode {
     @Override
     public boolean isLeaf() {
         return true;
-    }
-
-    public Icon getIcon() {
-        return ICON;
     }
 
 }

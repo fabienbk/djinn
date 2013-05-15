@@ -29,7 +29,8 @@ import com.scramcode.djinn.ui.i18n.Images;
 public class Clazz extends AbstractJavaItem {
     
     public static final ImageIcon ICON = Images.getIcon("Class.graph.icon");
-
+	public static final ImageIcon ICON_SMALL = Images.getIcon("Class.icon");
+	
     private String name;
     private int access;
     
@@ -50,6 +51,11 @@ public class Clazz extends AbstractJavaItem {
         this.canonicalName = canonicalName;        
         
         packageObject.getClasses().add(this);
+    }
+    
+    @Override
+    public JavaItem getParent() {    
+    	return packageObject;
     }
         
     public java.lang.String getName() {
@@ -90,8 +96,13 @@ public class Clazz extends AbstractJavaItem {
     }
 
     @Override
-    public ImageIcon getImage() {
+    public ImageIcon getIcon() {
         return ICON;
+    }
+    
+    @Override
+    public ImageIcon getSmallIcon() {
+    	return ICON_SMALL;
     }
     
     @Override
@@ -134,7 +145,7 @@ public class Clazz extends AbstractJavaItem {
 		return references;
 	}
 
-	public boolean isContainedBy(JavaItem destinationObject) {				
+	public boolean isContainedBy(JavaItem destinationObject) {						
 		return packageObject.getKey() == destinationObject.getKey() || packageObject.isContainedBy(destinationObject);		
 	}
 	

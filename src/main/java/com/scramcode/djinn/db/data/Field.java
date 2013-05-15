@@ -21,6 +21,7 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 
 import com.scramcode.djinn.db.logic.JavaItemVistor;
+import com.scramcode.djinn.ui.i18n.Images;
 
 public class Field extends AbstractJavaItem {
 
@@ -36,6 +37,11 @@ public class Field extends AbstractJavaItem {
         clazz.getFields().add(this);
     }
 
+    @Override
+    public JavaItem getParent() {    
+    	return clazz;
+    }
+    
     public int getAccess() {
         return this.access;
     }
@@ -62,7 +68,7 @@ public class Field extends AbstractJavaItem {
     }
     
     @Override
-    public ImageIcon getImage() {
+    public ImageIcon getIcon() {
         return null;
     }
     
@@ -81,5 +87,9 @@ public class Field extends AbstractJavaItem {
     	return false;
     }
     
+    @Override
+    public ImageIcon getSmallIcon() {
+    	return Images.getIcon("Field.icon");
+    }
     
 }

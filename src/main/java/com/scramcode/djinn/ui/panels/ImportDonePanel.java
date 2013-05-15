@@ -1,11 +1,12 @@
 package com.scramcode.djinn.ui.panels;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import java.awt.BorderLayout;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.border.EmptyBorder;
 
 public class ImportDonePanel extends JPanel {
 

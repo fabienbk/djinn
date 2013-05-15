@@ -30,6 +30,8 @@ public class Project extends AbstractJavaItem {
 
 	public static final ImageIcon ICON = Images.getIcon("Project.graph.icon");
 
+    private static final ImageIcon ICON_SMALL = Images.getIcon("Project.icon");
+
 	private String projectName;
 	private File directory;
 
@@ -38,6 +40,11 @@ public class Project extends AbstractJavaItem {
 	public Project(String name, File directory) {
 		this.projectName = name;
 		this.directory = directory;
+	}
+	
+	@Override
+	public JavaItem getParent() {	
+		return this;
 	}
 
 	public String getProjectName() {
@@ -54,8 +61,13 @@ public class Project extends AbstractJavaItem {
 	}
 
 	@Override
-	public ImageIcon getImage() {
+	public ImageIcon getIcon() {
 		return ICON;
+	}
+	
+	@Override
+	public ImageIcon getSmallIcon() {	
+		return ICON_SMALL;
 	}
 
 	@Override

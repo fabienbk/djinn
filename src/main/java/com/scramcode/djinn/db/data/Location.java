@@ -34,6 +34,7 @@ public class Location extends AbstractJavaItem {
     public static final int DIR_LOCATION_TYPE = 1;    
    
     public static final ImageIcon ICON = Images.getIcon("Jar.graph.icon");
+    public static final ImageIcon ICON_SMALL = Images.getIcon("Jar.icon");
     
     private String absolutePath;
     private int type;    
@@ -84,8 +85,13 @@ public class Location extends AbstractJavaItem {
     }
     
     @Override
-    public ImageIcon getImage() {
+    public ImageIcon getIcon() {
         return ICON;
+    }
+    
+    @Override
+    public ImageIcon getSmallIcon() {    
+    	return ICON_SMALL;
     }
     
     @Override
@@ -106,13 +112,17 @@ public class Location extends AbstractJavaItem {
 	}
 	
 	@Override
-	public boolean isContainedBy(JavaItem destinationObject) {
-		if (project != null) {
-			return getKey() == project.getKey();					
+	public boolean isContainedBy(JavaItem destinationObject) {		
+		if (project != null) {			
+			return destinationObject.getKey() == project.getKey();			
 		}
 		else {
-			return false;
+			return destinationObject.getKey() == getKey();
 		}		
 	}
     
+	@Override
+	public JavaItem getParent() {	
+		return project != null ? project : this;
+	}
 }

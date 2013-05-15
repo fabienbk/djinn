@@ -16,17 +16,17 @@
  */
 package com.scramcode.djinn.ui.dialogs;
 
+import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.BorderFactory;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.border.TitledBorder;
-
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import javax.swing.BorderFactory;
 
 public class ProgressDialog extends JDialog {
     /** Comment for <code>serialVersionUID</code> */

@@ -19,17 +19,12 @@ package com.scramcode.djinn.model.workspace;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.Icon;
-
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
-import com.scramcode.djinn.ui.i18n.Images;
 
 
 public class ProjectNode extends AbstractJavaItemTreeNode {
     
-    private static final Icon ICON = Images.getIcon("Project.icon");
-
     public ProjectNode(RootNode parent, Project project) {
         super(parent, project);
     }
@@ -45,10 +40,6 @@ public class ProjectNode extends AbstractJavaItemTreeNode {
         
         return children;
     }
-
-    public Icon getIcon() {
-        return ICON;
-    }    
          
     
 }

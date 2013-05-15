@@ -21,6 +21,7 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 
 import com.scramcode.djinn.db.logic.JavaItemVistor;
+import com.scramcode.djinn.ui.i18n.Images;
 
 /** @author Hibernate CodeGenerator */
 public class Method extends AbstractJavaItem {
@@ -28,12 +29,19 @@ public class Method extends AbstractJavaItem {
     private int access;
     private String name;
     private Clazz clazz;
+
+    private static final ImageIcon ICON = Images.getIcon("Method.icon");
     
     public Method(String name, int access, Clazz clazz) {        
         this.access = access;
         this.clazz = clazz;
         this.name = name;
         clazz.getMethods().add(this);
+    }
+    
+    @Override
+    public JavaItem getParent() {    
+    	return clazz;
     }
     
     public int getAccess() {
@@ -50,8 +58,13 @@ public class Method extends AbstractJavaItem {
     }
     
     @Override
-    public ImageIcon getImage() {
+    public ImageIcon getIcon() {
         return null;
+    }
+    
+    @Override
+    public ImageIcon getSmallIcon() {
+    	return ICON;
     }
     
     @Override

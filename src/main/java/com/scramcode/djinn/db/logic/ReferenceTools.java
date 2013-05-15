@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Set;
 
 import com.scramcode.djinn.db.data.Clazz;
-import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Package;
+import com.scramcode.djinn.db.data.Project;
 import com.scramcode.djinn.model.GraphGranularityComboBoxModel.GranularityLevel;
 
 
@@ -57,27 +57,20 @@ public final class ReferenceTools {
         return result;
     }
     
-    public static boolean detectReference(JavaItem sourceObject, final JavaItem destinationObject) { 
-    	System.out.println("Checking dependency on : " + sourceObject + " -> " + destinationObject);
+    public static boolean detectReference(JavaItem sourceObject, final JavaItem destinationObject) {
         JavaItemVistor visitor = new JavaItemVistor() {
         	@Override
 			public void visitClazz(Clazz clazz) {
-        		List<Clazz> references = clazz.getReferences();
-        		
-        		System.out.println("list of ref for " + clazz + " : " + DataHelper.getWorkspace().getUnresolvedRefs().get(clazz.getKey()));
-        		
+        		List<Clazz> references = clazz.getReferences();        		
         		for (Clazz referencedClazz :  references) {
 					if (referencedClazz.isContainedBy(destinationObject)) {
-						System.out.println("    -> found! on " + referencedClazz.getCanonicalName());
 						throw new AbortVisitException();
 					}
-					
 				}
         	}
         };        
         try {
         	sourceObject.accept(visitor);
-        	System.out.println("    -> NOT found!");
         	return false;
         }
         catch(AbortVisitException e) {
@@ -85,7 +78,7 @@ public final class ReferenceTools {
         }        
     }
 
-	private static Set<? extends JavaItem> getAllReferences(JavaItem sourceObject, GranularityLevel granularityLevel) {
+    public static Set<? extends JavaItem> getAllReferences(JavaItem sourceObject, GranularityLevel granularityLevel) {
 		// Get all references of the source object, at the requested granularity
         Set<? extends JavaItem> references = null;        
         switch(granularityLevel) {
@@ -99,6 +92,11 @@ public final class ReferenceTools {
             }    
             case PACKAGE: {
                 references = getAllReferencesGroupByPackage(sourceObject);
+                break;
+            }
+            case PROJECT: {
+                references = getAllReferencesGroupByProject(sourceObject);
+                break;
             }
         }
 		return references;
@@ -146,10 +144,28 @@ public final class ReferenceTools {
         return packageReferencesSet;     
 
     }
+    
 
-	public static Set<JavaItem> getAllReferencesFromSubSet(JavaItem sourceJavaItem, List<JavaItem> destinationJavaItemList) {
-		System.out.println("getAllReferencesFromSubSet : " + sourceJavaItem + " to " + destinationJavaItemList);
-		
+    public static Set<Project> getAllReferencesGroupByProject(JavaItem javaItem) {
+    	final Set<Project> projectReferencesSet = new HashSet<Project>();
+        JavaItemVistor visitor = new JavaItemVistor() {
+        	@Override
+			public void visitClazz(Clazz clazz) {
+        		List<Clazz> references = clazz.getReferences();
+        		for (Clazz reference : references) {
+					Location location = reference.getPackage().getLocation();
+					Project project = location.getProject();
+					if (project != null) {
+						projectReferencesSet.add(project);
+					}
+				}
+        	}
+        };
+        javaItem.accept(visitor);
+        return projectReferencesSet;     
+    }
+
+	public static Set<JavaItem> getAllReferencesFromSubSet(JavaItem sourceJavaItem, List<JavaItem> destinationJavaItemList) {		
 		HashSet<JavaItem> result = new HashSet<JavaItem>();
 		for (JavaItem destinationJavaItem : destinationJavaItemList) {						
 			if (sourceJavaItem.getKey() != destinationJavaItem.getKey() && detectReference(sourceJavaItem, destinationJavaItem)) {				

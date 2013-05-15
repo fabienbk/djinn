@@ -23,13 +23,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
 import com.scramcode.djinn.Launcher;
 import com.scramcode.djinn.ui.actions.QuitAction;
 import com.scramcode.djinn.ui.i18n.Messages;
 import com.scramcode.djinn.ui.menu.ApplicationMenu;
-import com.scramcode.djinn.ui.panels.GraphAreaPanel;
+import com.scramcode.djinn.ui.panels.DependencyDetailsPanel;
 import com.scramcode.djinn.ui.panels.WorkspacePanel;
 
 
@@ -39,9 +40,12 @@ public class DjinnFrame extends javax.swing.JFrame {
     private static final long serialVersionUID = 1L;
     
     private WorkspacePanel workspacePanel = new WorkspacePanel();
-    private GraphAreaPanel graphAreaPanel = new GraphAreaPanel();
+    
     private ApplicationMenu menuBar = new ApplicationMenu();    
-    private JSplitPane splitPane = new JSplitPane();
+    
+    private JTabbedPane tabbedPane = new JTabbedPane();
+    
+    private DependencyDetailsPanel dependencyDetailsPanel = new DependencyDetailsPanel();
     
     public DjinnFrame() {
         
@@ -51,10 +55,16 @@ public class DjinnFrame extends javax.swing.JFrame {
         setPreferredSize(new Dimension(640,480));
         setLocationByPlatform(true);
         
-        splitPane.setDividerSize(8);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+        JSplitPane vSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+        splitPane.setResizeWeight(0.2d);
         splitPane.add(workspacePanel, JSplitPane.LEFT);
-        splitPane.add(graphAreaPanel, JSplitPane.RIGHT);        
-                
+        splitPane.add(vSplitPane, JSplitPane.RIGHT);
+                        
+        vSplitPane.setResizeWeight(0.8d);
+        vSplitPane.add(tabbedPane, JSplitPane.TOP);
+        vSplitPane.add(dependencyDetailsPanel, JSplitPane.BOTTOM);
+        
         this.getContentPane().add(splitPane, BorderLayout.CENTER);
         
         setJMenuBar(menuBar);
@@ -79,8 +89,12 @@ public class DjinnFrame extends javax.swing.JFrame {
         return this.workspacePanel;
     }
     
-    public GraphAreaPanel getGraphAreaPanel() {
-		return graphAreaPanel;
+    public JTabbedPane getTabbedPane() {
+		return tabbedPane;
 	}
-    
+
+	public DependencyDetailsPanel getDependencyDetailsPanel() {
+		return dependencyDetailsPanel;
+	}
+        
 }

@@ -18,16 +18,11 @@ package com.scramcode.djinn.model.workspace;
 
 import java.util.Vector;
 
-import javax.swing.Icon;
-
 import com.scramcode.djinn.db.data.Method;
-import com.scramcode.djinn.ui.i18n.Images;
 
 
 public class MethodNode extends AbstractJavaItemTreeNode {
-
-    private static final Icon ICON = Images.getIcon("Method.icon");
-    
+ 
     public MethodNode(ClassNode parent, Method dataObject) {
         super(parent, dataObject);
     }
@@ -40,10 +35,6 @@ public class MethodNode extends AbstractJavaItemTreeNode {
     @Override
     public boolean isLeaf() {
         return true;
-    }
-
-    public Icon getIcon() {
-        return ICON;
     }
     
 }

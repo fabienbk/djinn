@@ -27,67 +27,70 @@ import com.scramcode.djinn.bytecode.importer.ImportListener;
 import com.scramcode.djinn.bytecode.importer.RecursiveDirectoryImporter;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.i18n.Messages;
+import com.scramcode.djinn.util.AbstractSwingWorker;
 import com.scramcode.djinn.util.DjinnException;
 import com.scramcode.djinn.util.FileChooserFactory;
-import com.scramcode.djinn.util.AbstractSwingWorker;
-
 
 public final class Launcher {
-	
+
 	public static String version = "";
-    
-	private Launcher() {		
+
+	private Launcher() {
 	}
-	
-    public static void main(String[] args) throws Exception {       
-            	    	
-    	// Install the look and feel
-    	try {
-    	    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-    	        if ("Nimbus".equals(info.getName())) {
-    	            UIManager.setLookAndFeel(info.getClassName());
-    	            break;
-    	        }
-    	    }
-    	} catch (Exception e) {
-    		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-    	}
-        
-        // Load the version
-        Properties versionProperties = new Properties();
-        versionProperties.load(Launcher.class.getResourceAsStream("version.properties"));
-        version = versionProperties.getProperty("version");
-        
-        System.out.println("Loading djinn version " + version + " ...");
-        
-        // Verify the call syntax
-    	if (args.length > 1) {    		
-    		JOptionPane.showMessageDialog(null, Messages.getString("error.argsyntax"), 
-    				Messages.getString("error"), JOptionPane.ERROR_MESSAGE);    		
-    		System.exit(2);
-    	}
-    	if (args.length == 1) {
-    		final File directoryToImport = new File(args[0]);
-    		if (!directoryToImport.isDirectory()) {
-	    		JOptionPane.showMessageDialog(null, Messages.getString("error.argsyntax"), 
-	    				Messages.getString("error"), JOptionPane.ERROR_MESSAGE);
-	    		System.exit(2);
-    		}
-    		
-    		AbstractSwingWorker importWorker = new AbstractSwingWorker(true) {
+
+	public static void main(String[] args) throws Exception {
+
+		// Install the look and feel
+		try {
+			try {
+				UIManager.setLookAndFeel("com.seaglasslookandfeel.SeaGlassLookAndFeel");
+			}
+			catch (Exception e) {
+				for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+					if ("Nimbus".equals(info.getName())) {
+						UIManager.setLookAndFeel(info.getClassName());
+						break;
+					}
+				}				
+			}			
+		} catch (Exception e) {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+
+		// Load the version
+		Properties versionProperties = new Properties();
+		versionProperties.load(Launcher.class.getResourceAsStream("version.properties"));
+		version = versionProperties.getProperty("version");
+
+		System.out.println("Loading djinn version " + version + " ...");
+
+		// Verify the call syntax
+		if (args.length > 1) {
+			JOptionPane.showMessageDialog(null, Messages.getString("error.argsyntax"), Messages.getString("error"), JOptionPane.ERROR_MESSAGE);
+			System.exit(2);
+		}
+		if (args.length == 1) {
+			final File directoryToImport = new File(args[0]);
+			if (!directoryToImport.isDirectory()) {
+				JOptionPane.showMessageDialog(null, Messages.getString("error.argsyntax"), Messages.getString("error"), JOptionPane.ERROR_MESSAGE);
+				System.exit(2);
+			}
+
+			AbstractSwingWorker importWorker = new AbstractSwingWorker(true) {
 				@Override
 				public Object construct() {
-					
+
 					RecursiveDirectoryImporter importer = new RecursiveDirectoryImporter(directoryToImport);
 					importer.addImportListener(new ImportListener() {
 						public void updateImportProgress(int percent) {
 							updateProgress(percent);
 						}
+
 						public void updateImportCurrentStatus(String status) {
-							updateMessage(status);		
-						}                    	
-                    });
-					
+							updateMessage(status);
+						}
+					});
+
 					try {
 						importer.performImport();
 					} catch (DjinnException e) {
@@ -95,18 +98,18 @@ public final class Launcher {
 						e.printStackTrace();
 					}
 					return null;
-				}    			
-				
-    		};
-    		importWorker.start();
-    		
-    	}    	
-    	        
-        FileChooserFactory.getInstance();
-//        ConnectionManager.getInstance();
-        
-        Application.getInstance().start();
-        
-    }
-    
+				}
+
+			};
+			importWorker.start();
+
+		}
+
+		FileChooserFactory.getInstance();
+		// ConnectionManager.getInstance();
+
+		Application.getInstance().start();
+
+	}
+
 }

@@ -18,74 +18,42 @@ package com.scramcode.djinn.model.workspace;
 
 import java.util.Vector;
 
-import javax.swing.Icon;
-
 import com.scramcode.djinn.db.data.Clazz;
 import com.scramcode.djinn.db.data.Field;
 import com.scramcode.djinn.db.data.Method;
-import com.scramcode.djinn.ui.i18n.Images;
-
 
 public class ClassNode extends AbstractJavaItemTreeNode {
 
-    private static final Icon ICON = Images.getIcon("Class.icon");
-    private boolean showChildren = true;    
-    
-    public ClassNode(PackageNode parent, Clazz dataObject) {
-        super(parent, dataObject);
-    }
-    
-    public ClassNode(PackageNode parent, Clazz dataObject, boolean showChildren) {
-        super(parent, dataObject);
-        this.showChildren = showChildren;
-    }
-    
-    /**
-     * Override to prevent children from showing in case of showChildren == false.
-     */
-    @Override    
-    public void refresh() {
-        if (showChildren) {
-            super.refresh();
-        }
-    }
+	public ClassNode(PackageNode parent, Clazz dataObject) {
+		super(parent, dataObject);
+	}
 
-    @Override
-    protected Vector<AbstractJavaItemTreeNode> computeChildren() {        
-        Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();
-        
-        if (showChildren) {                             	
-        	Clazz clazz = (Clazz)getJavaItem();
-        	        	                       
-        	for (Method method : clazz.getMethods()) {
-        		MethodNode methodNode = new MethodNode(ClassNode.this, method);                        
-        		children.add(methodNode);
-			}
-        	                       
-        	for (Field field: clazz.getFields()) {
-                FieldNode fieldNode = new FieldNode(ClassNode.this, field);
-            	children.add(fieldNode);
-			}        
-        }
-        return children;
-    }    
+	/**
+	 * Override to prevent children from showing in case of showChildren ==
+	 * false.
+	 */
+	@Override
+	public void refresh() {
+		super.refresh();
+	}
 
-    public Icon getIcon() {
-        return ICON;
-    }
+	@Override
+	protected Vector<AbstractJavaItemTreeNode> computeChildren() {
+		Vector<AbstractJavaItemTreeNode> children = new Vector<AbstractJavaItemTreeNode>();
 
-    /**
-     * @return the showChildren
-     */
-    public boolean isShowChildren() {
-        return showChildren;
-    }
+		Clazz clazz = (Clazz) getJavaItem();
 
-    /**
-     * @param showChildren the showChildren to set
-     */
-    public void setShowChildren(boolean showChildren) {
-        this.showChildren = showChildren;
-    }
+		for (Method method : clazz.getMethods()) {
+			MethodNode methodNode = new MethodNode(ClassNode.this, method);
+			children.add(methodNode);
+		}
+
+		for (Field field : clazz.getFields()) {
+			FieldNode fieldNode = new FieldNode(ClassNode.this, field);
+			children.add(fieldNode);
+		}
+
+		return children;
+	}
 
 }

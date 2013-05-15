@@ -29,13 +29,13 @@ import com.scramcode.djinn.ui.actions.NewWorkspaceAction;
 import com.scramcode.djinn.ui.actions.QuitAction;
 import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
 import com.scramcode.djinn.ui.actions.ShowSelectedItemsDependencyGraph;
-import com.scramcode.djinn.ui.actions.ShowTopLevelDependencyGraph;
 import com.scramcode.djinn.ui.actions.layout.FRLayoutAction;
 import com.scramcode.djinn.ui.actions.layout.KKLayoutAction;
 import com.scramcode.djinn.ui.actions.layout.SpringLayoutAction;
 import com.scramcode.djinn.ui.dialogs.WorkspaceEditorDialogController;
 import com.scramcode.djinn.ui.menu.ApplicationMenu;
-import com.scramcode.djinn.ui.panels.GraphAreaController;
+import com.scramcode.djinn.ui.panels.DependencyDetailsPanelController;
+import com.scramcode.djinn.ui.panels.TabbedGraphAreaController;
 import com.scramcode.djinn.ui.panels.WorkspaceTreeController;
 
 public final class Application {
@@ -47,8 +47,10 @@ public final class Application {
 
 	// Controllers
 	private WorkspaceTreeController workspaceTreeController;
-	private GraphAreaController graphAreaController;
+	private TabbedGraphAreaController graphAreaController;
 	private WorkspaceEditorDialogController workspaceEditorDialogController;
+	
+	private DependencyDetailsPanelController dependencyDetailsPanelController;
 	
 	private static Application instance = new Application();
 
@@ -62,7 +64,6 @@ public final class Application {
 		rootActionMap.put(QuitAction.class, new QuitAction());
 		rootActionMap.put(AboutDialogAction.class, new AboutDialogAction());
 
-		rootActionMap.put(ShowTopLevelDependencyGraph.class, new ShowTopLevelDependencyGraph());
 		rootActionMap.put(ShowSelectedItemsDependencyGraph.class, new ShowSelectedItemsDependencyGraph());
 		rootActionMap.put(ShowProjectDependencyGraph.class, new ShowProjectDependencyGraph(true));
 		
@@ -89,8 +90,10 @@ public final class Application {
 
 		// Controllers
 		workspaceTreeController = new WorkspaceTreeController(this);
-		graphAreaController = new GraphAreaController(this);
+		graphAreaController = new TabbedGraphAreaController(this);
 		workspaceEditorDialogController = new WorkspaceEditorDialogController(this);
+		
+		dependencyDetailsPanelController = new DependencyDetailsPanelController(this);
 	}
 
 	public DjinnFrame getApplicationFrame() {
@@ -113,12 +116,16 @@ public final class Application {
 		return this.workspaceTreeController;
 	}
 
-	public GraphAreaController getGraphAreaController() {
+	public TabbedGraphAreaController getGraphAreaController() {
 		return this.graphAreaController;
 	}
 
 	public WorkspaceEditorDialogController getWorkspaceEditorDialogController() {
 		return workspaceEditorDialogController;
+	}
+
+	public DependencyDetailsPanelController getDependencyDetailsPanelController() {
+		return dependencyDetailsPanelController;
 	}
 
 }
