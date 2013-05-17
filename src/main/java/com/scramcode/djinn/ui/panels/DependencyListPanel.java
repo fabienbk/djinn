@@ -27,7 +27,7 @@ import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.table.JavaItemTableFactory;
 import java.awt.Font;
 
-public class DependencyDetailsPanel extends JPanel {
+public class DependencyListPanel extends JPanel {
 	private final Action groupByClassAction = new GroupByClassAction();
 	private final Action groupByPackageAction = new GroupByPackageAction();
 	private final Action groupByLocationAction = new GroupByLocationAction();
@@ -43,7 +43,7 @@ public class DependencyDetailsPanel extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public DependencyDetailsPanel() {
+	public DependencyListPanel() {
 						
 		JToolBar toolBar = new JToolBar();
 		toolBar.setOrientation(SwingConstants.VERTICAL);
@@ -140,61 +140,61 @@ public class DependencyDetailsPanel extends JPanel {
 	
 	private class GroupByClassAction extends AbstractAction {
 		public GroupByClassAction() {
-			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/obj16/class_obj.gif")));
+			putValue(SMALL_ICON, new ImageIcon(DependencyListPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/obj16/class_obj.gif")));
 			putValue(SHORT_DESCRIPTION, "Group dependencies by Class");
 			setEnabled(true);			
 		}
 		public void actionPerformed(ActionEvent e) {
 			granularityLevel = GranularityLevel.CLASS;
-			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+			Application.getInstance().getDependencyDetailsPanelController().updateDependencyList();
 		}
 	}
 	private class GroupByPackageAction extends AbstractAction {
 		public GroupByPackageAction() {
-			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/obj16/package_obj.gif")));
+			putValue(SMALL_ICON, new ImageIcon(DependencyListPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/obj16/package_obj.gif")));
 			putValue(SHORT_DESCRIPTION, "Group dependencies by Package");
 		}
 		public void actionPerformed(ActionEvent e) {
 			granularityLevel = GranularityLevel.PACKAGE;
-			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+			Application.getInstance().getDependencyDetailsPanelController().updateDependencyList();
 		}
 	}
 	private class GroupByLocationAction extends AbstractAction {
 		public GroupByLocationAction() {
-			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.ant.ui/icons/full/obj16/jar_l_obj.gif")));
+			putValue(SMALL_ICON, new ImageIcon(DependencyListPanel.class.getResource("/org.eclipse.ant.ui/icons/full/obj16/jar_l_obj.gif")));
 			putValue(SHORT_DESCRIPTION, "Group dependencies by Jar/Directory");
 		}
 		public void actionPerformed(ActionEvent e) {
 			granularityLevel = GranularityLevel.JAR;
-			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+			Application.getInstance().getDependencyDetailsPanelController().updateDependencyList();
 		}
 	}
 	private class GroupByProjectAction extends AbstractAction {
 		public GroupByProjectAction() {
-			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.ui/icons/full/obj16/elements_obj.gif")));
+			putValue(SMALL_ICON, new ImageIcon(DependencyListPanel.class.getResource("/org.eclipse.ui/icons/full/obj16/elements_obj.gif")));
 			putValue(SHORT_DESCRIPTION, "Group dependencies by Project");
 		}
 		public void actionPerformed(ActionEvent e) {
 			granularityLevel = GranularityLevel.PROJECT;
-			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+			Application.getInstance().getDependencyDetailsPanelController().updateDependencyList();
 		}
 	}
 	private class ShowInternalReferencesAction extends AbstractAction {
 		public ShowInternalReferencesAction() {
-			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/elcl16/ch_callers.gif")));
+			putValue(SMALL_ICON, new ImageIcon(DependencyListPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/elcl16/ch_callers.gif")));
 			putValue(SHORT_DESCRIPTION, "Show internal workspace dependencies");
 		}
 		public void actionPerformed(ActionEvent e) {			
-			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+			Application.getInstance().getDependencyDetailsPanelController().updateDependencyList();
 		}
 	}
 	private class ShowExternalReferencesAction extends AbstractAction {
 		public ShowExternalReferencesAction() {
-			putValue(SMALL_ICON, new ImageIcon(DependencyDetailsPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/elcl16/ch_callees.gif")));
+			putValue(SMALL_ICON, new ImageIcon(DependencyListPanel.class.getResource("/org.eclipse.jdt.ui/icons/full/elcl16/ch_callees.gif")));
 			putValue(SHORT_DESCRIPTION, "Show external workspace dependencies");
 		}
 		public void actionPerformed(ActionEvent e) {
-			Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection();
+			Application.getInstance().getDependencyDetailsPanelController().updateDependencyList();
 		}
 	}
 	public JLabel getContainerFilterName() {

@@ -30,7 +30,7 @@ import com.scramcode.djinn.Launcher;
 import com.scramcode.djinn.ui.actions.QuitAction;
 import com.scramcode.djinn.ui.i18n.Messages;
 import com.scramcode.djinn.ui.menu.ApplicationMenu;
-import com.scramcode.djinn.ui.panels.DependencyDetailsPanel;
+import com.scramcode.djinn.ui.panels.DependencyListPanel;
 import com.scramcode.djinn.ui.panels.WorkspacePanel;
 
 
@@ -45,7 +45,7 @@ public class DjinnFrame extends javax.swing.JFrame {
     
     private JTabbedPane tabbedPane = new JTabbedPane();
     
-    private DependencyDetailsPanel dependencyDetailsPanel = new DependencyDetailsPanel();
+    private DependencyListPanel dependencyDetailsPanel = new DependencyListPanel();
     
     public DjinnFrame() {
         
@@ -93,7 +93,7 @@ public class DjinnFrame extends javax.swing.JFrame {
 		return tabbedPane;
 	}
 
-	public DependencyDetailsPanel getDependencyDetailsPanel() {
+	public DependencyListPanel getDependencyDetailsPanel() {
 		return dependencyDetailsPanel;
 	}
         

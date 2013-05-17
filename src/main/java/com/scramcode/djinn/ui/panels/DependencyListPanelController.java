@@ -14,30 +14,29 @@ import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.table.JavaItemTableModel;
 import com.scramcode.djinn.util.AbstractSwingWorker;
 
-public class DependencyDetailsPanelController {
+public class DependencyListPanelController {
 
 	private Application application;
-	private DependencyDetailsPanel dependencyDetailsPanel;
+	private DependencyListPanel dependencyListPanel;
 
 
-	public DependencyDetailsPanelController(Application application) {
+	public DependencyListPanelController(Application application) {
 		this.application = application;
-		this.dependencyDetailsPanel = application.getApplicationFrame().getDependencyDetailsPanel();		
+		this.dependencyListPanel = application.getApplicationFrame().getDependencyDetailsPanel();		
 	}
 	
-	public void updateSourceSelection() {		
+	public void updateDependencyList() {		
 		List<AbstractJavaItemTreeNode> selectionNode = application.getWorkspaceTreeController().getSelectionNode();
 		if (selectionNode.size() > 0) {
-			updateSourceSelection(selectionNode.get(0));
+			updateDependencyList(selectionNode.get(0));
 		}
 	}
 	
-	public void updateSourceSelection(final AbstractJavaItemTreeNode sourceNode) {				
-		// Get the current granularity
-		final GranularityLevel granularityLevel = dependencyDetailsPanel.getGranularity();
+	public void updateDependencyList(final AbstractJavaItemTreeNode sourceNode) {				
+		// Get the current granularity		
+		final GranularityLevel granularityLevel = dependencyListPanel.getGranularity();
     		
-		// Get the current selected 'target' vertex in the graph
-		            
+		// Get the current selected 'target' vertex in the graph		            
 		AbstractSwingWorker  worker = new AbstractSwingWorker() {
 		    @Override
 		    public Object construct() {
@@ -48,19 +47,21 @@ public class DependencyDetailsPanelController {
 		    public void finished() {
 		        if (getValue() != null) {                        
 		        	Set<JavaItem> set = (Set<JavaItem>)getValue();		        	
-		            JTable referencesTable = dependencyDetailsPanel.getReferencesTable();
+		            JTable referencesTable = dependencyListPanel.getReferencesTable();
 					
 		            referencesTable.clearSelection();
 		            JavaItemTableModel model = (JavaItemTableModel)referencesTable.getModel();
 		            
-		            ArrayList filteredList = new ArrayList();
+		            ArrayList<JavaItem> filteredList = new ArrayList<JavaItem>();
 		            for (JavaItem javaItem : set) {
-		            	if (dependencyDetailsPanel.getContainerFilterItem() != null) {
-		            		if (!javaItem.isContainedBy(dependencyDetailsPanel.getContainerFilterItem())) {
-		            			continue;
+		            	if (dependencyListPanel.getContainerFilterItem() != null) {
+		            		if (javaItem.isContainedBy(dependencyListPanel.getContainerFilterItem())) {		            			
+		            			filteredList.add(javaItem);
 		            		}
+		            	}	
+		            	else {
+		            		filteredList.add(javaItem);
 		            	}
-		            	filteredList.add(javaItem);
 					}
 					model.setList(filteredList);		            		            
 		        }                    

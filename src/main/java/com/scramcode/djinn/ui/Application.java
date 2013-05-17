@@ -34,7 +34,7 @@ import com.scramcode.djinn.ui.actions.layout.KKLayoutAction;
 import com.scramcode.djinn.ui.actions.layout.SpringLayoutAction;
 import com.scramcode.djinn.ui.dialogs.WorkspaceEditorDialogController;
 import com.scramcode.djinn.ui.menu.ApplicationMenu;
-import com.scramcode.djinn.ui.panels.DependencyDetailsPanelController;
+import com.scramcode.djinn.ui.panels.DependencyListPanelController;
 import com.scramcode.djinn.ui.panels.TabbedGraphAreaController;
 import com.scramcode.djinn.ui.panels.WorkspaceTreeController;
 
@@ -50,7 +50,7 @@ public final class Application {
 	private TabbedGraphAreaController graphAreaController;
 	private WorkspaceEditorDialogController workspaceEditorDialogController;
 	
-	private DependencyDetailsPanelController dependencyDetailsPanelController;
+	private DependencyListPanelController dependencyDetailsPanelController;
 	
 	private static Application instance = new Application();
 
@@ -93,7 +93,7 @@ public final class Application {
 		graphAreaController = new TabbedGraphAreaController(this);
 		workspaceEditorDialogController = new WorkspaceEditorDialogController(this);
 		
-		dependencyDetailsPanelController = new DependencyDetailsPanelController(this);
+		dependencyDetailsPanelController = new DependencyListPanelController(this);
 	}
 
 	public DjinnFrame getApplicationFrame() {
@@ -124,7 +124,7 @@ public final class Application {
 		return workspaceEditorDialogController;
 	}
 
-	public DependencyDetailsPanelController getDependencyDetailsPanelController() {
+	public DependencyListPanelController getDependencyDetailsPanelController() {
 		return dependencyDetailsPanelController;
 	}
 

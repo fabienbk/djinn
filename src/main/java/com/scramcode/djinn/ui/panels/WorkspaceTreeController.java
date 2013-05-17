@@ -17,6 +17,9 @@
  */
 package com.scramcode.djinn.ui.panels;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -36,6 +39,7 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.scramcode.djinn.db.data.AbstractJavaItem;
 import com.scramcode.djinn.db.data.JavaDependency;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.model.workspace.AbstractJavaItemTreeNode;
@@ -78,10 +82,24 @@ public class WorkspaceTreeController implements
         tree.addMouseListener(new WorkspaceTreePopupMouseListener(popupMenu));
         
         tree.collapseRow(0);        
+        
+        tree.addMouseListener(new MouseAdapter() {
+        	@Override
+        	public void mouseClicked(MouseEvent e) {        	
+        		TreePath path = tree.getPathForLocation(e.getX(), e.getY());        		
+        		if (path != null) {
+        			Object lastPathComponent = path.getLastPathComponent();
+        			if (lastPathComponent instanceof AbstractJavaItemTreeNode) {        				
+        				Application.getInstance().getApplicationFrame().getDependencyDetailsPanel().setContainerFilterName(null);
+        			}
+        		}
+        		
+        		
+        	}
+		});
     }
 
-    public void valueChanged(TreeSelectionEvent e) {    	
-    	
+    public void valueChanged(TreeSelectionEvent e) {    	    	
     	selection.clear();
     	selectionNode.clear();
     	
@@ -97,7 +115,8 @@ public class WorkspaceTreeController implements
         }
         
         if(selectionNode.size() == 1) {        
-        	Application.getInstance().getDependencyDetailsPanelController().updateSourceSelection(selectionNode.get(0));
+        	Application instance = Application.getInstance();
+			instance.getDependencyDetailsPanelController().updateDependencyList(selectionNode.get(0));			
         }
         
     }        
@@ -161,8 +180,8 @@ public class WorkspaceTreeController implements
 	}
 
 	public void select(JavaItem item, JavaItem filterItem) {
-		tree.setSelectionPath(new TreePath(item.getTreeNode().getPath()));
 		Application.getInstance().getApplicationFrame().getDependencyDetailsPanel().setContainerFilterName(filterItem);
+		tree.setSelectionPath(new TreePath(item.getTreeNode().getPath()));
 	}
 
 	public void select(Set<JavaItem> pickedVertices) {
