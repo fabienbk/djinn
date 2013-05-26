@@ -46,3 +46,5 @@ Getting Started
 ---------------
 
 There is a work-in-progress [tutorial here](http://blog.scramcode.com/post/9/explore-java-dependencies-with-djinn/). Stay tuned, better stuff will come soon.
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/fabienbk/djinn/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
