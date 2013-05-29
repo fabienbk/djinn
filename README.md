@@ -19,8 +19,12 @@ There is still a lot of work to do - the tool only provides basic functionality 
 Quick start
 -----------
 
-[Click here](http://fabienbk.github.io/djinn/jnlp/djinn.jnlp) to quickly run djinn through java webstart (you may not have all 
-the latest features, though). 
+If you don't want to be bothered with building the project:
+
+Here is the latest [runnable jar](http://fabienbk.github.io/djinn/release/djinn-gui.jar).
+
+Alternatively, your can [click here](http://fabienbk.github.io/djinn/jnlp/djinn.jnlp) to run djinn through java webstart.
+
 
 Building and running
 --------------------
