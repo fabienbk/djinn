@@ -1,3 +1,15 @@
+// TODO jnlp build error
+// XXXX div by zero
+
+// TODO bouton add jars to project
+// TODO save project
+
+// TODO close graph
+// TODO graph viewport
+
+// TODO bascules internal/external
+// TODO queries (referenced by)
+
 /*
  * Created on Feb 5, 2006
  * By Fabien Benoit - http://www.scramcode.com 

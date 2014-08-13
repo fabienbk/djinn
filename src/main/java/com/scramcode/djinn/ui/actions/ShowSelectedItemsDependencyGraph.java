@@ -75,7 +75,10 @@ public class ShowSelectedItemsDependencyGraph extends AbstractAction {
                 Map<JavaItem, Set<JavaItem>> graphData = new HashMap<JavaItem, Set<JavaItem>>();
                 
                 int progress = 0;                    
-                int delta = 100 / selectedItems.size();                
+								int delta = 100;                
+								if (selectedItems.size() > 0) {
+									delta = 100 / selectedItems.size();                
+								}
                 
                 for (JavaItem javaItem : selectedItems) {
                 	graphData.put(javaItem, ReferenceTools.getAllReferencesFromSubSet(javaItem, selectedItems));
