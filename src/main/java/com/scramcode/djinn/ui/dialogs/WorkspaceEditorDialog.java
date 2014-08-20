@@ -23,6 +23,7 @@ public class WorkspaceEditorDialog extends JDialog {
 	private JButton clearButton;
 	private JList list;
 	private JButton okButton;
+	private JButton cancelButton;
 	
 	/**
 	 * Launch the application.
@@ -86,22 +87,17 @@ public class WorkspaceEditorDialog extends JDialog {
 		list = new JList();
 		scrollPane.setViewportView(list);
 		contentPanel.setLayout(glContentPanel);
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				okButton = new JButton("OK");
-				okButton.setActionCommand("OK");
-				buttonPane.add(okButton);
-				getRootPane().setDefaultButton(okButton);
-			}
-			{
-				JButton cancelButton = new JButton("Cancel");
-				cancelButton.setActionCommand("Cancel");
-				buttonPane.add(cancelButton);
-			}
-		}
+
+		JPanel buttonPane = new JPanel();
+		buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+		getContentPane().add(buttonPane, BorderLayout.SOUTH);
+		okButton = new JButton("OK");
+		okButton.setActionCommand("OK");
+		buttonPane.add(okButton);
+		getRootPane().setDefaultButton(okButton);
+		cancelButton = new JButton("Cancel");
+		cancelButton.setActionCommand("Cancel");
+		buttonPane.add(cancelButton);
 	}
 	
 	public JButton getAddEclipseProjectButton() {
@@ -121,5 +117,8 @@ public class WorkspaceEditorDialog extends JDialog {
 	}
 	public JButton getOkButton() {
 		return okButton;
+	}
+	public JButton getCancelButton() {
+		return cancelButton;
 	}
 }
