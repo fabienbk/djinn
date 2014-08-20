@@ -81,7 +81,8 @@ public class Location extends AbstractJavaItem {
     
     @Override
     public String getLabel() {
-        return pathFile.getName();
+//        return pathFile.getName();
+        return absolutePath;
     }
     
     @Override
