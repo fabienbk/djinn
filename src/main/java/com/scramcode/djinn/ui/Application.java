@@ -25,7 +25,10 @@ import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWi
 import com.scramcode.djinn.ui.actions.AbstractShowDependenciesAction.ShowLinksWithPackagesAction;
 import com.scramcode.djinn.ui.actions.ImportDirectoryAction;
 import com.scramcode.djinn.ui.actions.ImportEclipseProjectAction;
+import com.scramcode.djinn.ui.actions.EditWorkspaceAction;
 import com.scramcode.djinn.ui.actions.NewWorkspaceAction;
+import com.scramcode.djinn.ui.actions.OpenWorkspaceAction;
+import com.scramcode.djinn.ui.actions.SaveWorkspaceAction;
 import com.scramcode.djinn.ui.actions.QuitAction;
 import com.scramcode.djinn.ui.actions.ShowProjectDependencyGraph;
 import com.scramcode.djinn.ui.actions.ShowSelectedItemsDependencyGraph;
@@ -61,6 +64,9 @@ public final class Application {
 		// Creating actions
 		
 		rootActionMap.put(NewWorkspaceAction.class, new NewWorkspaceAction(true));		
+		rootActionMap.put(OpenWorkspaceAction.class, new OpenWorkspaceAction(true));		
+		rootActionMap.put(EditWorkspaceAction.class, new EditWorkspaceAction(true));		
+		rootActionMap.put(SaveWorkspaceAction.class, new SaveWorkspaceAction(true));		
 		rootActionMap.put(QuitAction.class, new QuitAction());
 		rootActionMap.put(AboutDialogAction.class, new AboutDialogAction());
 
@@ -82,6 +88,9 @@ public final class Application {
 		// Creating menu bar actions
 		ApplicationMenu menuBar = applicationFrame.getApplicationMenu();
 		menuBar.getWorkspaceMenu().add(rootActionMap.get(NewWorkspaceAction.class));
+		menuBar.getWorkspaceMenu().add(rootActionMap.get(OpenWorkspaceAction.class));
+		menuBar.getWorkspaceMenu().add(rootActionMap.get(EditWorkspaceAction.class));
+		menuBar.getWorkspaceMenu().add(rootActionMap.get(SaveWorkspaceAction.class));
 		menuBar.getWorkspaceMenu().add(rootActionMap.get(QuitAction.class));
 		menuBar.getLayoutMenu().add(rootActionMap.get(FRLayoutAction.class));
 		menuBar.getLayoutMenu().add(rootActionMap.get(KKLayoutAction.class));

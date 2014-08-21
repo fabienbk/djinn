@@ -16,6 +16,7 @@ import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
+import com.scramcode.djinn.db.data.Workspace;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.i18n.Images;
 import com.scramcode.djinn.util.AbstractSwingWorker;
@@ -25,6 +26,8 @@ public class WorkspaceEditorDialogController {
 
 	private WorkspaceEditorDialog workspaceEditorDialog;
 	private WorkspaceEditorListModel workspaceEditorListModel;
+	
+	public boolean isEdit;
 
 	@SuppressWarnings({ "serial", "unchecked" })
 	public WorkspaceEditorDialogController(Application application) {
@@ -105,6 +108,12 @@ public class WorkspaceEditorDialogController {
 			}
 		});
 		
+		workspaceEditorDialog.getCancelButton().setAction(new AbstractAction("Cancel") {			
+			public void actionPerformed(ActionEvent ae) {				
+	     	workspaceEditorDialog.setVisible(false);            	            	
+			}
+		});
+		
 		workspaceEditorListModel = new WorkspaceEditorListModel();
 		workspaceEditorDialog.getList().setModel(workspaceEditorListModel);
 		workspaceEditorDialog.getList().setCellRenderer(new WorkspaceEditorListCellRenderer());
@@ -112,6 +121,18 @@ public class WorkspaceEditorDialogController {
 	}
 
 	public void setVisible(boolean visible) {
+		if (isEdit) {
+			Workspace workspace = DataHelper.getWorkspace();
+			if (workspace != null) {
+				for (JavaItem top : workspace.getTopLevelItems()) {
+					workspaceEditorListModel.addJavaItem(top);
+				}
+			}
+		}
+		else {
+			workspaceEditorListModel.getList().clear();
+		}
+		
 		workspaceEditorDialog.setVisible(visible);
 	}
 	

@@ -9,19 +9,19 @@ import com.scramcode.djinn.ui.dialogs.WorkspaceEditorDialogController;
 import com.scramcode.djinn.ui.i18n.Images;
 import com.scramcode.djinn.ui.i18n.Messages;
 
-public class NewWorkspaceAction extends AbstractAction {
+public class SaveWorkspaceAction extends AbstractAction {
 	
 	private static final long serialVersionUID = 1L;
 
-	public NewWorkspaceAction(boolean enabled) {
-        super(Messages.getString("NewWorkspaceAction.label"), Images.getIcon("NewWorkspaceAction.icon") );        
+	public SaveWorkspaceAction(boolean enabled) {
+        super(Messages.getString("SaveWorkspaceAction.label"), Images.getIcon("SaveWorkspaceAction.icon") );        
         setEnabled(enabled);
 	}
 
 	public void actionPerformed(ActionEvent event) {		
-		WorkspaceEditorDialogController dialog = Application.getInstance().getWorkspaceEditorDialogController();		
-		dialog.isEdit = false;
-		dialog.setVisible(true);		
+//		WorkspaceEditorDialogController dialog = Application.getInstance().getWorkspaceEditorDialogController();		
+//		dialog.isEdit = true;
+//		dialog.setVisible(true);		
 	}
 
 }
