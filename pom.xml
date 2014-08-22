@@ -28,6 +28,11 @@
 			</snapshots>
 			<url>file://${project.basedir}/lib</url>
 		</repository>
+    <repository>
+      <id>Sonatype-public</id>
+      <name>SnakeYAML repository</name>
+      <url>http://oss.sonatype.org/content/groups/public/</url>
+    </repository>
 	</repositories>
 
 	<build>
@@ -132,6 +137,11 @@
 	</reporting>
 
 	<dependencies>
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>1.14-SNAPSHOT</version>
+    </dependency>
 		<dependency>
 			<groupId>net.sf.jung</groupId>
 			<artifactId>jung-graph-impl</artifactId>
