@@ -3,6 +3,7 @@ package com.scramcode.djinn.ui.dialogs;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.AbstractAction;
@@ -104,7 +105,7 @@ public class WorkspaceEditorDialogController {
 		
 		workspaceEditorDialog.getOkButton().setAction(new AbstractAction("OK") {			
 			public void actionPerformed(ActionEvent ae) {				
-				createWorkspace(workspaceEditorListModel.getList());
+				createWorkspace(workspaceEditorListModel.getList(), workspaceEditorListModel, workspaceEditorDialog);
 			}
 		});
 		
@@ -137,7 +138,7 @@ public class WorkspaceEditorDialogController {
 	}
 	
 
-	public void createWorkspace(final ArrayList<JavaItem> list) {
+	public static void createWorkspace(final List<JavaItem> list, final WorkspaceEditorListModel model, final WorkspaceEditorDialog dialog) {
         new AbstractSwingWorker(true) {
         	@Override
             public Object construct() {
@@ -173,9 +174,13 @@ public class WorkspaceEditorDialogController {
             
             @Override
             public void finished() {
-            	workspaceEditorListModel.getList().clear();
-            	workspaceEditorDialog.setVisible(false);            	            	
-                Application.getInstance().getWorkspaceTreeController().refresh();
+							if (model != null) {
+								model.getList().clear();
+							}
+							if (dialog != null) {
+								dialog.setVisible(false);            	            	
+							}
+              Application.getInstance().getWorkspaceTreeController().refresh();
             }
             
         }.start();               

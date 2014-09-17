@@ -4,15 +4,14 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.StringWriter;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.yaml.snakeyaml.Yaml;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.Workspace;
 import com.scramcode.djinn.db.data.WorkspaceDto;
@@ -21,7 +20,7 @@ import com.scramcode.djinn.ui.i18n.Messages;
 
 public class SaveWorkspaceAction extends AbstractAction {
 	
-	public String WORKSPACE_EXTENSION = ".yaml";
+	protected static String WORKSPACE_EXTENSION = ".json";
 	
 	public SaveWorkspaceAction(boolean enabled) {
         super(Messages.getString("SaveWorkspaceAction.label"), Images.getIcon("SaveWorkspaceAction.icon") );        
@@ -53,14 +52,14 @@ public class SaveWorkspaceAction extends AbstractAction {
 				super.approveSelection();
 			}
 		};
-		fileChooser.setDialogTitle("Specify a file to save");   
-    fileChooser.setDialogType( JFileChooser.SAVE_DIALOG );
+		fileChooser.setDialogTitle("Specify a file to save the workspace");   
+    fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 		fileChooser.setMultiSelectionEnabled(false);
 		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fileChooser.setFileFilter(new FileFilter() {					
 			@Override
 			public String getDescription() {
-				return "Yaml files (*"+WORKSPACE_EXTENSION+")";
+				return WORKSPACE_EXTENSION+" files";
 			}
 			@Override
 			public boolean accept(File file) {
@@ -70,23 +69,23 @@ public class SaveWorkspaceAction extends AbstractAction {
 		int userSelection = fileChooser.showSaveDialog(null);
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			File fileToSave = addExtensionIfNecessary(fileChooser.getSelectedFile());
-			System.out.println("Save as file: " + fileToSave.getAbsolutePath());
 		
 			WorkspaceDto dto = new WorkspaceDto();
 			Workspace workspace = DataHelper.getWorkspace();
 			dto.topLevelItems = workspace.getTopLevelItems();
-			dto.locations     = workspace.getLocations();
-			dto.projects      = workspace.getProjects();
 
-			Yaml yaml = new Yaml();
-			StringWriter writer = new StringWriter();
-			yaml.dump(dto, writer);
-			System.out.println(writer.toString());
-
+	    ObjectMapper mapper = new ObjectMapper();
+      String json = "";
+			try {
+				json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(dto);
+			} catch (JsonProcessingException ex) {
+				ex.printStackTrace();
+			}
+			
 			FileWriter fw = null;
 			try {
 				fw = new FileWriter(fileToSave);
-				fw.write(writer.toString());
+				fw.write(json);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} finally {
@@ -102,7 +101,7 @@ public class SaveWorkspaceAction extends AbstractAction {
 		}		
 	}
 
-	private File addExtensionIfNecessary(File file) {
+	protected static File addExtensionIfNecessary(File file) {
 		String path = file.getAbsolutePath();
 		if (path.endsWith(WORKSPACE_EXTENSION)) {
 			return file;
