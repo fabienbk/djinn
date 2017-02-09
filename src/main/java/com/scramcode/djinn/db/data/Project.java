@@ -26,6 +26,9 @@ import javax.swing.ImageIcon;
 import com.scramcode.djinn.db.logic.JavaItemVistor;
 import com.scramcode.djinn.ui.i18n.Images;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties ({"parent","project","packages","treeNode","color","icon","smallIcon","label"})
 public class Project extends AbstractJavaItem {
 
 	public static final ImageIcon ICON = Images.getIcon("Project.graph.icon");
@@ -37,13 +40,15 @@ public class Project extends AbstractJavaItem {
 
 	private List<Location> locations = new ArrayList<Location>();
 
+	public Project() {}
+	
 	public Project(String name, File directory) {
 		this.projectName = name;
 		this.directory = directory;
 	}
 	
 	@Override
-	public JavaItem getParent() {	
+  public JavaItem getParent() {	
 		return this;
 	}
 

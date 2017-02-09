@@ -3,6 +3,7 @@ package com.scramcode.djinn.ui.dialogs;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.AbstractAction;
@@ -16,6 +17,7 @@ import com.scramcode.djinn.db.data.DataHelper;
 import com.scramcode.djinn.db.data.JavaItem;
 import com.scramcode.djinn.db.data.Location;
 import com.scramcode.djinn.db.data.Project;
+import com.scramcode.djinn.db.data.Workspace;
 import com.scramcode.djinn.ui.Application;
 import com.scramcode.djinn.ui.i18n.Images;
 import com.scramcode.djinn.util.AbstractSwingWorker;
@@ -25,6 +27,8 @@ public class WorkspaceEditorDialogController {
 
 	private WorkspaceEditorDialog workspaceEditorDialog;
 	private WorkspaceEditorListModel workspaceEditorListModel;
+	
+	public boolean isEdit;
 
 	@SuppressWarnings({ "serial", "unchecked" })
 	public WorkspaceEditorDialogController(Application application) {
@@ -101,7 +105,13 @@ public class WorkspaceEditorDialogController {
 		
 		workspaceEditorDialog.getOkButton().setAction(new AbstractAction("OK") {			
 			public void actionPerformed(ActionEvent ae) {				
-				createWorkspace(workspaceEditorListModel.getList());
+				createWorkspace(workspaceEditorListModel.getList(), workspaceEditorListModel, workspaceEditorDialog);
+			}
+		});
+		
+		workspaceEditorDialog.getCancelButton().setAction(new AbstractAction("Cancel") {			
+			public void actionPerformed(ActionEvent ae) {				
+	     	workspaceEditorDialog.setVisible(false);            	            	
 			}
 		});
 		
@@ -112,11 +122,23 @@ public class WorkspaceEditorDialogController {
 	}
 
 	public void setVisible(boolean visible) {
+		if (isEdit) {
+			Workspace workspace = DataHelper.getWorkspace();
+			if (workspace != null) {
+				for (JavaItem top : workspace.getTopLevelItems()) {
+					workspaceEditorListModel.addJavaItem(top);
+				}
+			}
+		}
+		else {
+			workspaceEditorListModel.getList().clear();
+		}
+		
 		workspaceEditorDialog.setVisible(visible);
 	}
 	
 
-	public void createWorkspace(final ArrayList<JavaItem> list) {
+	public static void createWorkspace(final List<JavaItem> list, final WorkspaceEditorListModel model, final WorkspaceEditorDialog dialog) {
         new AbstractSwingWorker(true) {
         	@Override
             public Object construct() {
@@ -152,9 +174,13 @@ public class WorkspaceEditorDialogController {
             
             @Override
             public void finished() {
-            	workspaceEditorListModel.getList().clear();
-            	workspaceEditorDialog.setVisible(false);            	            	
-                Application.getInstance().getWorkspaceTreeController().refresh();
+							if (model != null) {
+								model.getList().clear();
+							}
+							if (dialog != null) {
+								dialog.setVisible(false);            	            	
+							}
+              Application.getInstance().getWorkspaceTreeController().refresh();
             }
             
         }.start();               

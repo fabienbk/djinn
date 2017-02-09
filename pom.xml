@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>djinn</groupId>
 	<artifactId>djinn</artifactId>
-	<version>0.4.0</version>
+	<version>0.4.1</version>
 	<name>djinn</name>
 	<description>Java Dependency Explorer</description>
 
@@ -71,15 +71,18 @@
 				</configuration>
 			</plugin>
 
-			<!-- JNLP -->
+			<!-- JNLP launch manually with mvn webstart:jnlp -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>webstart-maven-plugin</artifactId>
+        <version>1.0-beta-3</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<!--phase>package</phase-->
+						<phase>none</phase>
 						<goals>
-							<goal>jnlp-inline</goal>
+							<!--goal>jnlp-inline</goal-->
+							<goal>jnlp</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -90,30 +93,28 @@
 					</jnlp>
 					<jnlpExtensions />
 					<verbose>false</verbose>
-					
-					<sign>
-                        <keystore>djinn-keystore</keystore>
-                        <keypass>arizona2010</keypass>
-                        <storepass>changeit</storepass>
-                        <alias>djinn-alias</alias>
-                        <validity>3650</validity>
-                        <dnameCn>Fabien Benoit-Koch</dnameCn>
-                        <dnameOu>Scramcode</dnameOu>
-                        <dnameO>Scramcode</dnameO>
-                        <dnameL></dnameL>
-                        <dnameSt></dnameSt>
-                        <dnameC></dnameC>
-                        <verify>true</verify>
-                        <keystoreConfig>
-                            <delete>true</delete>
-                            <gen>true</gen>
-                        </keystoreConfig>
-                    </sign>
-                    <pack200>false</pack200>
-                    <gzip>true</gzip>                    
+          <sign>
+            <keystore>djinn-keystore</keystore>
+            <keypass>arizona2010</keypass>
+            <storepass>changeit</storepass>
+            <alias>djinn-alias</alias>
+            <validity>3650</validity>
+            <dnameCn>Fabien Benoit-Koch</dnameCn>
+            <dnameOu>Scramcode</dnameOu>
+            <dnameO>Scramcode</dnameO>
+            <dnameL></dnameL>
+            <dnameSt></dnameSt>
+            <dnameC></dnameC>
+            <verify>true</verify>
+            <keystoreConfig>
+              <delete>true</delete>
+              <gen>true</gen>
+            </keystoreConfig>
+          </sign>
+          <pack200>false</pack200>
+          <gzip>true</gzip>                    
 				</configuration>
 			</plugin>
-
 
 		</plugins>
 	</build>
@@ -172,6 +173,18 @@
 			<artifactId>plastic</artifactId>
 			<version>1.2.0</version>
 		</dependency>
+	 <dependency>
+	  <groupId>com.fasterxml.jackson.core</groupId>
+	  <artifactId>jackson-core</artifactId>
+	  <version>2.4.2</version>
+	  <type>jar</type>
+	 </dependency>
+	 <dependency>
+	  <groupId>com.fasterxml.jackson.core</groupId>
+	  <artifactId>jackson-databind</artifactId>
+	  <version>2.4.2</version>
+	  <type>jar</type>
+	 </dependency>
 	</dependencies>
 
 </project>

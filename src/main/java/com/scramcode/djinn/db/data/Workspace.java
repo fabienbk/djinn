@@ -14,7 +14,7 @@ public class Workspace {
 	
 	private Map<Long, Project> projects = new HashMap<Long, Project>();
 	private Map<Long, Location> locations = new HashMap<Long, Location>();
-	
+
 	private Map<Long, Clazz> clazzes = new HashMap<Long, Clazz>();
 	private Map<String, List<Clazz>> clazzesByName = new HashMap<String, List<Clazz>>();
 	
@@ -29,7 +29,7 @@ public class Workspace {
 	}
 
 	public void addProject(Project project) {
-		projects.put(project.getKey(), project);
+		getProjects().put(project.getKey(), project);
 		topLevelItems.add(project);
 	}
 
@@ -108,4 +108,16 @@ public class Workspace {
 	public List<JavaItem> getTopLevelItems() {
 		return topLevelItems;
 	}
+	
+	public Map<Long, Location> getLocations() {
+		return locations;
+	}
+
+	/**
+	 * @return the projects
+	 */
+	public Map<Long, Project> getProjects() {
+		return projects;
+	}
+	
 }

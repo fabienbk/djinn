@@ -94,8 +94,7 @@ public final class Launcher {
 					try {
 						importer.performImport();
 					} catch (DjinnException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+						System.out.println(e);
 					}
 					return null;
 				}

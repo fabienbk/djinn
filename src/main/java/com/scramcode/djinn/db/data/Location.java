@@ -25,8 +25,9 @@ import javax.swing.ImageIcon;
 
 import com.scramcode.djinn.db.logic.JavaItemVistor;
 import com.scramcode.djinn.ui.i18n.Images;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-
+@JsonIgnoreProperties ({"parent","project","packages","treeNode","color","icon","smallIcon","label"})
 public class Location extends AbstractJavaItem {
 
 	public static final int NO_PROJECT_ROOT = -1;
@@ -42,6 +43,8 @@ public class Location extends AbstractJavaItem {
 	private Project project;
 	private List<Package> packages = new ArrayList<Package>();
     
+    public Location() {}
+		
     /** full constructor */
     public Location(String absolutePath, int type, Project project) {
         this.absolutePath = absolutePath;        
@@ -81,7 +84,8 @@ public class Location extends AbstractJavaItem {
     
     @Override
     public String getLabel() {
-        return pathFile.getName();
+//        return pathFile.getName();
+        return absolutePath;
     }
     
     @Override
