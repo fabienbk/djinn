@@ -49,6 +49,4 @@ If you're a clicky person, flip the executable permission flag, and you should b
 Getting Started
 ---------------
 
-There is a work-in-progress [tutorial here](http://blog.scramcode.com/post/9/explore-java-dependencies-with-djinn/). Stay tuned, better stuff will come soon.
-
-[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/98873eef74ddc5882786fa4036fd5beb "githalytics.com")](http://githalytics.com/fabienbk/djinn)
+To be written.

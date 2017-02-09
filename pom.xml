@@ -143,6 +143,7 @@
         <dependency>
             <groupId>djinn</groupId>
             <artifactId>eclipse-icons</artifactId>
+            <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/djinn/eclipse-icons/1.0/eclipse-icons-1.0.jar</systemPath>
         </dependency>
