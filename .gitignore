@@ -1,9 +1,8 @@
 *.class
 target
 bin
-
+.idea
 djinn-[0-9\.]*.jar
-
 # Package Files #
 *.war
 *.ear
